@@ -146,6 +146,8 @@ int CrazyBattle::Run(int argc, char* argv[])
         SDL_FreeSurface(textSurface);
     }
 
+    m_world.addSystem<PlayerMovementSystem>(m_playerMovementSystem);
+
     bool quitGame = false;
     while (!quitGame)
     {
@@ -166,6 +168,10 @@ int CrazyBattle::Run(int argc, char* argv[])
         renderQuad.w = m_fontTextureW;
         renderQuad.h = m_fontTextureH;
         SDL_RenderCopy(m_renderer, m_fontTexture, nullptr, &renderQuad);
+
+        m_world.refresh();
+
+        m_playerMovementSystem.Update();
 
         SDL_RenderPresent(m_renderer);
 

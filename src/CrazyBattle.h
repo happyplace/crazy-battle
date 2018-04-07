@@ -3,6 +3,9 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+#include "anax/World.hpp"
+#include "systems/PlayerMovementSystem.h"
+
 class CrazyBattle
 {
 public:
@@ -29,4 +32,7 @@ private:
     SDL_Texture* m_fontTexture;
     int m_fontTextureW;
     int m_fontTextureH;
+
+    anax::World m_world;
+    PlayerMovementSystem m_playerMovementSystem;
 };
