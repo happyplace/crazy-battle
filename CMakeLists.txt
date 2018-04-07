@@ -11,6 +11,8 @@ set(cb_source_files
 	"src/AssetLoaderDefines.h"
 	"src/AssetLoaderHelper.h"
 	"src/AssetLoaderHelper.cpp"
+	"src/InputManager.h"
+	"src/InputManager.cpp"
 	"src/components/PlayerComponent.h"
 	"src/components/TransformComponent.h"
 	"src/components/TextureComponent.h"

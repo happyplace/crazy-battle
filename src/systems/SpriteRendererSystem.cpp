@@ -12,6 +12,7 @@ void SpriteRendererSystem::Render()
         const TransformComponent& transformComp = entity.getComponent<TransformComponent>();
 
         SDL_assert(textureAsset);
+        // TODO: use a texture missing asset
 
         renderQuad.x = static_cast<int>(transformComp.position.x);
         renderQuad.y = static_cast<int>(transformComp.position.y);

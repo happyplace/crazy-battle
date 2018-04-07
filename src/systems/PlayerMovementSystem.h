@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "anax/System.hpp"
 
 #include "components/PlayerComponent.h"

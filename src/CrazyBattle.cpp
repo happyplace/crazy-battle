@@ -1,9 +1,11 @@
 #include "CrazyBattle.h"
 
 #include <SDL_image.h>
+
 #include "AssetLoaderHelper.h"
 
 CrazyBattle* CrazyBattle::ms_instance = nullptr;
+const int CrazyBattle::NumOfEventsPerPeek = 100;
 
 CrazyBattle::CrazyBattle()
     : m_window(nullptr)
@@ -52,7 +54,7 @@ CrazyBattle::~CrazyBattle()
 
 bool CrazyBattle::Init(int /*argc*/, char* /*argv*/[])
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL could not initalize! SDL_ERROR: %s", SDL_GetError());
         return false;
@@ -125,6 +127,13 @@ int CrazyBattle::Run(int argc, char* argv[])
         SDL_FreeSurface(textSurface);
     }
 
+    bool quitGame = false;
+
+    //  Game State
+    SDL_PumpEvents();
+    m_inputManager.Update();
+    CheckEvents(quitGame);
+
     m_world.addSystem<PlayerMovementSystem>(m_playerMovementSystem);
     m_world.addSystem<SpriteRendererSystem>(m_spriteRendererSystem);
 
@@ -133,13 +142,17 @@ int CrazyBattle::Run(int argc, char* argv[])
     playerTransformComp.scale.x = 5.0f;
     playerTransformComp.scale.y = 5.0f;
     player.addComponent<SpriteComponent>();
-    player.addComponent<TextureComponent>().texture = AssetLoaderHelper::LoadTexture("media/opp2/test2.png");
+    player.addComponent<TextureComponent>().texture = AssetLoaderHelper::LoadTexture("media/opp2/test.png");
+    std::vector<SDL_JoystickID> joystickIds;
+    m_inputManager.GetAllControllerInstanceIds(joystickIds);
+    player.addComponent<PlayerComponent>().controllerInstanceId = joystickIds.empty() ? -1 : joystickIds[0];
     player.activate();
+    // Game State
 
-    bool quitGame = false;
     while (!quitGame)
     {
         SDL_PumpEvents();
+        m_inputManager.Update();
 
         SDL_RenderClear(m_renderer);
 
@@ -158,24 +171,28 @@ int CrazyBattle::Run(int argc, char* argv[])
 
         SDL_RenderPresent(m_renderer);
 
-        const int numOfEventsPerPeek = 100;
-        SDL_Event sdlEvents[numOfEventsPerPeek];
-
-        // Using SDL_GETEVENT to remove all the events
-        const int numOfEvents = SDL_PeepEvents(sdlEvents, numOfEventsPerPeek, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
-        if (numOfEvents < 0)
-        {
-            SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_PeepEvents failed SDL_ERROR: %s", SDL_GetError());
-        }
-
-        for (int i = 0; i < numOfEvents; i++)
-        {
-            if (sdlEvents[i].type == SDL_QUIT)
-            {
-                quitGame = true;
-            }
-        }
+        CheckEvents(quitGame);
     }
 
     return 0;
+}
+
+void CrazyBattle::CheckEvents(bool &quitGame)
+{
+    SDL_Event sdlEvents[NumOfEventsPerPeek];
+
+    // Using SDL_GETEVENT to remove all the events
+    const int numOfEvents = SDL_PeepEvents(sdlEvents, NumOfEventsPerPeek, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
+    if (numOfEvents < 0)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_PeepEvents failed SDL_ERROR: %s", SDL_GetError());
+    }
+
+    for (int i = 0; i < numOfEvents; i++)
+    {
+        if (sdlEvents[i].type == SDL_QUIT)
+        {
+            quitGame = true;
+        }
+    }
 }
