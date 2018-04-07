@@ -8,9 +8,17 @@ set(cb_source_files
 	"src/main.cpp"
 	"src/CrazyBattle.h"
 	"src/CrazyBattle.cpp"
+	"src/AssetLoaderDefines.h"
+	"src/AssetLoaderHelper.h"
+	"src/AssetLoaderHelper.cpp"
 	"src/components/PlayerComponent.h"
+	"src/components/TransformComponent.h"
+	"src/components/TextureComponent.h"
+	"src/components/SpriteComponent.h"
 	"src/systems/PlayerMovementSystem.h"
 	"src/systems/PlayerMovementSystem.cpp"
+	"src/systems/SpriteRendererSystem.h"
+	"src/systems/SpriteRendererSystem.cpp"
 )
 
 find_package(SDL2 REQUIRED)
@@ -20,6 +28,8 @@ include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INC
 
 include_directories(libs/anax/include)
 add_subdirectory(libs/anax/crazy-battle_cmake)
+
+include_directories(libs/tinyheaders)
 
 add_executable(CrazyBattle ${cb_source_files})
 

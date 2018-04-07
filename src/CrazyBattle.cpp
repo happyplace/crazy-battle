@@ -1,6 +1,7 @@
 #include "CrazyBattle.h"
 
 #include <SDL_image.h>
+#include "AssetLoaderHelper.h"
 
 CrazyBattle* CrazyBattle::ms_instance = nullptr;
 
@@ -10,7 +11,6 @@ CrazyBattle::CrazyBattle()
 {
     ms_instance = this;
 
-    m_testTexture = nullptr;
     m_font = nullptr;
     m_fontTexture = nullptr;
     m_fontTextureW = 0;
@@ -29,12 +29,6 @@ CrazyBattle::~CrazyBattle()
     {
         TTF_CloseFont(m_font);
         m_font = nullptr;
-    }
-
-    if (m_testTexture)
-    {
-        SDL_DestroyTexture(m_testTexture);
-        m_testTexture = nullptr;
     }
 
     if (m_renderer)
@@ -107,21 +101,6 @@ int CrazyBattle::Run(int argc, char* argv[])
 
     SDL_SetRenderDrawColor(m_renderer, 0xb1, 0xc5, 0xdf, 0xff);
 
-    SDL_Surface* loadedSurface = IMG_Load("media/opp2/test.png");
-    if (loadedSurface == nullptr)
-    {
-        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to load image %s SDL_image Error: %s", "media/opp2/test.png", IMG_GetError());
-    }
-    else
-    {
-        m_testTexture = SDL_CreateTextureFromSurface(m_renderer, loadedSurface);
-        if (m_testTexture == nullptr)
-        {
-            SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to create texture from %s SDL_Error: %s", "media/opp2/test.png", SDL_GetError());
-        }
-        SDL_FreeSurface(loadedSurface);
-    }
-
     const char* fontPath = "media/helmet2/Helmet-Regular.ttf";
     m_font = TTF_OpenFont(fontPath, 100);
     if (m_font == nullptr)
@@ -147,6 +126,15 @@ int CrazyBattle::Run(int argc, char* argv[])
     }
 
     m_world.addSystem<PlayerMovementSystem>(m_playerMovementSystem);
+    m_world.addSystem<SpriteRendererSystem>(m_spriteRendererSystem);
+
+    anax::Entity player = m_world.createEntity();
+    TransformComponent& playerTransformComp = player.addComponent<TransformComponent>();
+    playerTransformComp.scale.x = 5.0f;
+    playerTransformComp.scale.y = 5.0f;
+    player.addComponent<SpriteComponent>();
+    player.addComponent<TextureComponent>().texture = AssetLoaderHelper::LoadTexture("media/opp2/test2.png");
+    player.activate();
 
     bool quitGame = false;
     while (!quitGame)
@@ -155,23 +143,18 @@ int CrazyBattle::Run(int argc, char* argv[])
 
         SDL_RenderClear(m_renderer);
 
+        m_world.refresh();
+
+        m_playerMovementSystem.Update();
+
+        m_spriteRendererSystem.Render();
+
         SDL_Rect renderQuad;
-
-        renderQuad.x = 1920/2;
-        renderQuad.y = 1080/2;
-        renderQuad.w = 43 * 4;
-        renderQuad.h = 57 * 4;
-        SDL_RenderCopy(m_renderer, m_testTexture, nullptr, &renderQuad);
-
         renderQuad.x = 0;
         renderQuad.y = 0;
         renderQuad.w = m_fontTextureW;
         renderQuad.h = m_fontTextureH;
         SDL_RenderCopy(m_renderer, m_fontTexture, nullptr, &renderQuad);
-
-        m_world.refresh();
-
-        m_playerMovementSystem.Update();
 
         SDL_RenderPresent(m_renderer);
 

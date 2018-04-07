@@ -5,6 +5,7 @@
 
 #include "anax/World.hpp"
 #include "systems/PlayerMovementSystem.h"
+#include "systems/SpriteRendererSystem.h"
 
 class CrazyBattle
 {
@@ -27,7 +28,6 @@ private:
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
 
-    SDL_Texture* m_testTexture;
     TTF_Font* m_font;
     SDL_Texture* m_fontTexture;
     int m_fontTextureW;
@@ -35,4 +35,5 @@ private:
 
     anax::World m_world;
     PlayerMovementSystem m_playerMovementSystem;
+    SpriteRendererSystem m_spriteRendererSystem;
 };
