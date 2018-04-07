@@ -14,7 +14,7 @@ void GameState::Init()
     playerTransformComp.scale.x = 5.0f;
     playerTransformComp.scale.y = 5.0f;
     player.addComponent<SpriteComponent>();
-    player.addComponent<TextureComponent>().texture = AssetLoaderHelper::LoadTexture("media/opp2/test.png");
+    player.addComponent<TextureComponent>().texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
     std::vector<SDL_JoystickID> joystickIds;
     InputManager::GetInstance().GetAllControllerInstanceIds(joystickIds);
     player.addComponent<PlayerComponent>().controllerInstanceId = joystickIds.empty() ? -1 : joystickIds[0];
