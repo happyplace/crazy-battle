@@ -1,5 +1,7 @@
 #include "CrazyBattle.h"
 
+#include <SDL_image.h>
+
 CrazyBattle* CrazyBattle::ms_instance = nullptr;
 
 CrazyBattle::CrazyBattle()
@@ -7,10 +9,34 @@ CrazyBattle::CrazyBattle()
     , m_renderer(nullptr)
 {
     ms_instance = this;
+
+    m_testTexture = nullptr;
+    m_font = nullptr;
+    m_fontTexture = nullptr;
+    m_fontTextureW = 0;
+    m_fontTextureH = 0;
 }
 
 CrazyBattle::~CrazyBattle()
 {
+    if (m_fontTexture)
+    {
+        SDL_DestroyTexture(m_fontTexture);
+        m_fontTexture = nullptr;
+    }
+
+    if (m_font)
+    {
+        TTF_CloseFont(m_font);
+        m_font = nullptr;
+    }
+
+    if (m_testTexture)
+    {
+        SDL_DestroyTexture(m_testTexture);
+        m_testTexture = nullptr;
+    }
+
     if (m_renderer)
     {
         SDL_DestroyRenderer(m_renderer);
@@ -23,6 +49,7 @@ CrazyBattle::~CrazyBattle()
         m_window = nullptr;
     }
 
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 
@@ -57,6 +84,12 @@ bool CrazyBattle::Init(int /*argc*/, char* /*argv*/[])
         return false;
     }
 
+    if (TTF_Init() == -1)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_ttf could not initialize SDL_ttf Error: %s", TTF_GetError());
+        return false;
+    }
+
     return true;
 }
 
@@ -74,12 +107,65 @@ int CrazyBattle::Run(int argc, char* argv[])
 
     SDL_SetRenderDrawColor(m_renderer, 0xb1, 0xc5, 0xdf, 0xff);
 
+    SDL_Surface* loadedSurface = IMG_Load("media/opp2/test.png");
+    if (loadedSurface == nullptr)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to load image %s SDL_image Error: %s", "media/opp2/test.png", IMG_GetError());
+    }
+    else
+    {
+        m_testTexture = SDL_CreateTextureFromSurface(m_renderer, loadedSurface);
+        if (m_testTexture == nullptr)
+        {
+            SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to create texture from %s SDL_Error: %s", "media/opp2/test.png", SDL_GetError());
+        }
+        SDL_FreeSurface(loadedSurface);
+    }
+
+    const char* fontPath = "media/helmet2/Helmet-Regular.ttf";
+    m_font = TTF_OpenFont(fontPath, 100);
+    if (m_font == nullptr)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "failed to load font '%s' SDL_ttf Error: %s", fontPath, TTF_GetError());
+    }
+    SDL_Color textColor = { 255, 255, 255, 255 };
+    SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, "Andrew was here!", textColor);
+    if (textSurface == nullptr)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "unable to render text surface SDL_ttf Error: %s", TTF_GetError());
+    }
+    else
+    {
+        m_fontTexture = SDL_CreateTextureFromSurface(m_renderer, textSurface);
+        if (m_fontTexture == nullptr)
+        {
+            SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to create texture from rendered text. SDL Error: %s", SDL_GetError());
+        }
+        m_fontTextureW = textSurface->w;
+        m_fontTextureH = textSurface->h;
+        SDL_FreeSurface(textSurface);
+    }
+
     bool quitGame = false;
     while (!quitGame)
     {
         SDL_PumpEvents();
 
         SDL_RenderClear(m_renderer);
+
+        SDL_Rect renderQuad;
+
+        renderQuad.x = 1920/2;
+        renderQuad.y = 1080/2;
+        renderQuad.w = 43 * 4;
+        renderQuad.h = 57 * 4;
+        SDL_RenderCopy(m_renderer, m_testTexture, nullptr, &renderQuad);
+
+        renderQuad.x = 0;
+        renderQuad.y = 0;
+        renderQuad.w = m_fontTextureW;
+        renderQuad.h = m_fontTextureH;
+        SDL_RenderCopy(m_renderer, m_fontTexture, nullptr, &renderQuad);
 
         SDL_RenderPresent(m_renderer);
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include <SDL_image.h>
+#include <SDL_ttf.h>
 
 class CrazyBattle
 {
@@ -23,4 +23,10 @@ private:
 
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
+
+    SDL_Texture* m_testTexture;
+    TTF_Font* m_font;
+    SDL_Texture* m_fontTexture;
+    int m_fontTextureW;
+    int m_fontTextureH;
 };
