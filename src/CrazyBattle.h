@@ -1,13 +1,18 @@
 #pragma once
 
+#include <vector>
+
 #include <SDL.h>
-#include <SDL_ttf.h>
 
 #include "InputManager.h"
 
-#include "anax/World.hpp"
-#include "systems/PlayerMovementSystem.h"
-#include "systems/SpriteRendererSystem.h"
+enum class CrazyBattleState
+{
+    None,
+    Game,
+};
+
+class State;
 
 class CrazyBattle
 {
@@ -19,6 +24,7 @@ public:
     ~CrazyBattle();
 
     int Run(int argc, char* argv[]);
+    void ChangeState(CrazyBattleState state) { m_nextState = state; }
 
     SDL_Window* Window() { return m_window; }
     SDL_Renderer* Renderer() { return m_renderer; }
@@ -26,6 +32,7 @@ public:
 private:
     bool Init(int argc, char* argv[]);
     void CheckEvents(bool& quitGame);
+    void CheckAndChangeState();
 
     static CrazyBattle* ms_instance;
 
@@ -34,12 +41,12 @@ private:
 
     InputManager m_inputManager;
 
-    TTF_Font* m_font;
-    SDL_Texture* m_fontTexture;
-    int m_fontTextureW;
-    int m_fontTextureH;
+    CrazyBattleState m_currentState;
+    CrazyBattleState m_nextState;
+    State* m_state;
 
-    anax::World m_world;
-    PlayerMovementSystem m_playerMovementSystem;
-    SpriteRendererSystem m_spriteRendererSystem;
+    //TTF_Font* m_font;
+    //SDL_Texture* m_fontTexture;
+    //int m_fontTextureW;
+    //int m_fontTextureH;
 };

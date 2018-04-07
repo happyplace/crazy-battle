@@ -1,5 +1,4 @@
 #include "CrazyBattle.h"
-#include "CrazyBattle.h"
 
 int main(int argc, char* argv[])
 {

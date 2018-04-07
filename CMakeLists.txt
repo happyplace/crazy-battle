@@ -13,6 +13,8 @@ set(cb_source_files
 	"src/AssetLoaderHelper.cpp"
 	"src/InputManager.h"
 	"src/InputManager.cpp"
+	"src/GameTimer.h"
+	"src/GameTimer.cpp"
 	"src/components/PlayerComponent.h"
 	"src/components/TransformComponent.h"
 	"src/components/TextureComponent.h"
@@ -21,6 +23,9 @@ set(cb_source_files
 	"src/systems/PlayerMovementSystem.cpp"
 	"src/systems/SpriteRendererSystem.h"
 	"src/systems/SpriteRendererSystem.cpp"
+	"src/states/State.h"
+	"src/states/GameState.h"
+	"src/states/GameState.cpp"
 )
 
 find_package(SDL2 REQUIRED)

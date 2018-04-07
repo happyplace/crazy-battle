@@ -1,5 +1,7 @@
 #include "InputManager.h"
 
+#include "tinymath2d.h"
+
 #include "CrazyBattle.h"
 
 InputManager* InputManager::ms_instance = nullptr;
