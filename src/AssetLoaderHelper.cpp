@@ -69,3 +69,38 @@ const TextureFramesAssetPtr AssetLoaderHelper::LoadTextureFrames(const char* pat
     }
     return nullptr;
 }
+
+const SpriteAnimationsAssetPtr AssetLoaderHelper::LoadSpriteAnimations(const char* path)
+{
+    std::ifstream myfile(path);
+    if (myfile.is_open())
+    {
+        std::string line;
+        std::stringstream spriteAnimations;
+        while (getline(myfile, line))
+        {
+            spriteAnimations << line;
+        }
+        myfile.close();
+
+        Document spriteAnimationDoc;
+        spriteAnimationDoc.Parse(spriteAnimations.str().c_str());
+
+        SpriteAnimationsAssetPtr spriteAnimationAsset(new SpriteAnimationsAsset());
+
+        SpriteAnimation animation;
+        for (SizeType i = 0; i < spriteAnimationDoc.Size(); i++)
+        {
+            animation.name = spriteAnimationDoc[i]["name"].GetString();
+            animation.speed = spriteAnimationDoc[i]["speed"].GetFloat();
+            const Value& frames = spriteAnimationDoc[i]["frames"];
+            for (SizeType k = 0; k < frames.Size(); k++)
+            {
+                animation.frames.push_back(frames[k].GetString());
+            }
+            spriteAnimationAsset->animations.push_back(animation);
+        }
+        return spriteAnimationAsset;
+    }
+    return nullptr;
+}

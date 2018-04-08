@@ -46,5 +46,23 @@ private:
     friend class AssetLoaderHelper;
 };
 
+struct SpriteAnimation
+{
+    std::string name;
+    float speed;
+    std::vector<std::string> frames;
+};
+
+struct SpriteAnimationsAsset
+{
+    std::vector<SpriteAnimation> animations;
+
+private:
+    SpriteAnimationsAsset() {}
+
+    friend class AssetLoaderHelper;
+};
+
 typedef std::shared_ptr<TextureFramesAsset> TextureFramesAssetPtr;
 typedef std::shared_ptr<TextureAsset> TextureAssetPtr;
+typedef std::shared_ptr<SpriteAnimationsAsset> SpriteAnimationsAssetPtr;
