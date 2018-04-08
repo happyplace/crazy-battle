@@ -1,4 +1,4 @@
-#include "GameState.h"
+﻿#include "GameState.h"
 
 #include "AssetLoaderHelper.h"
 #include "GameTimer.h"
@@ -13,8 +13,10 @@ void GameState::Init()
     TransformComponent& playerTransformComp = player.addComponent<TransformComponent>();
     playerTransformComp.scale.x = 5.0f;
     playerTransformComp.scale.y = 5.0f;
-    player.addComponent<SpriteComponent>();
-    player.addComponent<TextureComponent>().texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
+    player.addComponent<SpriteComponent>().frameName = "spr_f_archeologist_idle_anim_15.png";
+    TextureComponent& playerTextureComp = player.addComponent<TextureComponent>();
+    playerTextureComp.texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
+    playerTextureComp.textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
     std::vector<SDL_JoystickID> joystickIds;
     InputManager::GetInstance().GetAllControllerInstanceIds(joystickIds);
     player.addComponent<PlayerComponent>().controllerInstanceId = joystickIds.empty() ? -1 : joystickIds[0];

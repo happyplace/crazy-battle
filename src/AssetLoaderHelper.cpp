@@ -1,8 +1,16 @@
-#include "AssetLoaderHelper.h"
+﻿#include "AssetLoaderHelper.h"
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 #include <SDL_image.h>
+#include "rapidjson/document.h"
 
 #include "CrazyBattle.h"
+
+using namespace rapidjson;
 
 const TextureAssetPtr AssetLoaderHelper::LoadTexture(const char* path)
 {
@@ -26,4 +34,38 @@ const TextureAssetPtr AssetLoaderHelper::LoadTexture(const char* path)
         SDL_FreeSurface(loadedSurface);
         return textureAsset;
     }
+}
+
+const TextureFramesAssetPtr AssetLoaderHelper::LoadTextureFrames(const char* path)
+{
+    std::ifstream myfile(path);
+    if (myfile.is_open())
+    {
+        std::string line;
+        std::stringstream jsonFrame;
+        while (getline(myfile, line))
+        {
+            jsonFrame << line;
+        }
+        myfile.close();
+
+        Document textureFramesDoc;
+        textureFramesDoc.Parse(jsonFrame.str().c_str());
+
+        TextureFramesAssetPtr textureFramesAsset(new TextureFramesAsset());
+
+        TextureFrame frame;
+        const Value& frames = textureFramesDoc["frames"];
+        for (SizeType i = 0; i < frames.Size(); i++)
+        {
+            frame.name = frames[i]["filename"].GetString();
+            frame.x = frames[i]["frame"]["x"].GetInt();
+            frame.y = frames[i]["frame"]["y"].GetInt();
+            frame.width = frames[i]["frame"]["w"].GetInt();
+            frame.height = frames[i]["frame"]["h"].GetInt();
+            textureFramesAsset->frames.push_back(frame);
+        }
+        return textureFramesAsset;
+    }
+    return nullptr;
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "anax/Component.hpp"
 
@@ -7,4 +7,5 @@
 struct TextureComponent : anax::Component
 {
     TextureAssetPtr texture;
+    TextureFramesAssetPtr textureFrames;
 };

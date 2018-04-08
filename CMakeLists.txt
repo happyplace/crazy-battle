@@ -38,6 +38,8 @@ add_subdirectory(libs/anax/crazy-battle_cmake)
 
 include_directories(libs/tinyheaders)
 
+include_directories(libs/rapidjson/include)
+
 add_executable(CrazyBattle ${cb_source_files})
 
 target_compile_features(CrazyBattle PRIVATE cxx_range_for)

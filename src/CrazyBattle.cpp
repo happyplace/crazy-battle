@@ -1,4 +1,4 @@
-#include "CrazyBattle.h"
+﻿#include "CrazyBattle.h"
 
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -71,7 +71,7 @@ bool CrazyBattle::Init(int /*argc*/, char* /*argv*/[])
         return false;
     }
 
-    m_window = SDL_CreateWindow("Crazy Battle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1080, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow("Crazy Battle", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_SHOWN);
     if (m_window == nullptr)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "window could not be created SDL_ERROR: %s", SDL_GetError());

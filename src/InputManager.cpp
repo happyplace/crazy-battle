@@ -1,4 +1,4 @@
-#include "InputManager.h"
+﻿#include "InputManager.h"
 
 #include "tinymath2d.h"
 
@@ -8,7 +8,7 @@ InputManager* InputManager::ms_instance = nullptr;
 
 float InputManager::GetControllerAxisWithDeadZone(SDL_GameController* controller, SDL_GameControllerAxis axis)
 {
-    const float DeadZone = 0.1f;
+    const float DeadZone = 0.2f;
     int16_t value = SDL_GameControllerGetAxis(controller, axis);
     if (value < 0)
         return clamp((value / 32768.0f) + DeadZone, -1.0f, 0.0f) / (1.0f - DeadZone);

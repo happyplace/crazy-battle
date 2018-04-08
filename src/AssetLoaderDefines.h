@@ -1,6 +1,8 @@
-#pragma once
+﻿#pragma once
 
 #include <memory>
+#include <vector>
+#include <string>
 
 #include <SDL.h>
 
@@ -25,4 +27,24 @@ private:
     friend class AssetLoaderHelper;
 };
 
+struct TextureFrame
+{
+    std::string name;
+    int x;
+    int y;
+    int width;
+    int height;
+};
+
+struct TextureFramesAsset
+{
+    std::vector<TextureFrame> frames;
+
+private:
+    TextureFramesAsset() {}
+
+    friend class AssetLoaderHelper;
+};
+
+typedef std::shared_ptr<TextureFramesAsset> TextureFramesAssetPtr;
 typedef std::shared_ptr<TextureAsset> TextureAssetPtr;
