@@ -20,6 +20,7 @@ set(cb_source_files
 	"src/components/TextureComponent.h"
 	"src/components/SpriteComponent.h"
 	"src/components/AnimatedSpriteComponent.h"
+	"src/components/PhysicsBodyComponent.h"
 	"src/systems/PlayerMovementSystem.h"
 	"src/systems/PlayerMovementSystem.cpp"
 	"src/systems/SpriteRendererSystem.h"
@@ -30,6 +31,8 @@ set(cb_source_files
 	"src/systems/AnimateSpriteRendererSystem.cpp"
 	"src/systems/SpriteRendererHelper.h"
 	"src/systems/SpriteRendererHelper.cpp"
+	"src/systems/PhysicsWorldSystem.h"
+	"src/systems/PhysicsWorldSystem.cpp"
 	"src/states/State.h"
 	"src/states/GameState.h"
 	"src/states/GameState.cpp"
@@ -47,9 +50,13 @@ include_directories(libs/tinyheaders)
 
 include_directories(libs/rapidjson/include)
 
+include_directories(libs/Box2D/Box2D)
+add_subdirectory(libs/Box2D/crazy-battle_cmake)
+
 add_executable(CrazyBattle ${cb_source_files})
 
 target_compile_features(CrazyBattle PRIVATE cxx_range_for)
 
 target_link_libraries(CrazyBattle ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 target_link_libraries(CrazyBattle ANAX)
+target_link_libraries(CrazyBattle Box2D)

@@ -5,10 +5,13 @@
 #include "systems/SpriteRendererSystem.h"
 #include "systems/AnimateSpriteUpdateSystem.h"
 #include "systems/AnimateSpriteRendererSystem.h"
+#include "systems/PhysicsWorldSystem.h"
 
 class GameState : public State
 {
 public:
+    GameState();
+
     void Init() override;
     void DoUpdate(const GameTimer& gameTimer) override;
     void Render() override;
@@ -19,4 +22,6 @@ private:
     SpriteRendererSystem m_spriteRendererSystem;
     AnimateSpriteUpdateSystem m_animateSpriteUpdateSystem;
     AnimateSpriteRendererSystem m_animateSpriteRendererSystem;
+    PhysicsWorldSystem m_physicsWorldSystem;
+    double accumulator;
 };

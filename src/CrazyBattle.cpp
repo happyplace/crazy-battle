@@ -112,8 +112,6 @@ int CrazyBattle::Run(int argc, char* argv[])
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "nearest pixel sampling not enabled");
     }
 
-    SDL_SetRenderDrawColor(m_renderer, 0xb1, 0xc5, 0xdf, 0xff);
-
     //const char* fontPath = "media/helmet2/Helmet-Regular.ttf";
     //m_font = TTF_OpenFont(fontPath, 100);
     //if (m_font == nullptr)
@@ -142,6 +140,8 @@ int CrazyBattle::Run(int argc, char* argv[])
 
     GameTimer gameTimer;
 
+    gameTimer.Reset();
+
     bool quitGame = false;
     while (!quitGame)
     {
@@ -149,6 +149,7 @@ int CrazyBattle::Run(int argc, char* argv[])
         gameTimer.Tick();
         m_inputManager.Update();
 
+        SDL_SetRenderDrawColor(m_renderer, 0xb1, 0xc5, 0xdf, 0xff);
         SDL_RenderClear(m_renderer);
 
         CheckAndChangeState();
