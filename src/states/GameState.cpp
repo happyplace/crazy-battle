@@ -16,7 +16,7 @@ void GameState::Init()
     playerTransformComp.scale.x = 5.0f;
     playerTransformComp.scale.y = 5.0f;
     AnimatedSpriteComponent& playerAnimatedSpriteComp = player.addComponent<AnimatedSpriteComponent>();
-    playerAnimatedSpriteComp.animationName = "spr_f_archeologist_idle";
+    playerAnimatedSpriteComp.animationName = "spr_m_traveler_idle_anim";
     playerAnimatedSpriteComp.spriteAnimationsAsset = AssetLoaderHelper::LoadSpriteAnimations("media/opp2_animations.json");
     TextureComponent& playerTextureComp = player.addComponent<TextureComponent>();
     playerTextureComp.texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");

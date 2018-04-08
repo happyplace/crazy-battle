@@ -88,9 +88,9 @@ const SpriteAnimationsAssetPtr AssetLoaderHelper::LoadSpriteAnimations(const cha
 
         SpriteAnimationsAssetPtr spriteAnimationAsset(new SpriteAnimationsAsset());
 
-        SpriteAnimation animation;
         for (SizeType i = 0; i < spriteAnimationDoc.Size(); i++)
         {
+            SpriteAnimation animation;
             animation.name = spriteAnimationDoc[i]["name"].GetString();
             animation.speed = spriteAnimationDoc[i]["speed"].GetFloat();
             const Value& frames = spriteAnimationDoc[i]["frames"];

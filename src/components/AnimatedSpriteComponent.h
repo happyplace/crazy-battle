@@ -11,6 +11,7 @@ struct AnimatedSpriteComponent : anax::Component
     struct AnimationParams
     {
         AnimationParams() : timeOnFrame(0.0f), frame(0) {}
+        std::string prevAnimationName;
         float timeOnFrame;
         int frame;
     };

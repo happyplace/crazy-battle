@@ -10,9 +10,16 @@ void AnimateSpriteUpdateSystem::Update(const GameTimer& gameTimer)
 
         if (animatedSpriteComp.spriteAnimationsAsset)
         {
+            if (animatedSpriteComp.animationName.compare(animatedSpriteComp.animationParams.prevAnimationName) != 0)
+            {
+                animatedSpriteComp.animationParams.prevAnimationName = animatedSpriteComp.animationName;
+                animatedSpriteComp.animationParams.frame = 0;
+                animatedSpriteComp.animationParams.timeOnFrame = 0.0f;
+            }
+
             for (const SpriteAnimation& spriteAnimation : animatedSpriteComp.spriteAnimationsAsset->animations)
             {
-                if (spriteAnimation.name.compare(animatedSpriteComp.animationName) == 0)
+                if (spriteAnimation.name.compare(animatedSpriteComp.animationParams.prevAnimationName) == 0)
                 {
                     animatedSpriteComp.animationParams.timeOnFrame += static_cast<float>(gameTimer.DeltaTime());
                     if (animatedSpriteComp.animationParams.timeOnFrame >= spriteAnimation.speed)

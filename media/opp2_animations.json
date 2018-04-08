@@ -21,5 +21,35 @@
             "spr_f_archeologist_idle_anim_14.png",
             "spr_f_archeologist_idle_anim_15.png"
         ]
+    },
+    {
+        "name" : "spr_m_traveler_idle_anim",
+        "speed" : 0.2,
+        "frames" : 
+        [
+            "spr_m_traveler_idle_anim_00.png",
+            "spr_m_traveler_idle_anim_01.png",
+            "spr_m_traveler_idle_anim_02.png",
+            "spr_m_traveler_idle_anim_03.png",
+            "spr_m_traveler_idle_anim_04.png",
+            "spr_m_traveler_idle_anim_05.png",
+            "spr_m_traveler_idle_anim_06.png",
+            "spr_m_traveler_idle_anim_07.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_walk_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_walk_anim_00.png",
+            "spr_m_traveler_walk_anim_01.png",
+            "spr_m_traveler_walk_anim_02.png",
+            "spr_m_traveler_walk_anim_03.png",
+            "spr_m_traveler_walk_anim_04.png",
+            "spr_m_traveler_walk_anim_05.png",
+            "spr_m_traveler_walk_anim_06.png",
+            "spr_m_traveler_walk_anim_07.png"
+        ]
     }
 ]
