@@ -107,9 +107,9 @@ int CrazyBattle::Run(int argc, char* argv[])
         return 1;
     }
 
-    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+    if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0"))
     {
-        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Linear texture filtering not enabled");
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "nearest pixel sampling not enabled");
     }
 
     SDL_SetRenderDrawColor(m_renderer, 0xb1, 0xc5, 0xdf, 0xff);
