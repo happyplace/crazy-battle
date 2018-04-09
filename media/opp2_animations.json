@@ -149,7 +149,7 @@
         ]
     },
     {
-        "name" : "",
+        "name" : "spr_wasp_idle_anim",
         "speed" : 0.2,
         "frames" :
         [
