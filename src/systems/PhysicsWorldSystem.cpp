@@ -4,7 +4,7 @@
 #include "Box2D/Box2D.h"
 
 PhysicsWorldSystem::PhysicsWorldSystem()
-    : m_world(b2Vec2(0.0f, 9.81f))
+    : m_world(b2Vec2(0.0f, 39.24f))
 {
 }
 

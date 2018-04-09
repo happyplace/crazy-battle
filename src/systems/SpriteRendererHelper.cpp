@@ -39,5 +39,25 @@ void SpriteRendererHelper::RenderSpriteFrame(const std::string& frameName, const
     renderQuad.w = static_cast<int>(renderQuad.w * transformComp.scale.x);
     renderQuad.h = static_cast<int>(renderQuad.h * transformComp.scale.y);
 
-    SDL_RenderCopy(CrazyBattle::Game().Renderer(), textureComp.texture->texture, hasFrame ? &frameRect : nullptr, &renderQuad);
+    SDL_Point centre = { 0, 0 };
+
+    SDL_RendererFlip rendererFlip = SDL_FLIP_NONE;
+    if (transformComp.flipVertical)
+    {
+        rendererFlip = static_cast<SDL_RendererFlip>(rendererFlip | SDL_FLIP_VERTICAL);
+    }
+
+    if (transformComp.flipHorizontal)
+    {
+        rendererFlip = static_cast<SDL_RendererFlip>(rendererFlip | SDL_FLIP_HORIZONTAL);
+    }
+
+    SDL_RenderCopyEx(
+                CrazyBattle::Game().Renderer(),
+                textureComp.texture->texture,
+                hasFrame ? &frameRect : nullptr,
+                &renderQuad,
+                0.0f,
+                &centre,
+                rendererFlip);
 }
