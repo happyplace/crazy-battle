@@ -29,7 +29,7 @@ void GameState::Init()
     playerTextureComp.textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
     std::vector<SDL_JoystickID> joystickIds;
     InputManager::GetInstance().GetAllControllerInstanceIds(joystickIds);
-    player.addComponent<PlayerComponent>().controllerInstanceId = joystickIds.empty() ? -1 : joystickIds[0];
+    player.addComponent<PlayerComponent>().player.controllerInstanceId = joystickIds.empty() ? -1 : joystickIds[0];
     PhysicsBodyComponent& playerPhysicsBodyComp = player.addComponent<PhysicsBodyComponent>();
     playerPhysicsBodyComp.isStatic = false;
     playerPhysicsBodyComp.size = b2Vec2(64.0f, 64.0f);

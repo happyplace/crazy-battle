@@ -1,4 +1,4 @@
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+﻿set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 project(CrazyBattle)
 
@@ -15,6 +15,7 @@ set(cb_source_files
 	"src/InputManager.cpp"
 	"src/GameTimer.h"
 	"src/GameTimer.cpp"
+        "src/GameManagerDefines.h"
 	"src/components/PlayerComponent.h"
 	"src/components/TransformComponent.h"
 	"src/components/TextureComponent.h"

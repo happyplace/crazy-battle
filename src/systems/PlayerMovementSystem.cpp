@@ -1,4 +1,4 @@
-#include "PlayerMovementSystem.h"
+﻿#include "PlayerMovementSystem.h"
 
 #include "InputManager.h"
 #include "GameTimer.h"
@@ -13,7 +13,7 @@ void PlayerMovementSystem::Update(const GameTimer& gameTimer)
         const PlayerComponent playerComp = entity.getComponent<PlayerComponent>();
         PhysicsBodyComponent& physicsBodyComp = entity.getComponent<PhysicsBodyComponent>();
 
-        SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.controllerInstanceId);
+        SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
         if (gameController)
         {
             b2Vec2 linearVelocity = physicsBodyComp.params.body->GetLinearVelocity();

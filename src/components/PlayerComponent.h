@@ -1,12 +1,12 @@
-#pragma once
+﻿#pragma once
 
 #include "anax/Component.hpp"
 
-#include <SDL.h>
+#include "GameManagerDefines.h"
 
 struct PlayerComponent : anax::Component
 {
-    PlayerComponent() : controllerInstanceId(-1) {}
+    PlayerComponent() {}
 
-    SDL_JoystickID controllerInstanceId;
+    PlayerStruct player;
 };
