@@ -1,10 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 
 #include <SDL.h>
 
 #include "InputManager.h"
+#include "GameManager.h"
 
 enum class CrazyBattleState
 {
@@ -40,6 +41,7 @@ private:
     SDL_Renderer* m_renderer;
 
     InputManager m_inputManager;
+    GameManager m_gameManager;
 
     CrazyBattleState m_currentState;
     CrazyBattleState m_nextState;

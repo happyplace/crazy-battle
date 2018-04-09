@@ -6,6 +6,8 @@
 #include "systems/AnimateSpriteUpdateSystem.h"
 #include "systems/AnimateSpriteRendererSystem.h"
 #include "systems/PhysicsWorldSystem.h"
+#include "systems/PlayerEntitySpawnerSystem.h"
+#include "GameModeData.h"
 
 class GameState : public State
 {
@@ -23,5 +25,7 @@ private:
     AnimateSpriteUpdateSystem m_animateSpriteUpdateSystem;
     AnimateSpriteRendererSystem m_animateSpriteRendererSystem;
     PhysicsWorldSystem m_physicsWorldSystem;
+    PlayerEntitySpawnerSystem m_playerEntitySpawnerSystem;
     double accumulator;
+    GameModeData m_gameModeData;
 };

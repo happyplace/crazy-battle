@@ -6,6 +6,7 @@
 
 GameState::GameState()
     : accumulator(0.0)
+    , m_playerEntitySpawnerSystem(m_gameModeData)
 {
 }
 
@@ -16,30 +17,7 @@ void GameState::Init()
     m_world.addSystem<AnimateSpriteUpdateSystem>(m_animateSpriteUpdateSystem);
     m_world.addSystem<AnimateSpriteRendererSystem>(m_animateSpriteRendererSystem);
     m_world.addSystem<PhysicsWorldSystem>(m_physicsWorldSystem);
-
-    anax::Entity player = m_world.createEntity();
-    TransformComponent& playerTransformComp = player.addComponent<TransformComponent>();
-    playerTransformComp.scale.x = 2.0f;
-    playerTransformComp.scale.y = 2.0f;
-    AnimatedSpriteComponent& playerAnimatedSpriteComp = player.addComponent<AnimatedSpriteComponent>();
-    playerAnimatedSpriteComp.animationName = "spr_m_traveler_idle_anim";
-    playerAnimatedSpriteComp.spriteAnimationsAsset = AssetLoaderHelper::LoadSpriteAnimations("media/opp2_animations.json");
-    TextureComponent& playerTextureComp = player.addComponent<TextureComponent>();
-    playerTextureComp.texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
-    playerTextureComp.textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
-    std::vector<SDL_JoystickID> joystickIds;
-    InputManager::GetInstance().GetAllControllerInstanceIds(joystickIds);
-    player.addComponent<PlayerComponent>().player.controllerInstanceId = joystickIds.empty() ? -1 : joystickIds[0];
-    PhysicsBodyComponent& playerPhysicsBodyComp = player.addComponent<PhysicsBodyComponent>();
-    playerPhysicsBodyComp.isStatic = false;
-    playerPhysicsBodyComp.size = b2Vec2(64.0f, 64.0f);
-    playerPhysicsBodyComp.hasGravity = true;
-    playerPhysicsBodyComp.offset = b2Vec2_zero;
-    playerPhysicsBodyComp.groupIndex = 0;
-    playerPhysicsBodyComp.isBullet = true;
-    playerPhysicsBodyComp.canRotate = false;
-    playerPhysicsBodyComp.bodyType = PhysicsBodyComponent::BodyType::Box;
-    player.activate();
+    m_world.addSystem<PlayerEntitySpawnerSystem>(m_playerEntitySpawnerSystem);
 
     anax::Entity floor = m_world.createEntity();
     TransformComponent& floorTransformComp = floor.addComponent<TransformComponent>();
@@ -60,6 +38,8 @@ void GameState::Init()
 void GameState::DoUpdate(const GameTimer& gameTimer)
 {
     m_world.refresh();
+
+    m_playerEntitySpawnerSystem.Update();
 
     const double PhysicsTimeStep = 1.0/60.0;
     accumulator += gameTimer.DeltaTime();
