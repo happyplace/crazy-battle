@@ -51,5 +51,119 @@
             "spr_m_traveler_walk_anim_06.png",
             "spr_m_traveler_walk_anim_07.png"
         ]
+    },
+    {
+        "name" : "spr_m_traveler_run_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_run_anim_00.png",
+            "spr_m_traveler_run_anim_01.png",
+            "spr_m_traveler_run_anim_02.png",
+            "spr_m_traveler_run_anim_03.png",
+            "spr_m_traveler_run_anim_04.png",
+            "spr_m_traveler_run_anim_05.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_duck_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_duck_anim_00.png",
+            "spr_m_traveler_duck_anim_01.png",
+            "spr_m_traveler_duck_anim_02.png",
+            "spr_m_traveler_duck_anim_03.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_jump_1up_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_jump_1up_anim_00.png",
+            "spr_m_traveler_jump_1up_anim_01.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_jump_2midair_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_jump_2midair_anim_00.png",
+            "spr_m_traveler_jump_2midair_anim_01.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_jump_3down_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_jump_3down_anim_00.png",
+            "spr_m_traveler_jump_3down_anim_01.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_jump_4land_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_jump_4land_anim_00.png",
+            "spr_m_traveler_jump_4land_anim_01.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_look_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_look_anim_00.png",
+            "spr_m_traveler_look_anim_01.png",
+            "spr_m_traveler_look_anim_02.png",
+            "spr_m_traveler_look_anim_03.png"
+        ]
+    },
+    {
+        "name" : "spr_m_traveler_slide_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_m_traveler_slide_anim_00.png",
+            "spr_m_traveler_slide_anim_01.png"
+        ]
+    },
+    {
+        "name" : "fx_bling_anim",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "fx_bling_anim_00.png",
+            "fx_bling_anim_01.png",
+            "fx_bling_anim_02.png",
+            "fx_bling_anim_03.png",
+            "fx_bling_anim_04.png",
+            "fx_bling_anim_05.png",
+            "fx_bling_anim_06.png",
+            "fx_bling_anim_07.png",
+            "fx_bling_anim_08.png"
+        ]
+    },
+    {
+        "name" : "",
+        "speed" : 0.2,
+        "frames" :
+        [
+            "spr_wasp_idle_anim_00.png",
+            "spr_wasp_idle_anim_01.png",
+            "spr_wasp_idle_anim_02.png",
+            "spr_wasp_idle_anim_03.png",
+            "spr_wasp_idle_anim_04.png",
+            "spr_wasp_idle_anim_05.png",
+            "spr_wasp_idle_anim_06.png",
+            "spr_wasp_idle_anim_07.png",
+            "spr_wasp_idle_anim_08.png",
+            "spr_wasp_idle_anim_09.png",
+            "spr_wasp_idle_anim_10.png"
+        ]
     }
 ]
