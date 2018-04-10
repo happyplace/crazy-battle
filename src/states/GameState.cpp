@@ -20,20 +20,7 @@ void GameState::Init()
     m_world.addSystem<PlayerEntitySpawnerSystem>(m_playerEntitySpawnerSystem);
     m_world.addSystem<PlayerAnimationSystem>(m_playerAnimationSystem);
 
-    anax::Entity floor = m_world.createEntity();
-    TransformComponent& floorTransformComp = floor.addComponent<TransformComponent>();
-    floorTransformComp.position.x = 0.0f;
-    floorTransformComp.position.y = 600.0f;
-    PhysicsBodyComponent& floorPhysicsBodyComp = floor.addComponent<PhysicsBodyComponent>();
-    floorPhysicsBodyComp.isStatic = true;
-    floorPhysicsBodyComp.size = b2Vec2(600.0f, 64.0f);
-    floorPhysicsBodyComp.hasGravity = false;
-    floorPhysicsBodyComp.offset = b2Vec2_zero;
-    floorPhysicsBodyComp.groupIndex = 0;
-    floorPhysicsBodyComp.isBullet = false;
-    floorPhysicsBodyComp.canRotate = false;
-    floorPhysicsBodyComp.bodyType = PhysicsBodyComponent::BodyType::Box;
-    floor.activate();
+    m_gameLevelLoader.LoadLevel(m_world, "media/game_level.json");
 }
 
 void GameState::DoUpdate(const GameTimer& gameTimer)

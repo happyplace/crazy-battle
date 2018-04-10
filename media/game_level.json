@@ -1,0 +1,28 @@
+[
+	{
+		"components" :
+		[
+			{ 
+				"type" : "physics_body", 
+				"is_static" : true, 
+				"size" : { "width" : 600.0, "height" : 64.0 },
+				"density" : 1.0,
+				"friction" : 0.3,
+				"has_gravity" : false,
+				"offset" : { "x" : 0.0, "y" : 0.0 },
+				"group_index" : 0,
+				"is_bullet" : false,
+				"can_rotate" : false,
+				"body_type" : "box"
+			},
+			{
+				"type" : "transform",
+				"position" : { "x" : 0.0, "y" : 600.0 },
+				"rotation" : 0,
+				"scale" : { "x" : 1.0, "y" : 1.0 },
+				"flip_horizontal" : false,
+				"flip_vertical" : false
+			}
+		]
+	}
+]

@@ -9,6 +9,7 @@
 #include "systems/PlayerEntitySpawnerSystem.h"
 #include "systems/PlayerAnimationSystem.h"
 #include "GameModeData.h"
+#include "GameLevelLoader.h"
 
 class GameState : public State
 {
@@ -30,4 +31,5 @@ private:
     PlayerAnimationSystem m_playerAnimationSystem;
     double accumulator;
     GameModeData m_gameModeData;
+    GameLevelLoader m_gameLevelLoader;
 };

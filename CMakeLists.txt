@@ -20,6 +20,8 @@ set(cb_source_files
         "src/GameManager.cpp"
         "src/GameModeData.h"
         "src/GameModeData.cpp"
+        "src/GameLevelLoader.h"
+        "src/GameLevelLoader.cpp"
 	"src/components/PlayerComponent.h"
 	"src/components/TransformComponent.h"
 	"src/components/TextureComponent.h"
