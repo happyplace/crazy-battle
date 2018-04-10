@@ -43,6 +43,8 @@ set(cb_source_files
         "src/systems/PlayerEntitySpawnerSystem.cpp"
         "src/systems/PlayerDamageSystem.h"
         "src/systems/PlayerDamageSystem.cpp"
+        "src/systems/PlayerAnimationSystem.h"
+        "src/systems/PlayerAnimationSystem.cpp"
 	"src/states/State.h"
 	"src/states/GameState.h"
 	"src/states/GameState.cpp"

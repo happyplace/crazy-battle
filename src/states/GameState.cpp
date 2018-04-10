@@ -18,6 +18,7 @@ void GameState::Init()
     m_world.addSystem<AnimateSpriteRendererSystem>(m_animateSpriteRendererSystem);
     m_world.addSystem<PhysicsWorldSystem>(m_physicsWorldSystem);
     m_world.addSystem<PlayerEntitySpawnerSystem>(m_playerEntitySpawnerSystem);
+    m_world.addSystem<PlayerAnimationSystem>(m_playerAnimationSystem);
 
     anax::Entity floor = m_world.createEntity();
     TransformComponent& floorTransformComp = floor.addComponent<TransformComponent>();
@@ -50,6 +51,7 @@ void GameState::DoUpdate(const GameTimer& gameTimer)
     }
 
     m_playerMovementSystem.Update(gameTimer);
+    m_playerAnimationSystem.Update(gameTimer);
     m_animateSpriteUpdateSystem.Update(gameTimer);
 }
 

@@ -54,7 +54,7 @@
     },
     {
         "name" : "spr_m_traveler_run_anim",
-        "speed" : 0.2,
+        "speed" : 0.1,
         "frames" :
         [
             "spr_m_traveler_run_anim_00.png",

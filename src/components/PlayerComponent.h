@@ -6,7 +6,8 @@
 
 struct PlayerComponent : anax::Component
 {
-    PlayerComponent() {}
+    PlayerComponent() : moveSpeed(500.0f) {}
 
     PlayerStruct player;
+    float moveSpeed;
 };
