@@ -36,7 +36,7 @@ void PlayerAnimationSystem::Update(const GameTimer& gameTimer)
             animatedSpriteComp.animationName = "spr_m_traveler_idle_anim";
         }
 
-        const float TurnThreshold = 0.1f;
+        const float TurnThreshold = 0.2f;
         if (linearVelocity.x < -TurnThreshold)
         {
             transformComp.flipHorizontal = true;
