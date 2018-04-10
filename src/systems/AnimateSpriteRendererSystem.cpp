@@ -17,7 +17,7 @@ void AnimateSpriteRendererSystem::Render()
                 if (spriteAnimation.name.compare(animatedSpriteComp.animationName) == 0)
                 {
                     const std::string& frameName = spriteAnimation.frames[animatedSpriteComp.animationParams.frame];
-                    SpriteRendererHelper::RenderSpriteFrame(frameName, textureComp, transformComp);
+                    SpriteRendererHelper::RenderSpriteFrame(frameName, textureComp, transformComp, animatedSpriteComp.colour);
                     break;
                 }
             }

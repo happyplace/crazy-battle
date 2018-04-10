@@ -5,7 +5,7 @@
 #include "components/TransformComponent.h"
 
 void SpriteRendererHelper::RenderSpriteFrame(const std::string& frameName, const TextureComponent& textureComp,
-                                             const TransformComponent& transformComp)
+                                             const TransformComponent& transformComp, const SDL_Color& colour)
 {
     SDL_Rect renderQuad;
     SDL_Rect frameRect;
@@ -52,6 +52,7 @@ void SpriteRendererHelper::RenderSpriteFrame(const std::string& frameName, const
         rendererFlip = static_cast<SDL_RendererFlip>(rendererFlip | SDL_FLIP_HORIZONTAL);
     }
 
+    SDL_SetTextureColorMod(textureComp.texture->texture, colour.r, colour.g, colour.b);
     SDL_RenderCopyEx(
                 CrazyBattle::Game().Renderer(),
                 textureComp.texture->texture,

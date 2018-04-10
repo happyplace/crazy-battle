@@ -10,6 +10,6 @@ void SpriteRendererSystem::Render()
         const TextureComponent& textureComp = entity.getComponent<TextureComponent>();
         const TransformComponent& transformComp = entity.getComponent<TransformComponent>();
 
-        SpriteRendererHelper::RenderSpriteFrame(spriteComp.frameName, textureComp, transformComp);
+        SpriteRendererHelper::RenderSpriteFrame(spriteComp.frameName, textureComp, transformComp, spriteComp.colour);
     }
 }
