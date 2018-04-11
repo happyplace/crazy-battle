@@ -49,6 +49,7 @@ void PlayerEntitySpawnerSystem::CreatePlayer(const PlayerStruct& player)
     physicsBodyComp.isBullet = true;
     physicsBodyComp.canRotate = false;
     physicsBodyComp.bodyType = PhysicsBodyComponent::BodyType::Box;
+    physicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Player;
 
     playerEntity.activate();
 }

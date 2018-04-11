@@ -19,6 +19,8 @@ void GameState::Init()
     m_world.addSystem<PhysicsWorldSystem>(m_physicsWorldSystem);
     m_world.addSystem<PlayerEntitySpawnerSystem>(m_playerEntitySpawnerSystem);
     m_world.addSystem<PlayerAnimationSystem>(m_playerAnimationSystem);
+    m_world.addSystem<PlayerAttackInputSystem>(m_playerAttackInputSystem);
+    m_world.addSystem<LinearAttackSystem>(m_linearAttackSystem);
 
     m_gameLevelLoader.LoadLevel(m_world, "media/game_level.json");
 }
@@ -38,6 +40,8 @@ void GameState::DoUpdate(const GameTimer& gameTimer)
     }
 
     m_playerMovementSystem.Update(gameTimer);
+    m_playerAttackInputSystem.Update(gameTimer);
+    m_linearAttackSystem.Update(gameTimer);
     m_playerAnimationSystem.Update(gameTimer);
     m_animateSpriteUpdateSystem.Update(gameTimer);
 }

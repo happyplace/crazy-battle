@@ -5,6 +5,14 @@
 
 struct PhysicsBodyComponent : anax::Component
 {
+    enum class ContactType
+    {
+        Generic,
+        Player,
+        Bullet,
+        Floor,
+    };
+
     enum class BodyType { Box, };
 
     struct PhysicsBodyParams
@@ -17,7 +25,7 @@ struct PhysicsBodyComponent : anax::Component
         : isStatic(false), size(0.0f, 0.0f), density(1.0f)
         , friction(0.3f), hasGravity(true), offset(0.0f, 0.0f)
         , groupIndex(0), isBullet(false), canRotate(false)
-        , bodyType(BodyType::Box)
+        , bodyType(BodyType::Box), contactType(ContactType::Generic)
     {}
 
     PhysicsBodyParams params;
@@ -31,4 +39,5 @@ struct PhysicsBodyComponent : anax::Component
     bool isBullet;
     bool canRotate;
     BodyType bodyType;
+    ContactType contactType;
 };

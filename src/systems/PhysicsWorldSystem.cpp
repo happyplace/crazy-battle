@@ -1,11 +1,25 @@
 #include "PhysicsWorldSystem.h"
 
-#include "CrazyBattle.h"
+#include "anax/World.hpp"
 #include "Box2D/Box2D.h"
+
+#include "CrazyBattle.h"
+
+#include "components/AttackComponent.h"
+#include "components/PlayerComponent.h"
 
 PhysicsWorldSystem::PhysicsWorldSystem()
     : m_world(b2Vec2(0.0f, 39.24f))
 {
+}
+
+PhysicsWorldSystem::~PhysicsWorldSystem()
+{
+    for(auto& userData : m_userDataMap)
+    {
+        delete userData.second;
+    }
+    m_userDataMap.clear();
 }
 
 void PhysicsWorldSystem::Integrate(double deltaTime)
@@ -65,7 +79,11 @@ void PhysicsWorldSystem::onEntityAdded(anax::Entity& entity)
     boxFixture.density = physicsBodyComp.density;
     boxFixture.friction = physicsBodyComp.friction;
     boxFixture.filter.groupIndex = physicsBodyComp.groupIndex;
-    boxFixture.userData = nullptr;
+    UserData* userData = new UserData();
+    userData->contactType = physicsBodyComp.contactType;
+    userData->entityId = entity.getId().index;
+    boxFixture.userData = userData;
+    m_userDataMap[userData->entityId] = userData;
 
     physicsBodyComp.params.body->CreateFixture(&boxFixture);
     physicsBodyComp.params.body->SetGravityScale(physicsBodyComp.hasGravity ? 1.0f : 0.0f);
@@ -75,20 +93,43 @@ void PhysicsWorldSystem::onEntityAdded(anax::Entity& entity)
 
 void PhysicsWorldSystem::onEntityRemoved(anax::Entity& entity)
 {
-}
-
-void PhysicsWorldSystem::BeginContact(b2Contact* contact)
-{
-}
-
-void PhysicsWorldSystem::EndContact(b2Contact* contact)
-{
+    delete m_userDataMap[entity.getId().index];
+    m_userDataMap.erase(entity.getId().index);
 }
 
 void PhysicsWorldSystem::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
 {
+    UserData* userDataA = static_cast<UserData*>(contact->GetFixtureA()->GetUserData());
+    UserData* userDataB = static_cast<UserData*>(contact->GetFixtureB()->GetUserData());
+    PhysicsBodyComponent::ContactType contactTypeA = userDataA->contactType;
+    PhysicsBodyComponent::ContactType contactTypeB = userDataB->contactType;
+
+    if (contactTypeA == PhysicsBodyComponent::ContactType::Player &&
+        contactTypeB == PhysicsBodyComponent::ContactType::Bullet)
+    {
+        OnPlayerBulletContact(userDataA, userDataB, contact);
+    }
+    else if (contactTypeA == PhysicsBodyComponent::ContactType::Bullet &&
+             contactTypeB == PhysicsBodyComponent::ContactType::Player)
+    {
+        OnPlayerBulletContact(userDataB, userDataA, contact);
+    }
 }
 
-void PhysicsWorldSystem::PostSolve(b2Contact* contact, const b2ContactImpulse* impulse)
+void PhysicsWorldSystem::OnPlayerBulletContact(const UserData* player, const UserData* bullet, b2Contact* contact)
 {
+    int64_t playerPlayerId = getWorld().getEntity(player->entityId).getComponent<PlayerComponent>().player.id;
+    int64_t bulletPlayerId = getWorld().getEntity(bullet->entityId).getComponent<AttackComponent>().ownerPlayerId;
+
+    if (playerPlayerId == bulletPlayerId)
+    {
+        contact->SetEnabled(false);
+    }
+    else
+    {
+        // we hit a player
+        // - destroy the bullet entity
+        // - create animation entity of explosion
+        // - send damage entity???
+    }
 }

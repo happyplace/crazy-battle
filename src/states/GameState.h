@@ -1,6 +1,9 @@
 ﻿#pragma once
 
 #include "State.h"
+#include "GameModeData.h"
+#include "GameLevelLoader.h"
+
 #include "systems/PlayerMovementSystem.h"
 #include "systems/SpriteRendererSystem.h"
 #include "systems/AnimateSpriteUpdateSystem.h"
@@ -8,8 +11,8 @@
 #include "systems/PhysicsWorldSystem.h"
 #include "systems/PlayerEntitySpawnerSystem.h"
 #include "systems/PlayerAnimationSystem.h"
-#include "GameModeData.h"
-#include "GameLevelLoader.h"
+#include "systems/PlayerAttackInputSystem.h"
+#include "systems/LinearAttackSystem.h"
 
 class GameState : public State
 {
@@ -22,6 +25,10 @@ public:
     void Shutdown() override;
 
 private:
+    double accumulator;
+    GameModeData m_gameModeData;
+    GameLevelLoader m_gameLevelLoader;
+
     PlayerMovementSystem m_playerMovementSystem;
     SpriteRendererSystem m_spriteRendererSystem;
     AnimateSpriteUpdateSystem m_animateSpriteUpdateSystem;
@@ -29,7 +36,6 @@ private:
     PhysicsWorldSystem m_physicsWorldSystem;
     PlayerEntitySpawnerSystem m_playerEntitySpawnerSystem;
     PlayerAnimationSystem m_playerAnimationSystem;
-    double accumulator;
-    GameModeData m_gameModeData;
-    GameLevelLoader m_gameLevelLoader;
+    PlayerAttackInputSystem m_playerAttackInputSystem;
+    LinearAttackSystem m_linearAttackSystem;
 };
