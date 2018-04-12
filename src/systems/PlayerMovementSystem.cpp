@@ -7,8 +7,10 @@ void PlayerMovementSystem::Update(const GameTimer& gameTimer)
 {
     for (const anax::Entity& entity : getEntities())
     {
-        const PlayerComponent playerComp = entity.getComponent<PlayerComponent>();
+        PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
         PhysicsBodyComponent& physicsBodyComp = entity.getComponent<PhysicsBodyComponent>();
+
+        bool jumpPressed = false;
 
         SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
         if (gameController)
@@ -19,11 +21,13 @@ void PlayerMovementSystem::Update(const GameTimer& gameTimer)
             linearVelocity.x = MoveSpeed * axisLeftX;
             physicsBodyComp.params.body->SetLinearVelocity(linearVelocity);
 
-            const bool jumpPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_A) == 1;
-            if (jumpPressed && fabs(linearVelocity.y) < 0.1f)
+            jumpPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_A) == 1;
+            if ((jumpPressed && !playerComp.params.jumpPressed) && fabs(linearVelocity.y) < 0.1f)
             {
-                physicsBodyComp.params.body->ApplyLinearImpulseToCenter(b2Vec2(0.0f, -130.0f), true);
+                physicsBodyComp.params.body->ApplyLinearImpulseToCenter(b2Vec2(0.0f, -65.0f), true);
             }
         }
+
+        playerComp.params.jumpPressed = jumpPressed;
     }
 }

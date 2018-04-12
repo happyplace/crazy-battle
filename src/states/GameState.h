@@ -13,6 +13,8 @@
 #include "systems/PlayerAnimationSystem.h"
 #include "systems/PlayerAttackInputSystem.h"
 #include "systems/LinearAttackSystem.h"
+#include "systems/ChildTransformSystem.h"
+#include "systems/TimedLifeSystem.h"
 
 class GameState : public State
 {
@@ -38,4 +40,6 @@ private:
     PlayerAnimationSystem m_playerAnimationSystem;
     PlayerAttackInputSystem m_playerAttackInputSystem;
     LinearAttackSystem m_linearAttackSystem;
+    ChildTransformSystem m_childTransformSystem;
+    TimedLifeSystem m_timedLifeSystem;
 };

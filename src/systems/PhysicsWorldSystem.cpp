@@ -7,10 +7,19 @@
 
 #include "components/AttackComponent.h"
 #include "components/PlayerComponent.h"
+#include "components/PlayerDamageComponent.h"
+#include "components/TextureComponent.h"
+#include "components/AnimatedSpriteComponent.h"
+#include "AssetLoaderHelper.h"
+#include "components/TimedLifeComponent.h"
+#include "components/LinearAttackComponent.h"
 
 PhysicsWorldSystem::PhysicsWorldSystem()
     : m_world(b2Vec2(0.0f, 39.24f))
 {
+    m_texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
+    m_textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
+    m_spriteAnimations = AssetLoaderHelper::LoadSpriteAnimations("media/opp2_animations.json");
 }
 
 PhysicsWorldSystem::~PhysicsWorldSystem()
@@ -36,14 +45,16 @@ void PhysicsWorldSystem::Integrate(double deltaTime)
         const float PhysicsToPixels = 50.0f;
 
         transformComp.position.x = physicsBodyComp.params.body->GetPosition().x * PhysicsToPixels;
+        transformComp.position.x += physicsBodyComp.offset.x;
         transformComp.position.y = physicsBodyComp.params.body->GetPosition().y * PhysicsToPixels;
+        transformComp.position.y += physicsBodyComp.offset.y;
         transformComp.rotation = physicsBodyComp.params.body->GetAngle() * (180.0f / b2_pi);
 
         SDL_Rect rect;
         rect.w = physicsBodyComp.size.x * transformComp.scale.x;
         rect.h = physicsBodyComp.size.y * transformComp.scale.y;
-        rect.x = transformComp.position.x;
-        rect.y = transformComp.position.y;
+        rect.x = physicsBodyComp.params.body->GetPosition().x * PhysicsToPixels;
+        rect.y = physicsBodyComp.params.body->GetPosition().y * PhysicsToPixels;
 
         SDL_SetRenderDrawColor(CrazyBattle::Game().Renderer(), 0xff, 0xff, 0xff, 0xff);
         SDL_RenderDrawRect(CrazyBattle::Game().Renderer(), &rect);
@@ -95,6 +106,8 @@ void PhysicsWorldSystem::onEntityRemoved(anax::Entity& entity)
 {
     delete m_userDataMap[entity.getId().index];
     m_userDataMap.erase(entity.getId().index);
+    PhysicsBodyComponent& physicsBodyComp = entity.getComponent<PhysicsBodyComponent>();
+    m_world.DestroyBody(physicsBodyComp.params.body);
 }
 
 void PhysicsWorldSystem::PreSolve(b2Contact* contact, const b2Manifold* oldManifold)
@@ -114,6 +127,11 @@ void PhysicsWorldSystem::PreSolve(b2Contact* contact, const b2Manifold* oldManif
     {
         OnPlayerBulletContact(userDataB, userDataA, contact);
     }
+    else if (contactTypeA == PhysicsBodyComponent::ContactType::Bullet &&
+             contactTypeB == PhysicsBodyComponent::ContactType::Bullet)
+    {
+        OnBulletBulletContact(userDataA, userDataB, contact);
+    }
 }
 
 void PhysicsWorldSystem::OnPlayerBulletContact(const UserData* player, const UserData* bullet, b2Contact* contact)
@@ -121,15 +139,77 @@ void PhysicsWorldSystem::OnPlayerBulletContact(const UserData* player, const Use
     int64_t playerPlayerId = getWorld().getEntity(player->entityId).getComponent<PlayerComponent>().player.id;
     int64_t bulletPlayerId = getWorld().getEntity(bullet->entityId).getComponent<AttackComponent>().ownerPlayerId;
 
-    if (playerPlayerId == bulletPlayerId)
+    contact->SetEnabled(false);
+
+    if (playerPlayerId != bulletPlayerId)
     {
-        contact->SetEnabled(false);
+        anax::Entity bulletEntity = getWorld().getEntity(bullet->entityId);
+
+        TransformComponent& bulletTransformComp = bulletEntity.getComponent<TransformComponent>();
+
+        anax::Entity bulletHitEntity = getWorld().createEntity();
+        TransformComponent& bulletHitTransformComp = bulletHitEntity.addComponent<TransformComponent>();
+        bulletHitTransformComp.position = bulletTransformComp.position;
+        TextureComponent& bulletHitTextureComp = bulletHitEntity.addComponent<TextureComponent>();
+        bulletHitTextureComp.texture = m_texture;
+        bulletHitTextureComp.textureFrames = m_textureFrames;
+        AnimatedSpriteComponent& bulletHitAnimatedSpriteComp = bulletHitEntity.addComponent<AnimatedSpriteComponent>();
+        bulletHitAnimatedSpriteComp.spriteAnimationsAsset = m_spriteAnimations;
+        bulletHitAnimatedSpriteComp.animationName = "fx_explosion_b_anim";
+        bulletHitEntity.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 0.45f;
+        bulletHitEntity.activate();
+
+        anax::Entity damageEntity = getWorld().createEntity();
+        PlayerDamageComponent& playerDamageComponent = damageEntity.addComponent<PlayerDamageComponent>();
+        if (bulletEntity.hasComponent<LinearAttackComponent>())
+            playerDamageComponent.damageType = PlayerDamageComponent::DamageType::Linear;
+        else
+            SDL_assert(false);
+        playerDamageComponent.receiverPlayerId = playerPlayerId;
+        playerDamageComponent.senderPlayerId = bulletPlayerId;
+        damageEntity.activate();
+
+        getWorld().getEntity(bullet->entityId).kill();
     }
-    else
+}
+
+void PhysicsWorldSystem::OnBulletBulletContact(const UserData* bulletA, const UserData* bulletB, b2Contact* contact)
+{
+    int64_t bulletAPlayerId = getWorld().getEntity(bulletA->entityId).getComponent<AttackComponent>().ownerPlayerId;
+    int64_t bulletBPlayerId = getWorld().getEntity(bulletB->entityId).getComponent<AttackComponent>().ownerPlayerId;
+
+    contact->SetEnabled(false);
+    if (bulletAPlayerId != bulletBPlayerId)
     {
-        // we hit a player
-        // - destroy the bullet entity
-        // - create animation entity of explosion
-        // - send damage entity???
+        TransformComponent& bulletTransformCompA = getWorld().getEntity(bulletA->entityId).getComponent<TransformComponent>();
+
+        anax::Entity bulletHitEntityA = getWorld().createEntity();
+        TransformComponent& bulletHitTransformCompA = bulletHitEntityA.addComponent<TransformComponent>();
+        bulletHitTransformCompA.position = bulletTransformCompA.position;
+        TextureComponent& bulletHitTextureCompA = bulletHitEntityA.addComponent<TextureComponent>();
+        bulletHitTextureCompA.texture = m_texture;
+        bulletHitTextureCompA.textureFrames = m_textureFrames;
+        AnimatedSpriteComponent& bulletHitAnimatedSpriteCompA = bulletHitEntityA.addComponent<AnimatedSpriteComponent>();
+        bulletHitAnimatedSpriteCompA.spriteAnimationsAsset = m_spriteAnimations;
+        bulletHitAnimatedSpriteCompA.animationName = "fx_explosion_b_anim";
+        bulletHitEntityA.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 0.45f;
+        bulletHitEntityA.activate();
+
+        TransformComponent& bulletTransformCompB = getWorld().getEntity(bulletB->entityId).getComponent<TransformComponent>();
+
+        anax::Entity bulletHitEntityB = getWorld().createEntity();
+        TransformComponent& bulletHitTransformCompB = bulletHitEntityB.addComponent<TransformComponent>();
+        bulletHitTransformCompB.position = bulletTransformCompB.position;
+        TextureComponent& bulletHitTextureCompB = bulletHitEntityB.addComponent<TextureComponent>();
+        bulletHitTextureCompB.texture = m_texture;
+        bulletHitTextureCompB.textureFrames = m_textureFrames;
+        AnimatedSpriteComponent& bulletHitAnimatedSpriteCompB = bulletHitEntityB.addComponent<AnimatedSpriteComponent>();
+        bulletHitAnimatedSpriteCompB.spriteAnimationsAsset = m_spriteAnimations;
+        bulletHitAnimatedSpriteCompB.animationName = "fx_explosion_b_anim";
+        bulletHitEntityB.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 0.45f;
+        bulletHitEntityB.activate();
+
+        getWorld().getEntity(bulletA->entityId).kill();
+        getWorld().getEntity(bulletB->entityId).kill();
     }
 }

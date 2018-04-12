@@ -8,6 +8,7 @@
 
 #include "components/PhysicsBodyComponent.h"
 #include "components/TransformComponent.h"
+#include "AssetLoaderDefines.h"
 
 class PhysicsWorldSystem
         : public anax::System<anax::Requires<PhysicsBodyComponent, TransformComponent>>
@@ -36,8 +37,13 @@ private:
     void onEntityRemoved(anax::Entity& entity) override;
 
     void OnPlayerBulletContact(const UserData* player, const UserData* bullet, b2Contact* contact);
+    void OnBulletBulletContact(const UserData* bulletA, const UserData* bulletB, b2Contact* contact);
 
     b2World m_world;
     typedef std::unordered_map<uint64_t, UserData*> UserDataMap;
     UserDataMap m_userDataMap;
+
+    TextureAssetPtr m_texture;
+    TextureFramesAssetPtr m_textureFrames;
+    SpriteAnimationsAssetPtr m_spriteAnimations;
 };

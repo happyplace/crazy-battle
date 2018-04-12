@@ -27,6 +27,7 @@ void PlayerEntitySpawnerSystem::CreatePlayer(const PlayerStruct& player)
 	anax::Entity playerEntity = getWorld().createEntity();
     
     TransformComponent& transformComp = playerEntity.addComponent<TransformComponent>();
+    transformComp.position.x = 300.0f;
     transformComp.scale.x = 2.0f;
     transformComp.scale.y = 2.0f;
 
@@ -42,9 +43,9 @@ void PlayerEntitySpawnerSystem::CreatePlayer(const PlayerStruct& player)
 
     PhysicsBodyComponent& physicsBodyComp = playerEntity.addComponent<PhysicsBodyComponent>();
     physicsBodyComp.isStatic = false;
-    physicsBodyComp.size = b2Vec2(64.0f, 64.0f);
+    physicsBodyComp.size = b2Vec2(37.0f, 57.0f);
     physicsBodyComp.hasGravity = true;
-    physicsBodyComp.offset = b2Vec2_zero;
+    physicsBodyComp.offset = b2Vec2(-25.0f, -13.0f);
     physicsBodyComp.groupIndex = 0;
     physicsBodyComp.isBullet = true;
     physicsBodyComp.canRotate = false;
@@ -80,13 +81,13 @@ void PlayerEntitySpawnerSystem::Update()
 		}
 	}
 
-	for (const anax::Entity entity : getEntities())
+    for (anax::Entity entity : getEntities())
 	{
 		PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
 		const PlayerStruct* player = GameManager::GetInstance().GetPlayer(playerComp.player.id);
 		if (player == nullptr)
 		{
-            //getWorld().killEntity(entity);
+            entity.kill();
 		}
 		else
 		{

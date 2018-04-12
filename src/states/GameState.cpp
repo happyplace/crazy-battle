@@ -21,6 +21,8 @@ void GameState::Init()
     m_world.addSystem<PlayerAnimationSystem>(m_playerAnimationSystem);
     m_world.addSystem<PlayerAttackInputSystem>(m_playerAttackInputSystem);
     m_world.addSystem<LinearAttackSystem>(m_linearAttackSystem);
+    m_world.addSystem<ChildTransformSystem>(m_childTransformSystem);
+    m_world.addSystem<TimedLifeSystem>(m_timedLifeSystem);
 
     m_gameLevelLoader.LoadLevel(m_world, "media/game_level.json");
 }
@@ -44,6 +46,8 @@ void GameState::DoUpdate(const GameTimer& gameTimer)
     m_linearAttackSystem.Update(gameTimer);
     m_playerAnimationSystem.Update(gameTimer);
     m_animateSpriteUpdateSystem.Update(gameTimer);
+    m_timedLifeSystem.Update(gameTimer);
+    m_childTransformSystem.Update();
 }
 
 void GameState::Render()

@@ -6,8 +6,15 @@
 
 struct PlayerDamageComponent : anax::Component
 {
-	PlayerDamageComponent() : senderPlayerId(-1), receiverPlayerId(-1) {}
+    enum class DamageType { None, Linear, };
+
+    PlayerDamageComponent()
+        : senderPlayerId(-1)
+        , receiverPlayerId(-1)
+        , damageType(DamageType::None)
+    {}
 
 	int64_t senderPlayerId;
 	int64_t receiverPlayerId;
+    DamageType damageType;
 };
