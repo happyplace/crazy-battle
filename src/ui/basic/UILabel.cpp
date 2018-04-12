@@ -8,6 +8,7 @@ UILabel::UILabel()
     , m_texture(nullptr)
     , m_width(0)
     , m_height(0)
+    , m_textColor({ 255, 255, 255, 255 })
 {
 }
 
@@ -34,6 +35,18 @@ void UILabel::SetText(const std::string& text)
     if (text.compare(m_text) != 0)
     {
         m_text = text;
+        m_dirty = true;
+    }
+}
+
+void UILabel::SetTextColour(const SDL_Color& colour)
+{
+    if (colour.r != m_textColor.r ||
+        colour.g != m_textColor.g ||
+        colour.b != m_textColor.b ||
+        colour.a != m_textColor.a)
+    {
+        m_textColor = colour;
         m_dirty = true;
     }
 }
@@ -69,8 +82,7 @@ void UILabel::Redraw()
         m_texture = nullptr;
     }
 
-    SDL_Color textColor = { 255, 255, 255, 255 };
-    SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), textColor);
+    SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), m_textColor);
     if (textSurface == nullptr)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "unable to render text surface SDL_ttf Error: %s", TTF_GetError());

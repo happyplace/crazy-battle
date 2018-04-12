@@ -13,6 +13,7 @@ public:
 
     void SetFont(TTF_Font* font);
     void SetText(const std::string& text);
+    void SetTextColour(const SDL_Color& colour);
 
     SDL_Texture* GetTexture();
     int GetWidth();
@@ -27,4 +28,5 @@ private:
     SDL_Texture* m_texture;
     int m_width;
     int m_height;
+    SDL_Color m_textColor;
 };
