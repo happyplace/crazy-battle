@@ -62,6 +62,10 @@ set(cb_source_files
 	"src/states/State.h"
 	"src/states/GameState.h"
 	"src/states/GameState.cpp"
+        "src/ui/basic/UILabel.h"
+        "src/ui/basic/UILabel.cpp"
+        "src/ui/UIPlayerHealth.h"
+        "src/ui/UIPlayerHealth.cpp"
 )
 
 find_package(SDL2 REQUIRED)

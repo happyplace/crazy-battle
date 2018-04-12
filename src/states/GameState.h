@@ -16,6 +16,8 @@
 #include "systems/ChildTransformSystem.h"
 #include "systems/TimedLifeSystem.h"
 
+#include "ui/UIPlayerHealth.h"
+
 class GameState : public State
 {
 public:
@@ -42,4 +44,6 @@ private:
     LinearAttackSystem m_linearAttackSystem;
     ChildTransformSystem m_childTransformSystem;
     TimedLifeSystem m_timedLifeSystem;
+
+    UIPlayerHealth m_uiPlayerHealth;
 };

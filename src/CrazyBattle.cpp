@@ -17,27 +17,10 @@ CrazyBattle::CrazyBattle()
     , m_state(nullptr)
 {
     ms_instance = this;
-
-    //m_font = nullptr;
-    //m_fontTexture = nullptr;
-    //m_fontTextureW = 0;
-    //m_fontTextureH = 0;
 }
 
 CrazyBattle::~CrazyBattle()
 {
-    //if (m_fontTexture)
-    //{
-    //    SDL_DestroyTexture(m_fontTexture);
-    //    m_fontTexture = nullptr;
-    //}
-
-    //if (m_font)
-    //{
-    //    TTF_CloseFont(m_font);
-    //    m_font = nullptr;
-    //}
-
     if (m_state != nullptr)
     {
         m_state->Shutdown();
@@ -112,30 +95,6 @@ int CrazyBattle::Run(int argc, char* argv[])
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "nearest pixel sampling not enabled");
     }
 
-    //const char* fontPath = "media/helmet2/Helmet-Regular.ttf";
-    //m_font = TTF_OpenFont(fontPath, 100);
-    //if (m_font == nullptr)
-    //{
-    //    SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "failed to load font '%s' SDL_ttf Error: %s", fontPath, TTF_GetError());
-    //}
-    //SDL_Color textColor = { 255, 255, 255, 255 };
-    //SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, "Andrew was here!", textColor);
-    //if (textSurface == nullptr)
-    //{
-    //    SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "unable to render text surface SDL_ttf Error: %s", TTF_GetError());
-    //}
-    //else
-    //{
-    //    m_fontTexture = SDL_CreateTextureFromSurface(m_renderer, textSurface);
-    //    if (m_fontTexture == nullptr)
-    //    {
-    //        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to create texture from rendered text. SDL Error: %s", SDL_GetError());
-    //    }
-    //    m_fontTextureW = textSurface->w;
-    //    m_fontTextureH = textSurface->h;
-    //    SDL_FreeSurface(textSurface);
-    //}
-
     ChangeState(CrazyBattleState::Game);
 
     GameTimer gameTimer;
@@ -160,13 +119,6 @@ int CrazyBattle::Run(int argc, char* argv[])
             m_state->Update(gameTimer);
             m_state->Render();
         }
-
-        //SDL_Rect renderQuad;
-        //renderQuad.x = 0;
-        //renderQuad.y = 0;
-        //renderQuad.w = m_fontTextureW;
-        //renderQuad.h = m_fontTextureH;
-        //SDL_RenderCopy(m_renderer, m_fontTexture, nullptr, &renderQuad);
 
         SDL_RenderPresent(m_renderer);
 

@@ -54,6 +54,8 @@ void GameState::Render()
 {
     m_spriteRendererSystem.Render();
     m_animateSpriteRendererSystem.Render();
+
+    m_uiPlayerHealth.Render();
 }
 
 void GameState::Shutdown()

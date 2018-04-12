@@ -46,9 +46,4 @@ private:
     CrazyBattleState m_currentState;
     CrazyBattleState m_nextState;
     State* m_state;
-
-    //TTF_Font* m_font;
-    //SDL_Texture* m_fontTexture;
-    //int m_fontTextureW;
-    //int m_fontTextureH;
 };
