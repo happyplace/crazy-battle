@@ -9,6 +9,7 @@ UILabel::UILabel()
     , m_width(0)
     , m_height(0)
     , m_textColor({ 255, 255, 255, 255 })
+    , m_shadow(nullptr)
 {
 }
 
@@ -18,6 +19,12 @@ UILabel::~UILabel()
     {
         SDL_DestroyTexture(m_texture);
         m_texture = nullptr;
+    }
+
+    if (m_shadow)
+    {
+        SDL_DestroyTexture(m_shadow);
+        m_shadow = nullptr;
     }
 }
 
@@ -82,6 +89,12 @@ void UILabel::Redraw()
         m_texture = nullptr;
     }
 
+    if (m_shadow)
+    {
+        SDL_DestroyTexture(m_shadow);
+        m_shadow = nullptr;
+    }
+
     SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), m_textColor);
     if (textSurface == nullptr)
     {
@@ -99,5 +112,39 @@ void UILabel::Redraw()
         SDL_FreeSurface(textSurface);
     }
 
+    textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), {0x00, 0x00, 0x00, 0xff});
+    if (textSurface == nullptr)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "unable to render text surface SDL_ttf Error: %s", TTF_GetError());
+    }
+    else
+    {
+        m_shadow = SDL_CreateTextureFromSurface(CrazyBattle::Game().Renderer(), textSurface);
+        if (m_shadow == nullptr)
+        {
+            SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to create texture from rendered text. SDL Error: %s", SDL_GetError());
+        }
+        m_width = textSurface->w;
+        m_height = textSurface->h;
+        SDL_FreeSurface(textSurface);
+    }
+
     m_dirty = false;
+}
+
+void UILabel::Render(int x, int y)
+{
+    Redraw();
+    SDL_Rect renderQuad;
+    renderQuad.w = m_width;
+    renderQuad.h = m_height;
+
+    renderQuad.x = x + 5;
+    renderQuad.y = y + 5;
+    SDL_RenderCopy(CrazyBattle::Game().Renderer(), m_shadow, nullptr, &renderQuad);
+
+    renderQuad.x = x;
+    renderQuad.y = y;
+    SDL_RenderCopy(CrazyBattle::Game().Renderer(), m_texture, nullptr, &renderQuad);
+
 }

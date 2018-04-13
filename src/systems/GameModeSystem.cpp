@@ -1,5 +1,6 @@
 #include "GameModeSystem.h"
 
+#include "CrazyBattle.h"
 #include "GameTimer.h"
 #include "GameModeData.h"
 #include "GameManager.h"
@@ -94,6 +95,14 @@ void GameModeSystem::Update(const GameTimer& gameTimer)
         else
         {
             HidePlayer(entity);
+        }
+    }
+
+    if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time)
+    {
+        if (m_gameModeData.GetTimeLeft() <= 0.0f)
+        {
+            CrazyBattle::Game().ChangeState(CrazyBattleState::MainMenu);
         }
     }
 }

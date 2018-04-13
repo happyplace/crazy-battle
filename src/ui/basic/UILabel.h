@@ -15,6 +15,8 @@ public:
     void SetText(const std::string& text);
     void SetTextColour(const SDL_Color& colour);
 
+    void Render(int x, int y);
+
     SDL_Texture* GetTexture();
     int GetWidth();
     int GetHeight();
@@ -26,6 +28,7 @@ private:
     std::string m_text;
     bool m_dirty;
     SDL_Texture* m_texture;
+    SDL_Texture* m_shadow;
     int m_width;
     int m_height;
     SDL_Color m_textColor;

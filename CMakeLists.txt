@@ -64,11 +64,17 @@ set(cb_source_files
         "src/systems/GameModeSystem.cpp"
 	"src/states/State.h"
 	"src/states/GameState.h"
-	"src/states/GameState.cpp"
+        "src/states/GameState.cpp"
+        "src/states/MainMenuState.h"
+        "src/states/MainMenuState.cpp"
         "src/ui/basic/UILabel.h"
         "src/ui/basic/UILabel.cpp"
         "src/ui/UIPlayerHealth.h"
         "src/ui/UIPlayerHealth.cpp"
+        "src/ui/TitleScreenLogo.h"
+        "src/ui/TitleScreenLogo.cpp"
+        "src/ui/UIRendererHelper.h"
+        "src/ui/UIRendererHelper.cpp"
 )
 
 find_package(SDL2 REQUIRED)

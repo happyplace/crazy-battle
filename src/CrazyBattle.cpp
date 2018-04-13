@@ -5,6 +5,7 @@
 
 #include "GameTimer.h"
 #include "states/GameState.h"
+#include "states/MainMenuState.h"
 
 CrazyBattle* CrazyBattle::ms_instance = nullptr;
 const int CrazyBattle::NumOfEventsPerPeek = 100;
@@ -95,7 +96,7 @@ int CrazyBattle::Run(int argc, char* argv[])
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "nearest pixel sampling not enabled");
     }
 
-    ChangeState(CrazyBattleState::Game);
+    ChangeState(CrazyBattleState::MainMenu);
 
     GameTimer gameTimer;
 
@@ -142,6 +143,9 @@ void CrazyBattle::CheckAndChangeState()
         {
         case CrazyBattleState::Game:
             m_state = new GameState();
+            break;
+        case CrazyBattleState::MainMenu:
+            m_state = new MainMenuState();
             break;
         default:
             SDL_assert(false);
