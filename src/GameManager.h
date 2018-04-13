@@ -14,6 +14,7 @@ public:
 
 	const std::vector<PlayerStruct>& GetPlayers() const { return m_players; }
 	const PlayerStruct* GetPlayer(int64_t playerId) const;
+    const GameRules& GetRules() const { return m_gameRules; }
 
 	void Update();
 
@@ -25,4 +26,5 @@ private:
 
 	int64_t m_nextPlayerId;
 	std::vector<PlayerStruct> m_players;
+    GameRules m_gameRules;
 };

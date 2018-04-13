@@ -7,6 +7,8 @@
 GameState::GameState()
     : accumulator(0.0)
     , m_playerEntitySpawnerSystem(m_gameModeData)
+    , m_gameModeSystem(m_gameModeData)
+    , m_playerDamageSystem(m_gameModeData)
 {
 }
 
@@ -23,6 +25,8 @@ void GameState::Init()
     m_world.addSystem<LinearAttackSystem>(m_linearAttackSystem);
     m_world.addSystem<ChildTransformSystem>(m_childTransformSystem);
     m_world.addSystem<TimedLifeSystem>(m_timedLifeSystem);
+    m_world.addSystem<GameModeSystem>(m_gameModeSystem);
+    m_world.addSystem<PlayerDamageSystem>(m_playerDamageSystem);
 
     m_gameLevelLoader.LoadLevel(m_world, "media/game_level.json");
 }
@@ -30,6 +34,7 @@ void GameState::Init()
 void GameState::DoUpdate(const GameTimer& gameTimer)
 {
     m_world.refresh();
+    m_gameModeData.Update(gameTimer);
 
     m_playerEntitySpawnerSystem.Update();
 
@@ -41,6 +46,8 @@ void GameState::DoUpdate(const GameTimer& gameTimer)
         accumulator -= PhysicsTimeStep;
     }
 
+    m_playerDamageSystem.Update(gameTimer);
+    m_gameModeSystem.Update(gameTimer);
     m_playerMovementSystem.Update(gameTimer);
     m_playerAttackInputSystem.Update(gameTimer);
     m_linearAttackSystem.Update(gameTimer);
@@ -55,7 +62,7 @@ void GameState::Render()
     m_spriteRendererSystem.Render();
     m_animateSpriteRendererSystem.Render();
 
-    m_uiPlayerHealth.Render();
+    m_uiPlayerHealth.Render(m_gameModeData);
 }
 
 void GameState::Shutdown()

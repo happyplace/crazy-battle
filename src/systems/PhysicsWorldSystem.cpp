@@ -162,7 +162,7 @@ void PhysicsWorldSystem::OnPlayerBulletContact(const UserData* player, const Use
         anax::Entity damageEntity = getWorld().createEntity();
         PlayerDamageComponent& playerDamageComponent = damageEntity.addComponent<PlayerDamageComponent>();
         if (bulletEntity.hasComponent<LinearAttackComponent>())
-            playerDamageComponent.damageType = PlayerDamageComponent::DamageType::Linear;
+            playerDamageComponent.damageType = DamageType::Linear;
         else
             SDL_assert(false);
         playerDamageComponent.receiverPlayerId = playerPlayerId;

@@ -12,3 +12,13 @@ struct PlayerStruct
 	int64_t id;
 	SDL_JoystickID controllerInstanceId;
 };
+
+struct GameRules
+{
+    enum class Mode { Lives, Time, };
+    Mode mode;
+    int lives;
+    float time;
+    float deathTime;
+    float health;
+};

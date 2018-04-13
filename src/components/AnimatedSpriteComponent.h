@@ -8,7 +8,10 @@
 
 struct AnimatedSpriteComponent : anax::Component
 {
-    AnimatedSpriteComponent() : colour({ 0xff, 0xff, 0xff, 0xff }) {}
+    AnimatedSpriteComponent()
+        : colour({ 0xff, 0xff, 0xff, 0xff })
+        , enabled(true)
+    {}
 
     struct AnimationParams
     {
@@ -22,4 +25,5 @@ struct AnimatedSpriteComponent : anax::Component
     SpriteAnimationsAssetPtr spriteAnimationsAsset;
     AnimationParams animationParams;
     SDL_Color colour;
+    bool enabled;
 };

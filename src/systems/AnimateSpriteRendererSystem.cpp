@@ -10,6 +10,11 @@ void AnimateSpriteRendererSystem::Render()
         const TextureComponent& textureComp = entity.getComponent<TextureComponent>();
         const TransformComponent& transformComp = entity.getComponent<TransformComponent>();
 
+        if (!animatedSpriteComp.enabled)
+        {
+            continue;
+        }
+
         if (animatedSpriteComp.spriteAnimationsAsset)
         {
             for (const SpriteAnimation& spriteAnimation : animatedSpriteComp.spriteAnimationsAsset->animations)

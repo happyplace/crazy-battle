@@ -28,6 +28,15 @@ struct PhysicsBodyComponent : anax::Component
         , bodyType(BodyType::Box), contactType(ContactType::Generic)
     {}
 
+    inline void SetPosition(float positionX, float positionY, float offsetX = 0.0f, float offsetY = 0.0f)
+    {
+        const float PixelsToPhysics = 0.02f;
+        b2Vec2 position;
+        position.x = (positionX + offsetX) * PixelsToPhysics;
+        position.y = (positionY + offsetY) * PixelsToPhysics;
+        params.body->SetTransform(position, params.body->GetAngle());
+    }
+
     PhysicsBodyParams params;
     bool isStatic;
     b2Vec2 size;

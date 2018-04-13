@@ -29,8 +29,10 @@ UIPlayerHealth::~UIPlayerHealth()
     }
 }
 
-void UIPlayerHealth::Render()
+void UIPlayerHealth::Render(GameModeData& gameModeData)
 {
+    m_label.SetText(std::to_string(gameModeData.GetTimeLeft()));
+
     SDL_Rect renderQuad;
     renderQuad.x = 100;
     renderQuad.y = 0;

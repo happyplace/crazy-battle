@@ -5,6 +5,7 @@
 
 #include "AssetLoaderDefines.h"
 #include "ui/basic/UILabel.h"
+#include "GameModeData.h"
 
 class UIPlayerHealth
 {
@@ -12,7 +13,7 @@ public:
     UIPlayerHealth();
     ~UIPlayerHealth();
 
-    void Render();
+    void Render(GameModeData& gameModeData);
 
 private:
     TTF_Font* m_font;

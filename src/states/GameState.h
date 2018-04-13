@@ -15,6 +15,8 @@
 #include "systems/LinearAttackSystem.h"
 #include "systems/ChildTransformSystem.h"
 #include "systems/TimedLifeSystem.h"
+#include "systems/GameModeSystem.h"
+#include "systems/PlayerDamageSystem.h"
 
 #include "ui/UIPlayerHealth.h"
 
@@ -44,6 +46,8 @@ private:
     LinearAttackSystem m_linearAttackSystem;
     ChildTransformSystem m_childTransformSystem;
     TimedLifeSystem m_timedLifeSystem;
+    GameModeSystem m_gameModeSystem;
+    PlayerDamageSystem m_playerDamageSystem;
 
     UIPlayerHealth m_uiPlayerHealth;
 };

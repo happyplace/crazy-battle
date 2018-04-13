@@ -8,6 +8,12 @@ GameManager::GameManager()
 	: m_nextPlayerId(0)
 {
 	ms_instance = this;
+
+    m_gameRules.mode = GameRules::Mode::Time;
+    m_gameRules.lives = 3;
+    m_gameRules.time = 60.0f;
+    m_gameRules.deathTime = 5.0f;
+    m_gameRules.health = 125.0f;
 }
 
 GameManager::~GameManager()

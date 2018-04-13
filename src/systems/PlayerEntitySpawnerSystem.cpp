@@ -66,16 +66,16 @@ void PlayerEntitySpawnerSystem::Update()
 	const std::vector<PlayerStruct>& players = GameManager::GetInstance().GetPlayers();
 	for (const PlayerStruct& player : players)
 	{
-		bool playerHasEntity = false;
-		for (const anax::Entity entity : getEntities())
-		{
-			if (entity.getComponent<PlayerComponent>().player.id == player.id)
-			{
-				playerHasEntity = true;
-				break;
-			}
-		}
-		if (!playerHasEntity)
+        bool playerHasEntity = false;
+        for (const anax::Entity entity : getEntities())
+        {
+            if (entity.getComponent<PlayerComponent>().player.id == player.id)
+            {
+                playerHasEntity = true;
+                break;
+            }
+        }
+        if (!playerHasEntity)
 		{
 			CreatePlayer(player);
 		}

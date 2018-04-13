@@ -9,4 +9,10 @@ PlayerDamageSystem::PlayerDamageSystem(GameModeData& gameModeData)
 
 void PlayerDamageSystem::Update(const GameTimer& gameTimer)
 {
+    for (anax::Entity entity : getEntities())
+    {
+        PlayerDamageComponent& playerDamageComp = entity.getComponent<PlayerDamageComponent>();
+        m_gameModeData.OnPlayerDamage(playerDamageComp.senderPlayerId, playerDamageComp.receiverPlayerId, playerDamageComp.damageType);
+        entity.kill();
+    }
 }
