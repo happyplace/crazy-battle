@@ -6,26 +6,20 @@
 
 TitleScreenLogo::TitleScreenLogo()
 {
-    const char* fontPath = "media/helmet2/Helmet-Regular.ttf";
-    m_fontLarge = TTF_OpenFont(fontPath, 100);
-    if (m_fontLarge == nullptr)
-    {
-        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "failed to load font '%s' SDL_ttf Error: %s", fontPath, TTF_GetError());
-    }
-
-    m_fontMedium = TTF_OpenFont(fontPath, 65);
-    if (m_fontMedium == nullptr)
-    {
-        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "failed to load font '%s' SDL_ttf Error: %s", fontPath, TTF_GetError());
-    }
+    m_fontLarge = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 100);
+    m_fontMedium = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 65);
+    m_fontSmall = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 55);
 
     m_texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
     m_textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
     m_button = AssetLoaderHelper::LoadTexture("media/button_sprites.png");
     m_buttonFrames = AssetLoaderHelper::LoadTextureFrames("media/button_sprites.json");
+    m_jungle = AssetLoaderHelper::LoadTexture("media/jungle_asset_pack/jungle_sprites.png");
+    m_jungleFrames = AssetLoaderHelper::LoadTextureFrames("media/jungle_sprites.json");
 
     m_titleLabel.SetFont(m_fontLarge);
     m_titleLabel.SetText("Crazy Battle");
+    m_titleLabel.SetTextColour( { 0xff, 0x52, 0x52, 0xff });
 
     m_startGame.SetFont(m_fontMedium);
     m_startGame.SetText("Start Game");
@@ -33,43 +27,37 @@ TitleScreenLogo::TitleScreenLogo()
     m_controls.SetFont(m_fontMedium);
     m_controls.SetText("Controls");
 
-    m_license.SetFont(m_fontMedium);
-    m_license.SetText("License");
-
     m_mode.SetFont(m_fontMedium);
     m_modeParameter.SetFont(m_fontMedium);
-}
 
-TitleScreenLogo::~TitleScreenLogo()
-{
-    if (m_fontLarge)
-    {
-        TTF_CloseFont(m_fontLarge);
-        m_fontLarge = nullptr;
-    }
+    m_changeMode.SetFont(m_fontSmall);
+    m_changeMode.SetText("Change Mode");
 
-    if (m_fontMedium)
-    {
-        TTF_CloseFont(m_fontMedium);
-        m_fontMedium = nullptr;
-    }
+    m_changeOption.SetFont(m_fontSmall);
+    m_changeOption.SetText("Change Option");
 }
 
 void TitleScreenLogo::Render()
 {
+    float backgroundScale = 3.4f;
+    UIRendererHelper::RenderTextureFrame(0, 0, "plx-1.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(0, 0, "plx-2.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(0, 0, "plx-3.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(0, 0, "plx-4.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(0, 0, "plx-5.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+
     m_titleLabel.Render(95, 200);
     UIRendererHelper::RenderTextureFrame(0, 0, "opp_promo_traveler.png", m_texture, m_textureFrames);
 
-    int startGameX = 770;
+    int startGameX = 900;
     int startGameY = 530;
     m_startGame.Render(startGameX, startGameY);
     UIRendererHelper::RenderTextureFrame(startGameX - 73, startGameY + 15, "start_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
 
-    m_controls.Render(98, 385);
-    UIRendererHelper::RenderTextureFrame(20, 400, "lb_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
-
-    m_license.Render(98, 470);
-    UIRendererHelper::RenderTextureFrame(20, 485, "rb_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
+    int controlsX = 135;
+    int controlsY = 530;
+    m_controls.Render(controlsX, controlsY);
+    UIRendererHelper::RenderTextureFrame(controlsX - 78, controlsY + 15, "lb_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
 
     m_mode.SetText(GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time ? "Mode: Timed" : "Mode: Lives");
     m_mode.Render(1280 - m_mode.GetWidth() - 20, 0);
@@ -84,4 +72,10 @@ void TitleScreenLogo::Render()
         m_modeParameter.SetText(parameter);
     }
     m_modeParameter.Render(1280 - m_modeParameter.GetWidth() - 20, 80);
+
+    m_changeMode.Render(1280 - m_changeOption.GetWidth() - 20, 200);
+    UIRendererHelper::RenderTextureFrame(820, 200, "y_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
+
+    m_changeOption.Render(1280 - m_changeOption.GetWidth() - 20, 280);
+    UIRendererHelper::RenderTextureFrame(820, 280, "x_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
 }

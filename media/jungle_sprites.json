@@ -1,0 +1,57 @@
+{"frames": [
+
+{
+	"filename": "plx-1.png",
+	"frame": {"x":0,"y":0,"w":384,"h":216},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":384,"h":216},
+	"sourceSize": {"w":384,"h":216},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "plx-2.png",
+	"frame": {"x":386,"y":0,"w":384,"h":216},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":384,"h":216},
+	"sourceSize": {"w":384,"h":216},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "plx-3.png",
+	"frame": {"x":772,"y":0,"w":384,"h":216},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":384,"h":216},
+	"sourceSize": {"w":384,"h":216},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "plx-4.png",
+	"frame": {"x":1158,"y":0,"w":384,"h":216},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":384,"h":216},
+	"sourceSize": {"w":384,"h":216},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "plx-5.png",
+	"frame": {"x":1544,"y":0,"w":384,"h":216},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":384,"h":216},
+	"sourceSize": {"w":384,"h":216},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sprites.png",
+	"format": "RGBA8888",
+	"size": {"w":1928,"h":216},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:f96a0fc42abc9b4fc11ff6f1eff82443:a26e7802f9c0317eac7d8fef85d6514e:1eabdf11f75e3a4fe3147baf7b5be24b$"
+}
+}

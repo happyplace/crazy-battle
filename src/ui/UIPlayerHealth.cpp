@@ -5,28 +5,13 @@
 
 UIPlayerHealth::UIPlayerHealth()
 {
-    const char* fontPath = "media/helmet2/Helmet-Regular.ttf";
-    m_font = TTF_OpenFont(fontPath, 100);
-    if (m_font == nullptr)
-    {
-        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "failed to load font '%s' SDL_ttf Error: %s", fontPath, TTF_GetError());
-    }
-
+    m_font = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 100);
     m_texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
     m_textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
     //m_spriteAnimations = AssetLoaderHelper::LoadSpriteAnimations("media/opp2_animations.json");
 
     m_label.SetFont(m_font);
     m_label.SetText("100%");
-}
-
-UIPlayerHealth::~UIPlayerHealth()
-{
-    if (m_font)
-    {
-        TTF_CloseFont(m_font);
-        m_font = nullptr;
-    }
 }
 
 void UIPlayerHealth::Render(GameModeData& gameModeData)

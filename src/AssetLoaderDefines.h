@@ -5,6 +5,7 @@
 #include <string>
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 struct TextureAsset
 {
@@ -63,6 +64,38 @@ private:
     friend class AssetLoaderHelper;
 };
 
+struct TextAsset
+{
+    std::string text;
+
+private:
+    TextAsset() {}
+
+    friend class AssetLoaderHelper;
+};
+
+struct FontAsset
+{
+    ~FontAsset()
+    {
+        if (font)
+        {
+            TTF_CloseFont(font);
+            font = nullptr;
+        }
+    }
+
+    TTF_Font* font;
+    int size;
+
+private:
+    FontAsset() : font(nullptr), size(0) {}
+
+    friend class AssetLoaderHelper;
+};
+
 typedef std::shared_ptr<TextureFramesAsset> TextureFramesAssetPtr;
 typedef std::shared_ptr<TextureAsset> TextureAssetPtr;
 typedef std::shared_ptr<SpriteAnimationsAsset> SpriteAnimationsAssetPtr;
+typedef std::shared_ptr<FontAsset> FontAssetPtr;
+typedef std::shared_ptr<TextAsset> TextAssetPtr;

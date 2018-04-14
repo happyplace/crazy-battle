@@ -75,6 +75,8 @@ set(cb_source_files
         "src/ui/TitleScreenLogo.cpp"
         "src/ui/UIRendererHelper.h"
         "src/ui/UIRendererHelper.cpp"
+        "src/ui/ControlsScreen.h"
+        "src/ui/ControlsScreen.cpp"
 )
 
 find_package(SDL2 REQUIRED)

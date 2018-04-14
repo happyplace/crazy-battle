@@ -10,6 +10,8 @@ UILabel::UILabel()
     , m_height(0)
     , m_textColor({ 255, 255, 255, 255 })
     , m_shadow(nullptr)
+    , m_hasShadow(true)
+    , m_lineWrap(-1)
 {
 }
 
@@ -28,7 +30,7 @@ UILabel::~UILabel()
     }
 }
 
-void UILabel::SetFont(TTF_Font* font)
+void UILabel::SetFont(FontAssetPtr font)
 {
     if (m_font != font)
     {
@@ -54,6 +56,15 @@ void UILabel::SetTextColour(const SDL_Color& colour)
         colour.a != m_textColor.a)
     {
         m_textColor = colour;
+        m_dirty = true;
+    }
+}
+
+void UILabel::SetLineWrap(int lineWrap)
+{
+    if (lineWrap != m_lineWrap)
+    {
+        m_lineWrap = lineWrap;
         m_dirty = true;
     }
 }
@@ -95,7 +106,11 @@ void UILabel::Redraw()
         m_shadow = nullptr;
     }
 
-    SDL_Surface* textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), m_textColor);
+    SDL_Surface* textSurface = nullptr;
+    if (m_lineWrap > 0)
+        textSurface = TTF_RenderText_Blended_Wrapped(m_font->font, m_text.c_str(), m_textColor, static_cast<Uint32>(m_lineWrap));
+    else
+        textSurface = TTF_RenderText_Solid(m_font->font, m_text.c_str(), m_textColor);
     if (textSurface == nullptr)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "unable to render text surface SDL_ttf Error: %s", TTF_GetError());
@@ -112,7 +127,10 @@ void UILabel::Redraw()
         SDL_FreeSurface(textSurface);
     }
 
-    textSurface = TTF_RenderText_Solid(m_font, m_text.c_str(), {0x00, 0x00, 0x00, 0xff});
+    if (m_lineWrap > 0)
+        textSurface = TTF_RenderText_Blended_Wrapped(m_font->font, m_text.c_str(), {0x00, 0x00, 0x00, 0xff}, static_cast<Uint32>(m_lineWrap));
+    else
+        textSurface = TTF_RenderText_Solid(m_font->font, m_text.c_str(), {0x00, 0x00, 0x00, 0xff});
     if (textSurface == nullptr)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "unable to render text surface SDL_ttf Error: %s", TTF_GetError());
@@ -139,9 +157,12 @@ void UILabel::Render(int x, int y)
     renderQuad.w = m_width;
     renderQuad.h = m_height;
 
-    renderQuad.x = x + 5;
-    renderQuad.y = y + 5;
-    SDL_RenderCopy(CrazyBattle::Game().Renderer(), m_shadow, nullptr, &renderQuad);
+    if (m_hasShadow)
+    {
+        renderQuad.x = x + 5;
+        renderQuad.y = y + 5;
+        SDL_RenderCopy(CrazyBattle::Game().Renderer(), m_shadow, nullptr, &renderQuad);
+    }
 
     renderQuad.x = x;
     renderQuad.y = y;

@@ -104,3 +104,36 @@ const SpriteAnimationsAssetPtr AssetLoaderHelper::LoadSpriteAnimations(const cha
     }
     return nullptr;
 }
+
+const FontAssetPtr AssetLoaderHelper::LoadFont(const char* path, int size)
+{
+    FontAssetPtr fontAsset(new FontAsset());
+    fontAsset->size = size;
+    fontAsset->font = TTF_OpenFont(path, size);
+    if (fontAsset->font == nullptr)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "failed to load font '%s' SDL_ttf Error: %s", path, TTF_GetError());
+        return nullptr;
+    }
+    return fontAsset;
+}
+
+const TextAssetPtr AssetLoaderHelper::LoadText(const char* path)
+{
+    std::ifstream myTextFile(path);
+    if (myTextFile.is_open())
+    {
+        std::string line;
+        std::stringstream textStream;
+        while (getline(myTextFile, line))
+        {
+            textStream << line;
+        }
+        myTextFile.close();
+
+        TextAssetPtr textAsset(new TextAsset());
+        textAsset->text = textStream.str();
+        return textAsset;
+    }
+    return nullptr;
+}
