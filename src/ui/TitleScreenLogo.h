@@ -12,7 +12,13 @@ class TitleScreenLogo
 public:
     TitleScreenLogo();
 
+    void Update(const GameTimer& gameTimer);
     void Render();
+
+    static float ms_layer2;
+    static float ms_layer3;
+    static float ms_layer4;
+    static float ms_layer5;
 
 private:
     FontAssetPtr m_fontLarge;

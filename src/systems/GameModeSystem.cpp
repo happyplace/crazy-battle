@@ -102,7 +102,7 @@ void GameModeSystem::Update(const GameTimer& gameTimer)
     {
         if (m_gameModeData.GetTimeLeft() <= 0.0f)
         {
-            CrazyBattle::Game().ChangeState(CrazyBattleState::MainMenu);
+            CrazyBattle::Game().ChangeState(CrazyBattleState::GameEndState);
         }
     }
 }

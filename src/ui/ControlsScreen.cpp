@@ -23,7 +23,7 @@ ControlsScreen::ControlsScreen()
     m_attack.SetFont(m_fontSmall);
     m_attack.SetText("Attack");
     m_sinAttack.SetFont(m_fontSmall);
-    m_sinAttack.SetText("Sin Attack");
+    m_sinAttack.SetText("Sine Attack");
 }
 
 void ControlsScreen::Render()

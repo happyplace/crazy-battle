@@ -88,6 +88,8 @@ void MainMenuState::DoUpdate(const GameTimer& gameTimer)
             state.x = xPressed;
         }
     }
+
+    m_titleScreenLogo.Update(gameTimer);
 }
 
 void MainMenuState::Render()

@@ -67,6 +67,8 @@ set(cb_source_files
         "src/states/GameState.cpp"
         "src/states/MainMenuState.h"
         "src/states/MainMenuState.cpp"
+        "src/states/GameEndState.h"
+        "src/states/GameEndState.cpp"
         "src/ui/basic/UILabel.h"
         "src/ui/basic/UILabel.cpp"
         "src/ui/UIPlayerHealth.h"
@@ -77,6 +79,8 @@ set(cb_source_files
         "src/ui/UIRendererHelper.cpp"
         "src/ui/ControlsScreen.h"
         "src/ui/ControlsScreen.cpp"
+        "src/ui/UIEndGameScreen.h"
+        "src/ui/UIEndGameScreen.cpp"
 )
 
 find_package(SDL2 REQUIRED)

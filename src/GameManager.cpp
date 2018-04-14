@@ -9,9 +9,9 @@ GameManager::GameManager()
 {
 	ms_instance = this;
 
-    m_gameRules.mode = GameRules::Mode::Lives;
-    m_gameRules.lives = 5;
-    m_gameRules.time = 60.0f;
+    m_gameRules.mode = GameRules::Mode::Time;//GameRules::Mode::Lives;
+    m_gameRules.lives = 1;//5;
+    m_gameRules.time = 1.0f;//60.0f;
     m_gameRules.deathTime = 3.0f;
     m_gameRules.health = 125.0f;
 }

@@ -3,6 +3,12 @@
 #include "AssetLoaderHelper.h"
 #include "CrazyBattle.h"
 #include "ui/UIRendererHelper.h"
+#include "GameTimer.h"
+
+float TitleScreenLogo::ms_layer2 = 0.0f;
+float TitleScreenLogo::ms_layer3 = 0.0f;
+float TitleScreenLogo::ms_layer4 = 0.0f;
+float TitleScreenLogo::ms_layer5 = 0.0f;
 
 TitleScreenLogo::TitleScreenLogo()
 {
@@ -37,14 +43,52 @@ TitleScreenLogo::TitleScreenLogo()
     m_changeOption.SetText("Change Option");
 }
 
+void TitleScreenLogo::Update(const GameTimer& gameTimer)
+{
+    float dt = static_cast<float>(gameTimer.DeltaTime());
+    ms_layer2 += dt / 80.0f;
+    if (ms_layer2 > 1.0f)
+    {
+        ms_layer2 = 0.0f;
+    }
+
+    ms_layer3 += dt / 60.0f;
+    if (ms_layer3 > 1.0f)
+    {
+        ms_layer3 = 0.0f;
+    }
+
+    ms_layer4 += dt / 40.0f;
+    if (ms_layer4 > 1.0f)
+    {
+        ms_layer4 = 0.0f;
+    }
+
+    ms_layer5 += dt / 20.0f;
+    if (ms_layer5 > 1.0f)
+    {
+        ms_layer5 = 0.0f;
+    }
+}
+
 void TitleScreenLogo::Render()
 {
-    float backgroundScale = 3.4f;
+    const float backgroundScale = 3.4f;
+    const int width = static_cast<int>(384 * backgroundScale);
+
     UIRendererHelper::RenderTextureFrame(0, 0, "plx-1.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
-    UIRendererHelper::RenderTextureFrame(0, 0, "plx-2.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
-    UIRendererHelper::RenderTextureFrame(0, 0, "plx-3.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
-    UIRendererHelper::RenderTextureFrame(0, 0, "plx-4.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
-    UIRendererHelper::RenderTextureFrame(0, 0, "plx-5.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+
+    UIRendererHelper::RenderTextureFrame(width * ms_layer2, 0, "plx-2.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(width * (ms_layer2 - 1), 0, "plx-2.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+
+    UIRendererHelper::RenderTextureFrame(width * ms_layer3, 0, "plx-3.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(width * (ms_layer3 - 1), 0, "plx-3.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+
+    UIRendererHelper::RenderTextureFrame(width * ms_layer4, 0, "plx-4.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(width * (ms_layer4 - 1), 0, "plx-4.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+
+    UIRendererHelper::RenderTextureFrame(width * ms_layer5, 0, "plx-5.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
+    UIRendererHelper::RenderTextureFrame(width * (ms_layer5 - 1), 0, "plx-5.png", m_jungle, m_jungleFrames, backgroundScale, backgroundScale);
 
     m_titleLabel.Render(95, 200);
     UIRendererHelper::RenderTextureFrame(0, 0, "opp_promo_traveler.png", m_texture, m_textureFrames);

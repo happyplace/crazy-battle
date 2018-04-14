@@ -12,6 +12,7 @@ enum class CrazyBattleState
     None,
     Game,
     MainMenu,
+    GameEndState,
 };
 
 class State;
