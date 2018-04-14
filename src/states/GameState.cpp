@@ -66,8 +66,8 @@ void GameState::Render()
     m_spriteRendererSystem.Render();
     m_animateSpriteRendererSystem.Render();
 
-    m_uiPlayerHealthSystem.Render(m_gameModeData);
-    m_uiPregame.Render(m_gameModeData);
+    //m_uiPlayerHealthSystem.Render(m_gameModeData);
+    //m_uiPregame.Render(m_gameModeData);
 }
 
 void GameState::Shutdown()

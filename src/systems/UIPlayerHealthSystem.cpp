@@ -29,7 +29,7 @@ void UIPlayerHealthSystem::Render(GameModeData& gameModeData)
 {
     if (!gameModeData.IsGameRunning())
     {
-        //return;
+        return;
     }
 
     if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time)
