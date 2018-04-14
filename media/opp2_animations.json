@@ -182,5 +182,22 @@
 			"fx_explosion_b_anim_08.png",
 			"fx_explosion_b_anim_09.png"
 		]
-	}
+	},
+    {
+        "name" : "fx_explosion_r_anim",
+        "speed" : 0.05,
+        "frames" :
+        [
+            "fx_explosion_r_anim_00.png",
+            "fx_explosion_r_anim_01.png",
+            "fx_explosion_r_anim_02.png",
+            "fx_explosion_r_anim_03.png",
+            "fx_explosion_r_anim_04.png",
+            "fx_explosion_r_anim_05.png",
+            "fx_explosion_r_anim_06.png",
+            "fx_explosion_r_anim_07.png",
+            "fx_explosion_r_anim_08.png",
+            "fx_explosion_r_anim_09.png"
+        ]
+    }
 ]

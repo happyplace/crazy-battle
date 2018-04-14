@@ -13,7 +13,8 @@
 #include "components/SpriteComponent.h"
 #include "components/TimedLifeComponent.h"
 
-PlayerAttackInputSystem::PlayerAttackInputSystem()
+PlayerAttackInputSystem::PlayerAttackInputSystem(GameModeData& gameModeData)
+    : m_gameModeData(gameModeData)
 {
     m_texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
     m_textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
@@ -30,13 +31,16 @@ void PlayerAttackInputSystem::Update(const GameTimer& gameTimer)
 
         bool attackPressed = false;
 
-        SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
-        if (gameController)
+        if (playerComp.state == PlayerComponent::State::Idle && m_gameModeData.IsGameRunning())
         {
-            attackPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_X) == 1;
-            if (attackPressed && !playerComp.params.attackPressed)
+            SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
+            if (gameController)
             {
-                LinearAttack(transformComp, playerComp);
+                attackPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_X) == 1;
+                if (attackPressed && !playerComp.params.attackPressed)
+                {
+                    LinearAttack(transformComp, playerComp);
+                }
             }
         }
 
@@ -60,6 +64,7 @@ void PlayerAttackInputSystem::LinearAttack(const TransformComponent& transform, 
     attackPhysicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Bullet;
     SpriteComponent& attackSpriteComp = entity.addComponent<SpriteComponent>();
     attackSpriteComp.frameName = "icon_orbs_materials_09.png";
+    attackSpriteComp.colour = m_gameModeData.GetColorPair(player.player.id)->color;
     TextureComponent& attackTextureComp = entity.addComponent<TextureComponent>();
     attackTextureComp.texture = m_texture;
     attackTextureComp.textureFrames = m_textureFrames;
@@ -76,6 +81,7 @@ void PlayerAttackInputSystem::LinearAttack(const TransformComponent& transform, 
     AnimatedSpriteComponent& secondarySpriteComp = secondaryEntity.addComponent<AnimatedSpriteComponent>();
     secondarySpriteComp.spriteAnimationsAsset = m_spriteAnimations;
     secondarySpriteComp.animationName = "fx_bling_anim";
+    secondarySpriteComp.colour = m_gameModeData.GetColorPair(player.player.id)->color;
     ChildComponent& secondaryChildComp = secondaryEntity.addComponent<ChildComponent>();
     secondaryChildComp.parentEntity = entity;
     secondaryEntity.activate();

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 struct GameModeScore
 {
     GameModeScore() : kills(0), deaths(0) {}
@@ -22,21 +24,12 @@ enum class DamageType
 
 struct GameHealth
 {
-    enum class State
-    {
-        Idle,
-        Respawning,
-        Dead,
-    };
-
     GameHealth()
-        : state(State::Idle)
-        , lives(-1)
+        : lives(-1)
         , health(100.0f)
         , deathTimer(0.0f)
     {}
 
-    State state;
     int lives;
     float health;
     float deathTimer;
@@ -50,4 +43,14 @@ struct HealthPair
 
     int64_t playerId;
     GameHealth health;
+};
+
+struct ColorPair
+{
+    ColorPair()
+        : playerId(-1)
+    {}
+
+    int64_t playerId;
+    SDL_Color color;
 };

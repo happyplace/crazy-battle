@@ -75,7 +75,7 @@ void PlayerEntitySpawnerSystem::Update()
                 break;
             }
         }
-        if (!playerHasEntity)
+        if (!playerHasEntity && m_gameModeData.GetHealth().size() < 4 && !m_gameModeData.IsGameRunning())
 		{
 			CreatePlayer(player);
 		}
@@ -98,7 +98,11 @@ void PlayerEntitySpawnerSystem::Update()
 
 void PlayerEntitySpawnerSystem::onEntityAdded(anax::Entity& entity)
 {
-	m_gameModeData.PlayerAdded(entity.getComponent<PlayerComponent>().player.id);
+    PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
+    m_gameModeData.PlayerAdded(playerComp.player.id);
+    const ColorPair* colorPair = m_gameModeData.GetColorPair(playerComp.player.id);
+    AnimatedSpriteComponent& animatedSpriteComp = entity.getComponent<AnimatedSpriteComponent>();
+    animatedSpriteComp.colour = colorPair->color;
 }
 
 void PlayerEntitySpawnerSystem::onEntityRemoved(anax::Entity& entity)

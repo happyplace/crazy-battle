@@ -97,7 +97,7 @@ int CrazyBattle::Run(int argc, char* argv[])
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "nearest pixel sampling not enabled");
     }
 
-    ChangeState(CrazyBattleState::GameEndState);
+    ChangeState(CrazyBattleState::Game);
 
     GameTimer gameTimer;
 

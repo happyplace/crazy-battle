@@ -4,9 +4,12 @@
 #include "CrazyBattle.h"
 
 void UIRendererHelper::RenderTextureFrame(int x, int y, const char* frameName, TextureAssetPtr texture,
-                                          TextureFramesAssetPtr frames, float scaleX /*= 1.0f*/, float scaleY /*= 1.0f*/)
+                                          TextureFramesAssetPtr frames, float scaleX /*= 1.0f*/, float scaleY /*= 1.0f*/,
+                                          SDL_Color color /*= { 0xff, 0xff, 0xff, 0xff }*/)
 {
     SDL_SetRenderDrawColor(CrazyBattle::Game().Renderer(), 0xff, 0xff, 0xff, 0xff);
+
+    SDL_SetTextureColorMod(texture->texture, color.r, color.g, color.b);
 
     if (frames)
     {

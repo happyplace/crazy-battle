@@ -17,8 +17,10 @@
 #include "systems/TimedLifeSystem.h"
 #include "systems/GameModeSystem.h"
 #include "systems/PlayerDamageSystem.h"
+#include "systems/GameBackgroundSystem.h"
+#include "systems/UIPlayerHealthSystem.h"
 
-#include "ui/UIPlayerHealth.h"
+#include "ui/UIPregame.h"
 
 class GameState : public State
 {
@@ -48,6 +50,8 @@ private:
     TimedLifeSystem m_timedLifeSystem;
     GameModeSystem m_gameModeSystem;
     PlayerDamageSystem m_playerDamageSystem;
+    GameBackgroundSystem m_gameBackgroundSystem;
+    UIPlayerHealthSystem m_uiPlayerHealthSystem;
 
-    UIPlayerHealth m_uiPlayerHealth;
+    UIPregame m_uiPregame;
 };

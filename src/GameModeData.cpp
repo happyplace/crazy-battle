@@ -2,10 +2,21 @@
 
 #include "GameManager.h"
 #include "GameTimer.h"
+#include "InputManager.h"
 
 GameModeData::GameModeData()
+    : m_isGameRunning(false)
+    , m_timeLeft(0.0f)
 {
-   m_timeLeft = GameManager::GetInstance().GetRules().time;
+    m_colors.resize(4);
+    m_colors[0].playerId = -1;
+    m_colors[0].color = { 0xff, 0xff, 0xff, 0xff };
+    m_colors[1].playerId = -1;
+    m_colors[1].color = { 0xff, 0x01, 0xc8, 0xff };
+    m_colors[2].playerId = -1;
+    m_colors[2].color = { 0x41, 0xff, 0x01, 0xff };
+    m_colors[3].playerId = -1;
+    m_colors[3].color = { 0x03, 0xb3, 0xff, 0xff };
 }
 
 void GameModeData::OnPlayerKill(int64_t playerIdGotKill, int64_t playerIdDied)
@@ -48,10 +59,28 @@ void GameModeData::PlayerAdded(int64_t playerId)
         pair.health.lives = GameManager::GetInstance().GetRules().lives;
         m_health.push_back(pair);
     }
+
+    for (ColorPair& colorPair : m_colors)
+    {
+        if (colorPair.playerId == -1)
+        {
+            colorPair.playerId = playerId;
+            break;
+        }
+    }
 }
 
 void GameModeData::PlayerRemoved(int64_t playerId)
 {
+    for (ColorPair& colorPair : m_colors)
+    {
+        if (colorPair.playerId == playerId)
+        {
+            colorPair.playerId = -1;
+            break;
+        }
+    }
+
 	for (std::size_t i = 0; i < m_scores.size(); i++)
 	{
         if (m_scores[i].playerId == playerId)
@@ -91,6 +120,16 @@ HealthPair* GameModeData::GetHealthPair(int64_t playerId)
     return nullptr;
 }
 
+ColorPair* GameModeData::GetColorPair(int64_t playerId)
+{
+    for (ColorPair& colorPair : m_colors)
+    {
+        if (colorPair.playerId == playerId)
+            return &colorPair;
+    }
+    return nullptr;
+}
+
 float GameModeData::GetDamage(DamageType damageType) const
 {
     switch(damageType)
@@ -117,5 +156,31 @@ void GameModeData::OnPlayerDamage(int64_t senderPlayerId, int64_t receiverPlayer
 
 void GameModeData::Update(const GameTimer& gameTimer)
 {
-    m_timeLeft -= static_cast<float>(gameTimer.DeltaTime());
+    if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time)
+    {
+        m_timeLeft -= static_cast<float>(gameTimer.DeltaTime());
+    }
+
+    if (!m_isGameRunning)
+    {
+        std::vector<SDL_JoystickID> controllerIds;
+        InputManager::GetInstance().GetAllControllerInstanceIds(controllerIds);
+        for (SDL_JoystickID controllerId : controllerIds)
+        {
+            SDL_GameController* gameController = InputManager::GetInstance().GetController(controllerId);
+            if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_BACK) == 1 && m_health.size() > 1)
+            {
+                StartGame();
+            }
+        }
+    }
+}
+
+void GameModeData::StartGame()
+{
+    m_isGameRunning = true;
+    if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time)
+    {
+        m_timeLeft = GameManager::GetInstance().GetRules().time;
+    }
 }

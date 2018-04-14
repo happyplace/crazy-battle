@@ -6,18 +6,17 @@
 #include "ui/basic/UILabel.h"
 #include "GameModeData.h"
 
-class UIPlayerHealth
+class UIPregame
 {
 public:
-    UIPlayerHealth();
+    UIPregame();
 
     void Render(GameModeData& gameModeData);
 
 private:
     FontAssetPtr m_font;
-    UILabel m_label;
-
+    UILabel m_joinGame;
+    UILabel m_startGame;
     TextureAssetPtr m_texture;
     TextureFramesAssetPtr m_textureFrames;
-    //SpriteAnimationsAssetPtr m_spriteAnimations;
 };

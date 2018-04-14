@@ -62,6 +62,10 @@ set(cb_source_files
         "src/systems/TimedLifeSystem.cpp"
         "src/systems/GameModeSystem.h"
         "src/systems/GameModeSystem.cpp"
+        "src/systems/GameBackgroundSystem.h"
+        "src/systems/GameBackgroundSystem.cpp"
+        "src/systems/UIPlayerHealthSystem.h"
+        "src/systems/UIPlayerHealthSystem.cpp"
 	"src/states/State.h"
 	"src/states/GameState.h"
         "src/states/GameState.cpp"
@@ -71,8 +75,6 @@ set(cb_source_files
         "src/states/GameEndState.cpp"
         "src/ui/basic/UILabel.h"
         "src/ui/basic/UILabel.cpp"
-        "src/ui/UIPlayerHealth.h"
-        "src/ui/UIPlayerHealth.cpp"
         "src/ui/TitleScreenLogo.h"
         "src/ui/TitleScreenLogo.cpp"
         "src/ui/UIRendererHelper.h"
@@ -81,6 +83,10 @@ set(cb_source_files
         "src/ui/ControlsScreen.cpp"
         "src/ui/UIEndGameScreen.h"
         "src/ui/UIEndGameScreen.cpp"
+        "src/ui/UIPregame.h"
+        "src/ui/UIPregame.cpp"
+        "src/ui/HealthWidget.h"
+        "src/ui/HealthWidget.cpp"
 )
 
 find_package(SDL2 REQUIRED)
