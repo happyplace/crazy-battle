@@ -51,6 +51,7 @@ void UIPlayerHealthSystem::Render(GameModeData& gameModeData)
         switch (playerComp.state)
         {
         case PlayerComponent::State::Dead:
+            m_healthWidget.RenderDead(x_coord[i], 618, colorPair->color);
             break;
         case PlayerComponent::State::Respawning:
             m_healthWidget.RenderRespawning(x_coord[i], 618, healthPair.health.deathTimer, colorPair->color);

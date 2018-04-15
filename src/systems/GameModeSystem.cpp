@@ -12,6 +12,7 @@
 #include "components/TextureComponent.h"
 #include "components/TimedLifeComponent.h"
 #include "AssetLoaderHelper.h"
+#include "ui/UIEndGameScreen.h"
 
 GameModeSystem::GameModeSystem(GameModeData& gameModeData)
     : m_gameModeData(gameModeData)
@@ -120,11 +121,44 @@ void GameModeSystem::Update(const GameTimer& gameTimer)
         }
     }
 
-    if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time && m_gameModeData.IsGameRunning())
+    if (m_gameModeData.IsGameRunning())
     {
-        if (m_gameModeData.GetTimeLeft() <= 0.0f)
+        if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Time)
         {
-            CrazyBattle::Game().ChangeState(CrazyBattleState::GameEndState);
+            if (m_gameModeData.GetTimeLeft() <= 0.0f)
+            {
+                UIEndGameScreen::ms_scoreCards.clear();
+                for (anax::Entity entity : getEntities())
+                {
+                    const PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
+                    UIEndGameScreen::ScoreCard scoreCard;
+                    scoreCard.color = m_gameModeData.GetColorPair(playerComp.player.id)->color;
+                    scoreCard.kills = m_gameModeData.GetScorePair(playerComp.player.id)->score.kills;
+                    scoreCard.deaths = m_gameModeData.GetScorePair(playerComp.player.id)->score.deaths;
+                    UIEndGameScreen::ms_scoreCards.push_back(scoreCard);
+                }
+                CrazyBattle::Game().ChangeState(CrazyBattleState::GameEndState);
+            }
+        }
+        else
+        {
+            SDL_Color color;
+            int playersAlive = 0;
+            for (anax::Entity entity : getEntities())
+            {
+                const PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
+                if (playerComp.state != PlayerComponent::State::Dead)
+                {
+                    color = m_gameModeData.GetColorPair(playerComp.player.id)->color;
+                    playersAlive++;
+                }
+            }
+
+            if (playersAlive <= 1)
+            {
+                UIEndGameScreen::ms_winnerColor = color;
+                CrazyBattle::Game().ChangeState(CrazyBattleState::GameEndState);
+            }
         }
     }
 }

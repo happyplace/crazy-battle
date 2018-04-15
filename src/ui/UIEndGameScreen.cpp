@@ -5,14 +5,17 @@
 #include "GameTimer.h"
 #include "ui/UIRendererHelper.h"
 
+SDL_Color UIEndGameScreen::ms_winnerColor = { 0xff, 0xff, 0xff, 0xff };
+std::vector<UIEndGameScreen::ScoreCard> UIEndGameScreen::ms_scoreCards;
+
 UIEndGameScreen::UIEndGameScreen()
 {
 //    m_fontLarge = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 100);
 //    m_fontMedium = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 65);
     m_fontSmall = AssetLoaderHelper::LoadFont("media/helmet2/Helmet-Regular.ttf", 55);
 
-//    m_texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
-//    m_textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
+    m_texture = AssetLoaderHelper::LoadTexture("media/opp2/opp2_sprites.png");
+    m_textureFrames = AssetLoaderHelper::LoadTextureFrames("media/opp2_sprites.json");
     m_button = AssetLoaderHelper::LoadTexture("media/button_sprites.png");
     m_buttonFrames = AssetLoaderHelper::LoadTextureFrames("media/button_sprites.json");
     m_jungle = AssetLoaderHelper::LoadTexture("media/jungle_asset_pack/jungle_sprites.png");
@@ -23,6 +26,9 @@ UIEndGameScreen::UIEndGameScreen()
 
     m_playAgain.SetFont(m_fontSmall);
     m_playAgain.SetText("Play Again");
+
+    m_winner.SetFont(m_fontSmall);
+    m_winner.SetText("- Winner -");
 }
 
 void UIEndGameScreen::Update(const GameTimer& gameTimer)
@@ -77,4 +83,21 @@ void UIEndGameScreen::Render()
 
     UIRendererHelper::RenderTextureFrame(900, 600, "start_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
     m_playAgain.Render(980, 590);
+
+    if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Lives)
+    {
+        m_winner.Render((1280 / 2.0f) - (m_winner.GetWidth() / 2.0f), 100);
+        int width = 10 * 16;
+        UIRendererHelper::RenderTextureFrame((1280 / 2.0f) - (width / 2.0f), (720 / 2.0f) - (width / 2.0f),
+                                             "icon_traveler.png", m_texture, m_textureFrames, 10.0f, 10.0f,
+                                             ms_winnerColor);
+    }
+    else
+    {
+        const int yCoord[] = { 50, 190, 325, 450 };
+        for (std::size_t i = 0; i < ms_scoreCards.size(); i++)
+        {
+            m_healthWidget.RenderScoreCard(490, yCoord[i], ms_scoreCards[i].kills, ms_scoreCards[i].deaths, ms_scoreCards[i].color);
+        }
+    }
 }

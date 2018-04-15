@@ -66,6 +66,7 @@ void PhysicsWorldSystem::Integrate(double deltaTime)
         if (entity.isActivated())
             entity.kill();
     }
+    entitiesToKill.clear();
 }
 
 void PhysicsWorldSystem::initialize()
