@@ -94,6 +94,8 @@ void PhysicsWorldSystem::onEntityAdded(anax::Entity& entity)
     userData->contactType = physicsBodyComp.contactType;
     userData->entityId = entity.getId().index;
     boxFixture.userData = userData;
+    if (physicsBodyComp.category != 0)
+        boxFixture.filter.categoryBits = physicsBodyComp.category;
     m_userDataMap[userData->entityId] = userData;
 
     physicsBodyComp.params.body->CreateFixture(&boxFixture);
@@ -131,6 +133,16 @@ void PhysicsWorldSystem::PreSolve(b2Contact* contact, const b2Manifold* oldManif
              contactTypeB == PhysicsBodyComponent::ContactType::Bullet)
     {
         OnBulletBulletContact(userDataA, userDataB, contact);
+    }
+    else if (contactTypeA == PhysicsBodyComponent::ContactType::Bullet &&
+             contactTypeB == PhysicsBodyComponent::ContactType::Floor)
+    {
+        OnBulletFloorContact(userDataA);
+    }
+    else if (contactTypeA == PhysicsBodyComponent::ContactType::Floor &&
+             contactTypeB == PhysicsBodyComponent::ContactType::Bullet)
+    {
+        OnBulletFloorContact(userDataB);
     }
 }
 
@@ -212,4 +224,23 @@ void PhysicsWorldSystem::OnBulletBulletContact(const UserData* bulletA, const Us
         getWorld().getEntity(bulletA->entityId).kill();
         getWorld().getEntity(bulletB->entityId).kill();
     }
+}
+
+void PhysicsWorldSystem::OnBulletFloorContact(const UserData* bullet)
+{
+    TransformComponent& bulletTransformComp = getWorld().getEntity(bullet->entityId).getComponent<TransformComponent>();
+
+    anax::Entity bulletHitEntity = getWorld().createEntity();
+    TransformComponent& bulletHitTransformComp = bulletHitEntity.addComponent<TransformComponent>();
+    bulletHitTransformComp.position = bulletTransformComp.position;
+    TextureComponent& bulletHitTextureComp = bulletHitEntity.addComponent<TextureComponent>();
+    bulletHitTextureComp.texture = m_texture;
+    bulletHitTextureComp.textureFrames = m_textureFrames;
+    AnimatedSpriteComponent& bulletHitAnimatedSpriteComp = bulletHitEntity.addComponent<AnimatedSpriteComponent>();
+    bulletHitAnimatedSpriteComp.spriteAnimationsAsset = m_spriteAnimations;
+    bulletHitAnimatedSpriteComp.animationName = "fx_explosion_b_anim";
+    bulletHitEntity.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 0.45f;
+    bulletHitEntity.activate();
+
+    getWorld().getEntity(bullet->entityId).kill();
 }

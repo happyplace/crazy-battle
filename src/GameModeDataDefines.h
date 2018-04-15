@@ -49,8 +49,10 @@ struct ColorPair
 {
     ColorPair()
         : playerId(-1)
+        , category(0x0000)
     {}
 
     int64_t playerId;
     SDL_Color color;
+    short category;
 };

@@ -74,6 +74,7 @@ void GameLevelLoader::LoadPhysicsBody(anax::Entity& entity, const rapidjson::Val
     physicsBodyComp.isBullet = false;
     physicsBodyComp.canRotate = false;
     physicsBodyComp.bodyType = PhysicsBodyComponent::BodyType::Box;
+    physicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Floor;
 
     physicsBodyComp.size.x = json["size"]["width"].GetFloat();
     physicsBodyComp.size.y = json["size"]["height"].GetFloat();

@@ -40,16 +40,20 @@ void GameState::DoUpdate(const GameTimer& gameTimer)
     m_gameModeData.Update(gameTimer);
 
     m_playerEntitySpawnerSystem.Update();
+    m_world.refresh();
 
     const double PhysicsTimeStep = 1.0/60.0;
     accumulator += gameTimer.DeltaTime();
     while (accumulator >= PhysicsTimeStep)
     {
         m_physicsWorldSystem.Integrate(PhysicsTimeStep);
+        m_world.refresh();
         accumulator -= PhysicsTimeStep;
     }
 
     m_playerDamageSystem.Update(gameTimer);
+    m_world.refresh();
+
     m_gameModeSystem.Update(gameTimer);
     m_playerMovementSystem.Update(gameTimer);
     m_playerAttackInputSystem.Update(gameTimer);
@@ -57,6 +61,7 @@ void GameState::DoUpdate(const GameTimer& gameTimer)
     m_playerAnimationSystem.Update(gameTimer);
     m_animateSpriteUpdateSystem.Update(gameTimer);
     m_timedLifeSystem.Update(gameTimer);
+    m_world.refresh();
     m_childTransformSystem.Update();
 }
 
@@ -66,8 +71,8 @@ void GameState::Render()
     m_spriteRendererSystem.Render();
     m_animateSpriteRendererSystem.Render();
 
-    //m_uiPlayerHealthSystem.Render(m_gameModeData);
-    //m_uiPregame.Render(m_gameModeData);
+    m_uiPlayerHealthSystem.Render(m_gameModeData);
+    m_uiPregame.Render(m_gameModeData);
 }
 
 void GameState::Shutdown()

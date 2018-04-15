@@ -26,6 +26,7 @@ struct PhysicsBodyComponent : anax::Component
         , friction(0.3f), hasGravity(true), offset(0.0f, 0.0f)
         , groupIndex(0), isBullet(false), canRotate(false)
         , bodyType(BodyType::Box), contactType(ContactType::Generic)
+        , category(0)
     {}
 
     inline void SetPosition(float positionX, float positionY, float offsetX = 0.0f, float offsetY = 0.0f)
@@ -49,4 +50,5 @@ struct PhysicsBodyComponent : anax::Component
     bool canRotate;
     BodyType bodyType;
     ContactType contactType;
+    short category;
 };

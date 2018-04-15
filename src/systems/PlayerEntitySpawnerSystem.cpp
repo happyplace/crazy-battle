@@ -24,6 +24,10 @@ void PlayerEntitySpawnerSystem::Init()
 
 void PlayerEntitySpawnerSystem::CreatePlayer(const PlayerStruct& player)
 {
+    m_gameModeData.PlayerAdded(player.id);
+
+    const ColorPair* colorPair = m_gameModeData.GetColorPair(player.id);
+
 	anax::Entity playerEntity = getWorld().createEntity();
     
     TransformComponent& transformComp = playerEntity.addComponent<TransformComponent>();
@@ -51,6 +55,7 @@ void PlayerEntitySpawnerSystem::CreatePlayer(const PlayerStruct& player)
     physicsBodyComp.canRotate = false;
     physicsBodyComp.bodyType = PhysicsBodyComponent::BodyType::Box;
     physicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Player;
+    physicsBodyComp.category = colorPair->category;
 
     playerEntity.activate();
 }
@@ -99,7 +104,6 @@ void PlayerEntitySpawnerSystem::Update()
 void PlayerEntitySpawnerSystem::onEntityAdded(anax::Entity& entity)
 {
     PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
-    m_gameModeData.PlayerAdded(playerComp.player.id);
     const ColorPair* colorPair = m_gameModeData.GetColorPair(playerComp.player.id);
     AnimatedSpriteComponent& animatedSpriteComp = entity.getComponent<AnimatedSpriteComponent>();
     animatedSpriteComp.colour = colorPair->color;
@@ -107,5 +111,5 @@ void PlayerEntitySpawnerSystem::onEntityAdded(anax::Entity& entity)
 
 void PlayerEntitySpawnerSystem::onEntityRemoved(anax::Entity& entity)
 {
-	m_gameModeData.PlayerRemoved(entity.getComponent<PlayerComponent>().player.id);
+    m_gameModeData.PlayerRemoved(entity.getComponent<PlayerComponent>().player.id);
 }

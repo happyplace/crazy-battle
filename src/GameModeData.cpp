@@ -11,12 +11,16 @@ GameModeData::GameModeData()
     m_colors.resize(4);
     m_colors[0].playerId = -1;
     m_colors[0].color = { 0xff, 0xff, 0xff, 0xff };
+    m_colors[0].category = 0x1;
     m_colors[1].playerId = -1;
     m_colors[1].color = { 0xff, 0x01, 0xc8, 0xff };
+    m_colors[1].category = 0x2;
     m_colors[2].playerId = -1;
     m_colors[2].color = { 0x41, 0xff, 0x01, 0xff };
+    m_colors[2].category = 0x4;
     m_colors[3].playerId = -1;
     m_colors[3].color = { 0x03, 0xb3, 0xff, 0xff };
+    m_colors[3].category = 0x8;
 }
 
 void GameModeData::OnPlayerKill(int64_t playerIdGotKill, int64_t playerIdDied)

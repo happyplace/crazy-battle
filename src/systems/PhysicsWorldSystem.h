@@ -38,6 +38,7 @@ private:
 
     void OnPlayerBulletContact(const UserData* player, const UserData* bullet, b2Contact* contact);
     void OnBulletBulletContact(const UserData* bulletA, const UserData* bulletB, b2Contact* contact);
+    void OnBulletFloorContact(const UserData* bullet);
 
     b2World m_world;
     typedef std::unordered_map<uint64_t, UserData*> UserDataMap;

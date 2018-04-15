@@ -64,6 +64,11 @@ void GameModeSystem::Update(const GameTimer& gameTimer)
     for (HealthPair& healthPair : m_gameModeData.GetHealth())
     {
         anax::Entity& entity = m_playerEntities[healthPair.playerId];
+        if (!entity.isValid())
+        {
+            continue;
+        }
+
         PlayerComponent& playerComp = entity.getComponent<PlayerComponent>();
         switch (playerComp.state)
         {
