@@ -8,7 +8,7 @@
 class InputManager
 {
 public:
-    static InputManager& GetInstance() { SDL_assert(ms_instance); &ms_instance; }
+    static InputManager& GetInstance() { SDL_assert(ms_instance); return *ms_instance; }
     static float GetControllerAxisWithDeadZone(SDL_GameController* controller, SDL_GameControllerAxis axis);
 
     InputManager();

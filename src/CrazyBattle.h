@@ -15,13 +15,14 @@ enum class CrazyBattleState
     GameEndState,
 };
 
+#define NUM_OF_EVENTS_PER_PEEK 100
+
 class State;
 
 class CrazyBattle
 {
 public:
     static CrazyBattle& Game() { return *ms_instance; }
-    static const int NumOfEventsPerPeek;
 
     CrazyBattle();
     ~CrazyBattle();

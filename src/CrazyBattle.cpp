@@ -9,7 +9,6 @@
 #include "states/GameEndState.h"
 
 CrazyBattle* CrazyBattle::ms_instance = nullptr;
-const int CrazyBattle::NumOfEventsPerPeek = 100;
 
 CrazyBattle::CrazyBattle()
     : m_window(nullptr)
@@ -169,10 +168,10 @@ void CrazyBattle::CheckAndChangeState()
 
 void CrazyBattle::CheckEvents(bool &quitGame)
 {
-    SDL_Event sdlEvents[NumOfEventsPerPeek];
+    SDL_Event sdlEvents[NUM_OF_EVENTS_PER_PEEK];
 
     // Using SDL_GETEVENT to remove all the events
-    const int numOfEvents = SDL_PeepEvents(sdlEvents, NumOfEventsPerPeek, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
+    const int numOfEvents = SDL_PeepEvents(sdlEvents, NUM_OF_EVENTS_PER_PEEK, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
     if (numOfEvents < 0)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_PeepEvents failed SDL_ERROR: %s", SDL_GetError());

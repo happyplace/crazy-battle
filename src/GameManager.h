@@ -7,7 +7,7 @@
 class GameManager
 {
 public:
-	static GameManager& GetInstance() { SDL_assert(ms_instance); &ms_instance; }
+	static GameManager& GetInstance() { SDL_assert(ms_instance); return *ms_instance; }
 
 	GameManager();
 	~GameManager();

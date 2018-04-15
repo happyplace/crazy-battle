@@ -23,6 +23,7 @@ anax::Entity UIPlayerHealthSystem::GetPlayer(int64_t playerId)
             return entity;
         }
     }
+    return anax::Entity();
 }
 
 void UIPlayerHealthSystem::Render(GameModeData& gameModeData)

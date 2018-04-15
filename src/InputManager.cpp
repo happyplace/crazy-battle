@@ -47,9 +47,9 @@ SDL_GameController* InputManager::GetController(SDL_JoystickID instanceId)
 
 void InputManager::Update()
 {
-    SDL_Event sdlEvents[CrazyBattle::NumOfEventsPerPeek];
+    SDL_Event sdlEvents[NUM_OF_EVENTS_PER_PEEK];
 
-    int numOfEvents = SDL_PeepEvents(sdlEvents, CrazyBattle::NumOfEventsPerPeek, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
+    int numOfEvents = SDL_PeepEvents(sdlEvents, NUM_OF_EVENTS_PER_PEEK, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
     if (numOfEvents < 0)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_PeepEvents failed with SDL Error: %s", SDL_GetError());
