@@ -20,6 +20,7 @@ enum class DamageType
 {
     None,
     Linear,
+    Sine,
 };
 
 struct GameHealth

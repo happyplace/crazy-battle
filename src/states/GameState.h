@@ -19,6 +19,7 @@
 #include "systems/PlayerDamageSystem.h"
 #include "systems/GameBackgroundSystem.h"
 #include "systems/UIPlayerHealthSystem.h"
+#include "systems/SineAttackSystem.h"
 
 #include "ui/UIPregame.h"
 
@@ -52,6 +53,7 @@ private:
     PlayerDamageSystem m_playerDamageSystem;
     GameBackgroundSystem m_gameBackgroundSystem;
     UIPlayerHealthSystem m_uiPlayerHealthSystem;
+    SineAttackSystem m_sineAttackSystem;
 
     UIPregame m_uiPregame;
 };

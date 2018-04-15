@@ -139,6 +139,8 @@ float GameModeData::GetDamage(DamageType damageType) const
     switch(damageType)
     {
     case DamageType::Linear:
+        return 15.0f;
+    case DamageType::Sine:
         return 25.0f;
     default:
         return 0.0f;

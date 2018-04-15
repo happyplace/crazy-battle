@@ -23,7 +23,7 @@ ControlsScreen::ControlsScreen()
     m_attack.SetFont(m_fontSmall);
     m_attack.SetText("Attack");
     m_sinAttack.SetFont(m_fontSmall);
-    m_sinAttack.SetText("Sine Attack");
+    m_sinAttack.SetText("(hold) Sine Attack");
 }
 
 void ControlsScreen::Render()
@@ -46,8 +46,8 @@ void ControlsScreen::Render()
                 (720.0f / 2.0f) - ((m_controller->height * scale) / 2.0f),
                 "", m_controller, nullptr, scale, scale);
 
-    m_superJump.Render(800, 20);
-    UIRendererHelper::RenderTextureFrame(720, 20, "a_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
+    //m_superJump.Render(800, 20);
+    //UIRendererHelper::RenderTextureFrame(720, 20, "a_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);
 
     m_jump.Render(800, 90);
     UIRendererHelper::RenderTextureFrame(720, 90, "a_button.png", m_button, m_buttonFrames, 2.0f, 2.0f);

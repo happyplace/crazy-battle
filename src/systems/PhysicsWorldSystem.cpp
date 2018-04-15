@@ -13,6 +13,7 @@
 #include "AssetLoaderHelper.h"
 #include "components/TimedLifeComponent.h"
 #include "components/LinearAttackComponent.h"
+#include "components/SineAttackComponent.h"
 
 PhysicsWorldSystem::PhysicsWorldSystem()
     : m_world(b2Vec2(0.0f, 39.24f))
@@ -181,6 +182,8 @@ void PhysicsWorldSystem::OnPlayerBulletContact(const UserData* player, const Use
         PlayerDamageComponent& playerDamageComponent = damageEntity.addComponent<PlayerDamageComponent>();
         if (bulletEntity.hasComponent<LinearAttackComponent>())
             playerDamageComponent.damageType = DamageType::Linear;
+        else if (bulletEntity.hasComponent<SineAttackComponent>())
+            playerDamageComponent.damageType = DamageType::Sine;
         else
             SDL_assert(false);
         playerDamageComponent.receiverPlayerId = playerPlayerId;

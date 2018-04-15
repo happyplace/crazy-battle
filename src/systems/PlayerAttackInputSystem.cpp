@@ -12,6 +12,7 @@
 #include "components/ChildComponent.h"
 #include "components/SpriteComponent.h"
 #include "components/TimedLifeComponent.h"
+#include "components/SineAttackComponent.h"
 
 PlayerAttackInputSystem::PlayerAttackInputSystem(GameModeData& gameModeData)
     : m_gameModeData(gameModeData)
@@ -31,7 +32,7 @@ void PlayerAttackInputSystem::Update(const GameTimer& gameTimer)
 
         bool attackPressed = false;
 
-        if (playerComp.state == PlayerComponent::State::Idle /*&& m_gameModeData.IsGameRunning()*/)
+        if (playerComp.state == PlayerComponent::State::Idle && m_gameModeData.IsGameRunning())
         {
             SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
             if (gameController)
@@ -78,6 +79,7 @@ void PlayerAttackInputSystem::LinearAttack(const TransformComponent& transform, 
     attackPhysicsBodyComp.size.y = 32.0f;
     attackPhysicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Bullet;
     attackPhysicsBodyComp.category = colorPair->category;
+    attackPhysicsBodyComp.hasGravity = false;
     SpriteComponent& attackSpriteComp = entity.addComponent<SpriteComponent>();
     attackSpriteComp.frameName = "icon_orbs_materials_09.png";
     attackSpriteComp.colour = m_gameModeData.GetColorPair(player.player.id)->color;
@@ -109,22 +111,25 @@ void PlayerAttackInputSystem::SineAttack(const TransformComponent& transform, co
 
     v2 position = transform.position;
     position.x += 40.0f;
-    position.y -= 20.0f;
+    position.y += 40.0f;
 
     anax::Entity entity = getWorld().createEntity();
     TransformComponent& attackTransformComp = entity.addComponent<TransformComponent>();
     attackTransformComp.position = position;
     attackTransformComp.flipHorizontal = transform.flipHorizontal;
-    LinearAttackComponent& linearAttackComp = entity.addComponent<LinearAttackComponent>();
-    linearAttackComp.direction.x = transform.flipHorizontal ? -1.0f : 1.0f;
-    linearAttackComp.direction.y = 0.0f;
+    SineAttackComponent& sineAttackComp = entity.addComponent<SineAttackComponent>();
+    sineAttackComp.direction.x = transform.flipHorizontal ? -1.0f : 1.0f;
+    sineAttackComp.direction.y = 0.0f;
     AttackComponent& attackComp = entity.addComponent<AttackComponent>();
     attackComp.ownerPlayerId = player.player.id;
     PhysicsBodyComponent& attackPhysicsBodyComp = entity.addComponent<PhysicsBodyComponent>();
-    attackPhysicsBodyComp.size.x = 32.0f;
-    attackPhysicsBodyComp.size.y = 32.0f;
+    attackPhysicsBodyComp.size.x = 60.0f;
+    attackPhysicsBodyComp.size.y = 48.0f;
+    attackPhysicsBodyComp.offset.x = -20.0f;
+    attackPhysicsBodyComp.offset.y = -30.0f;
     attackPhysicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Bullet;
     attackPhysicsBodyComp.category = colorPair->category;
+    attackPhysicsBodyComp.hasGravity = false;
     TextureComponent& secondaryTextureComp = entity.addComponent<TextureComponent>();
     secondaryTextureComp.texture = m_texture;
     secondaryTextureComp.textureFrames = m_textureFrames;
