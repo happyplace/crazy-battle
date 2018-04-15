@@ -59,6 +59,12 @@ void PhysicsWorldSystem::Integrate(double deltaTime)
         SDL_SetRenderDrawColor(CrazyBattle::Game().Renderer(), 0xff, 0xff, 0xff, 0xff);
         SDL_RenderDrawRect(CrazyBattle::Game().Renderer(), &rect);
     }
+
+    for (anax::Entity entity : entitiesToKill)
+    {
+        if (entity.isActivated())
+            entity.kill();
+    }
 }
 
 void PhysicsWorldSystem::initialize()
@@ -181,7 +187,7 @@ void PhysicsWorldSystem::OnPlayerBulletContact(const UserData* player, const Use
         playerDamageComponent.senderPlayerId = bulletPlayerId;
         damageEntity.activate();
 
-        getWorld().getEntity(bullet->entityId).kill();
+        entitiesToKill.push_back(getWorld().getEntity(bullet->entityId));
     }
 }
 
@@ -221,8 +227,8 @@ void PhysicsWorldSystem::OnBulletBulletContact(const UserData* bulletA, const Us
         bulletHitEntityB.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 0.45f;
         bulletHitEntityB.activate();
 
-        getWorld().getEntity(bulletA->entityId).kill();
-        getWorld().getEntity(bulletB->entityId).kill();
+        entitiesToKill.push_back(getWorld().getEntity(bulletA->entityId));
+        entitiesToKill.push_back(getWorld().getEntity(bulletB->entityId));
     }
 }
 
@@ -242,5 +248,5 @@ void PhysicsWorldSystem::OnBulletFloorContact(const UserData* bullet)
     bulletHitEntity.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 0.45f;
     bulletHitEntity.activate();
 
-    getWorld().getEntity(bullet->entityId).kill();
+    entitiesToKill.push_back(getWorld().getEntity(bullet->entityId));
 }

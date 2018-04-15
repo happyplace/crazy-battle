@@ -19,6 +19,7 @@ public:
 
 private:
     void LinearAttack(const TransformComponent& transform, const PlayerComponent& player) const;
+    void SineAttack(const TransformComponent& transform, const PlayerComponent& player) const;
 
     TextureAssetPtr m_texture;
     TextureFramesAssetPtr m_textureFrames;

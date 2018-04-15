@@ -18,10 +18,12 @@ struct PlayerComponent : anax::Component
         PlayerParams()
             : attackPressed(false)
             , jumpPressed(false)
+            , attackPressTime(0.0)
         {}
 
         bool attackPressed;
         bool jumpPressed;
+        double attackPressTime;
     };
 
     PlayerComponent() : moveSpeed(500.0f), state(State::Idle) {}

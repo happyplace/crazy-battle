@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include "anax/System.hpp"
 #include "Box2D/Dynamics/b2World.h"
@@ -47,4 +48,5 @@ private:
     TextureAssetPtr m_texture;
     TextureFramesAssetPtr m_textureFrames;
     SpriteAnimationsAssetPtr m_spriteAnimations;
+    std::vector<anax::Entity> entitiesToKill;
 };

@@ -37,9 +37,18 @@ void PlayerAttackInputSystem::Update(const GameTimer& gameTimer)
             if (gameController)
             {
                 attackPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_X) == 1;
-                if (attackPressed && !playerComp.params.attackPressed)
+                if (!playerComp.params.attackPressed && attackPressed)
                 {
-                    LinearAttack(transformComp, playerComp);
+                    playerComp.params.attackPressTime = gameTimer.TotalTime();
+                }
+
+                if (!attackPressed && playerComp.params.attackPressed)
+                {
+                    double secondsHeld = gameTimer.TotalTime() - playerComp.params.attackPressTime;
+                    if (secondsHeld >= 0.5)
+                        SineAttack(transformComp, playerComp);
+                    else
+                        LinearAttack(transformComp, playerComp);
                 }
             }
         }
@@ -92,4 +101,37 @@ void PlayerAttackInputSystem::LinearAttack(const TransformComponent& transform, 
     ChildComponent& secondaryChildComp = secondaryEntity.addComponent<ChildComponent>();
     secondaryChildComp.parentEntity = entity;
     secondaryEntity.activate();
+}
+
+void PlayerAttackInputSystem::SineAttack(const TransformComponent& transform, const PlayerComponent& player) const
+{
+    ColorPair* colorPair = m_gameModeData.GetColorPair(player.player.id);
+
+    v2 position = transform.position;
+    position.x += 40.0f;
+    position.y -= 20.0f;
+
+    anax::Entity entity = getWorld().createEntity();
+    TransformComponent& attackTransformComp = entity.addComponent<TransformComponent>();
+    attackTransformComp.position = position;
+    attackTransformComp.flipHorizontal = transform.flipHorizontal;
+    LinearAttackComponent& linearAttackComp = entity.addComponent<LinearAttackComponent>();
+    linearAttackComp.direction.x = transform.flipHorizontal ? -1.0f : 1.0f;
+    linearAttackComp.direction.y = 0.0f;
+    AttackComponent& attackComp = entity.addComponent<AttackComponent>();
+    attackComp.ownerPlayerId = player.player.id;
+    PhysicsBodyComponent& attackPhysicsBodyComp = entity.addComponent<PhysicsBodyComponent>();
+    attackPhysicsBodyComp.size.x = 32.0f;
+    attackPhysicsBodyComp.size.y = 32.0f;
+    attackPhysicsBodyComp.contactType = PhysicsBodyComponent::ContactType::Bullet;
+    attackPhysicsBodyComp.category = colorPair->category;
+    TextureComponent& secondaryTextureComp = entity.addComponent<TextureComponent>();
+    secondaryTextureComp.texture = m_texture;
+    secondaryTextureComp.textureFrames = m_textureFrames;
+    AnimatedSpriteComponent& secondarySpriteComp = entity.addComponent<AnimatedSpriteComponent>();
+    secondarySpriteComp.spriteAnimationsAsset = m_spriteAnimations;
+    secondarySpriteComp.animationName = "spr_wasp_idle_anim";
+    secondarySpriteComp.colour = m_gameModeData.GetColorPair(player.player.id)->color;
+    entity.addComponent<TimedLifeComponent>().timeLeftToKeepAlive = 4.0f;
+    entity.activate();
 }
