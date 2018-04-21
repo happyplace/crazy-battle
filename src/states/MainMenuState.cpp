@@ -22,6 +22,16 @@ void MainMenuState::DoUpdate(const GameTimer& gameTimer)
         {
             m_screen = Screen::Title;
         }
+        if (m_screen == Screen::Controls)
+        {
+            ButtonState& state = GetButttonState(gamePad->GetId());
+            bool yPressed = gamePad->BtnY();
+            if (yPressed && !state.y)
+            {
+                m_controlsScreen.SwapShowKeyboard();
+            }
+            state.y = yPressed;
+        }
         if (m_screen == Screen::Title)
         {
             if (gamePad->BtnLeftShoulder())
