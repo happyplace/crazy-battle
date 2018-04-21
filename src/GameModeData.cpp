@@ -169,12 +169,9 @@ void GameModeData::Update(const GameTimer& gameTimer)
 
     if (!m_isGameRunning)
     {
-        std::vector<SDL_JoystickID> controllerIds;
-        InputManager::GetInstance().GetAllControllerInstanceIds(controllerIds);
-        for (SDL_JoystickID controllerId : controllerIds)
+        for (GamePadPtr gamePad : InputManager::GetInstance().GetAllGamePads())
         {
-            SDL_GameController* gameController = InputManager::GetInstance().GetController(controllerId);
-            if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_BACK) == 1 && m_health.size() > 1)
+            if (gamePad->Back() && m_health.size() > 1)
             {
                 StartGame();
             }

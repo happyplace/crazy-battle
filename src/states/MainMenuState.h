@@ -19,11 +19,11 @@ private:
     struct ButtonState
     {
         ButtonState() : joyId(-1), y(false), x(false) {}
-        SDL_JoystickID joyId;
+        int32_t joyId;
         bool y;
         bool x;
     };
-    ButtonState& GetButttonState(SDL_JoystickID id);
+    ButtonState& GetButttonState(int32_t id);
     std::vector<ButtonState> m_buttonState;
 
     TitleScreenLogo m_titleScreenLogo;

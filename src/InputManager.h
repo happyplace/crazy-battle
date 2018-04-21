@@ -5,6 +5,8 @@
 
 #include <SDL.h>
 
+#include "GamePad.h"
+
 class InputManager
 {
 public:
@@ -15,17 +17,22 @@ public:
     ~InputManager();
 
     void Update();
-    SDL_GameController* GetController(SDL_JoystickID instanceId);
-    void GetAllControllerInstanceIds(std::vector<SDL_JoystickID>& outInstanceIds) const;
+
+    GamePadPtr GetGamePad(int32_t gamePadId);
+    const std::vector<GamePadPtr>& GetAllGamePads() const { return m_gamePads; }
 
 private:
     static InputManager* ms_instance;
 
-    struct GameController
+    struct GamePadJoystickPair
     {
-        SDL_GameController* gameController;
+        int32_t gamePadId;
         SDL_JoystickID instanceId;
     };
-    typedef std::unordered_map<SDL_JoystickID, GameController> GameControllerMap;
-    GameControllerMap m_gameControllers;
+
+    GamePadJoystickPair* GetJoystickPair(SDL_JoystickID instanceId);
+
+    int32_t m_nextGamePadId;
+    std::vector<GamePadJoystickPair> m_gamePadJoysticks;
+    std::vector<GamePadPtr> m_gamePads;
 };

@@ -12,27 +12,24 @@ void MainMenuState::Init()
 
 void MainMenuState::DoUpdate(const GameTimer& gameTimer)
 {
-    std::vector<SDL_JoystickID> controllerIds;
-    InputManager::GetInstance().GetAllControllerInstanceIds(controllerIds);
-    for (SDL_JoystickID controllerId : controllerIds)
+    for (GamePadPtr gamePad : InputManager::GetInstance().GetAllGamePads())
     {
-        SDL_GameController* gameController = InputManager::GetInstance().GetController(controllerId);
-        if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_START) == 1)
+        if (gamePad->Start())
         {
             CrazyBattle::Game().ChangeState(CrazyBattleState::Game);
         }
-        if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_B) == 1)
+        if (gamePad->BtnB())
         {
             m_screen = Screen::Title;
         }
         if (m_screen == Screen::Title)
         {
-            if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == 1)
+            if (gamePad->BtnLeftShoulder())
             {
                 m_screen = Screen::Controls;
             }
-            ButtonState& state = GetButttonState(controllerId);
-            bool yPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_Y) == 1;
+            ButtonState& state = GetButttonState(gamePad->GetId());
+            bool yPressed = gamePad->BtnY();
             if (yPressed && !state.y)
             {
                 GameManager::GetInstance().GetRules().mode =
@@ -41,7 +38,7 @@ void MainMenuState::DoUpdate(const GameTimer& gameTimer)
                             GameRules::Mode::Lives;
             }
             state.y = yPressed;
-            bool xPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_X) == 1;
+            bool xPressed = gamePad->Attack();
             if (xPressed && !state.x)
             {
                 if (GameManager::GetInstance().GetRules().mode == GameRules::Mode::Lives)
@@ -109,7 +106,7 @@ void MainMenuState::Shutdown()
 {
 }
 
-MainMenuState::ButtonState& MainMenuState::GetButttonState(SDL_JoystickID id)
+MainMenuState::ButtonState& MainMenuState::GetButttonState(int32_t id)
 {
     for (ButtonState& buttonState : m_buttonState)
     {

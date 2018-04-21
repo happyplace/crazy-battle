@@ -12,16 +12,16 @@ void PlayerMovementSystem::Update(const GameTimer& gameTimer)
 
         bool jumpPressed = false;
 
-        SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
-        if (gameController)
+        GamePadPtr gamePad = InputManager::GetInstance().GetGamePad(playerComp.player.gamePadId);
+        if (gamePad)
         {
             b2Vec2 linearVelocity = physicsBodyComp.params.body->GetLinearVelocity();
-            const float axisLeftX = InputManager::GetControllerAxisWithDeadZone(gameController, SDL_CONTROLLER_AXIS_LEFTX);
+            const float axisLeftX = gamePad->MoveX();
             const float MoveSpeed = playerComp.moveSpeed * static_cast<float>(gameTimer.DeltaTime());
             linearVelocity.x = MoveSpeed * axisLeftX;
             physicsBodyComp.params.body->SetLinearVelocity(linearVelocity);
 
-            jumpPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_A) == 1;
+            jumpPressed = gamePad->Jump();
             if ((jumpPressed && !playerComp.params.jumpPressed) && fabs(linearVelocity.y) < 0.1f)
             {
                 physicsBodyComp.params.body->ApplyLinearImpulseToCenter(b2Vec2(0.0f, -65.0f), true);

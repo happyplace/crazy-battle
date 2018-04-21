@@ -96,7 +96,7 @@ void PlayerEntitySpawnerSystem::Update()
 		}
 		else
 		{
-            playerComp.player.controllerInstanceId = player->controllerInstanceId;
+            playerComp.player.gamePadId = player->gamePadId;
 		}
 	}
 }

@@ -27,11 +27,11 @@ PlayerStruct* GameManager::CreatePlayer()
     return &m_players.back();
 }
 
-PlayerStruct* GameManager::GetPlayerAssignedToControllerId(SDL_JoystickID controllerId)
+PlayerStruct* GameManager::GetPlayerAssignedToControllerId(int32_t controllerId)
 {
     for (PlayerStruct& player : m_players)
 	{
-		if (player.controllerInstanceId == controllerId)
+        if (player.gamePadId == controllerId)
 		{
             return &player;
 		}
@@ -57,23 +57,20 @@ void GameManager::Update()
 
 	for (PlayerStruct& player : m_players)
 	{
-		if (inputManager.GetController(player.controllerInstanceId) == nullptr)
+        if (inputManager.GetGamePad(player.gamePadId) == nullptr)
 		{
-			player.controllerInstanceId = -1;
+            player.gamePadId = -1;
 		}
 	}
 
-	std::vector<SDL_JoystickID> controllerIds;
-	inputManager.GetAllControllerInstanceIds(controllerIds);
-	for (SDL_JoystickID controllerId : controllerIds)
+    for (GamePadPtr gamePad : inputManager.GetAllGamePads())
 	{
-		SDL_GameController* gameController = inputManager.GetController(controllerId);
-		if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_START) == 1)
+        if (gamePad->Start())
 		{
-			if (GetPlayerAssignedToControllerId(controllerId) == nullptr)
+            if (GetPlayerAssignedToControllerId(gamePad->GetId()) == nullptr)
 			{
 				PlayerStruct* player = CreatePlayer();
-                player->controllerInstanceId = controllerId;
+                player->gamePadId = gamePad->GetId();
 			}
 		}
 	}

@@ -21,7 +21,7 @@ public:
 private:
 	static GameManager* ms_instance;
 
-	PlayerStruct* GetPlayerAssignedToControllerId(SDL_JoystickID controllerId);
+    PlayerStruct* GetPlayerAssignedToControllerId(int32_t controllerId);
 	PlayerStruct* CreatePlayer();
 
 	int64_t m_nextPlayerId;

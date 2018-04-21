@@ -17,6 +17,7 @@ float InputManager::GetControllerAxisWithDeadZone(SDL_GameController* controller
 }
 
 InputManager::InputManager()
+    : m_nextGamePadId(0)
 {
     ms_instance = this;
 }
@@ -26,21 +27,14 @@ InputManager::~InputManager()
     ms_instance = nullptr;
 }
 
-void InputManager::GetAllControllerInstanceIds(std::vector<SDL_JoystickID>& outInstanceIds) const
+InputManager::GamePadJoystickPair* InputManager::GetJoystickPair(SDL_JoystickID instanceId)
 {
-    outInstanceIds.clear();
-    for (const std::pair<SDL_JoystickID, GameController> gameControllerPair : m_gameControllers)
+    for (GamePadJoystickPair& pair : m_gamePadJoysticks)
     {
-        outInstanceIds.push_back(gameControllerPair.first);
-    }
-}
-
-SDL_GameController* InputManager::GetController(SDL_JoystickID instanceId)
-{
-    GameControllerMap::iterator it = m_gameControllers.find(instanceId);
-    if (it != m_gameControllers.end())
-    {
-        return it->second.gameController;
+        if (pair.instanceId == instanceId)
+        {
+            return &pair;
+        }
     }
     return nullptr;
 }
@@ -61,31 +55,59 @@ void InputManager::Update()
         if (sdlEvents[i].type == SDL_CONTROLLERDEVICEADDED)
         {
             const int32_t controllerIndex = sdlEvents[i].cdevice.which;
-            GameController controller;
-            controller.gameController = SDL_GameControllerOpen(controllerIndex);
-            SDL_assert(controller.gameController);
-            if (controller.gameController)
+            SDL_GameController* gameController = SDL_GameControllerOpen(controllerIndex);
+            SDL_assert(gameController);
+            if (gameController)
             {
-                SDL_Joystick* controllerJoystick = SDL_GameControllerGetJoystick(controller.gameController);
-                controller.instanceId = SDL_JoystickInstanceID(controllerJoystick);
-                SDL_assert(controller.instanceId >= 0);
-                if (controller.instanceId >= 0)
+                SDL_Joystick* controllerJoystick = SDL_GameControllerGetJoystick(gameController);
+                SDL_JoystickID instanceId = SDL_JoystickInstanceID(controllerJoystick);
+                SDL_assert(instanceId >= 0);
+                if (instanceId >= 0)
                 {
-                    SDL_assert(m_gameControllers.find(controller.instanceId) == m_gameControllers.end());
-                    m_gameControllers[controller.instanceId] = controller;
+                    SDL_assert(GetJoystickPair(instanceId) == nullptr);
+
+                    GamePadPtr gamePad(new GamePad(m_nextGamePadId++, gameController));
+
+                    GamePadJoystickPair pair;
+                    pair.instanceId = instanceId;
+                    pair.gamePadId = gamePad->GetId();
+                    m_gamePadJoysticks.push_back(pair);
+
+                    m_gamePads.push_back(gamePad);
                 }
             }
         }
         else if (sdlEvents[i].type == SDL_CONTROLLERDEVICEREMOVED)
         {
             const int32_t controllerInstanceId = sdlEvents[i].cdevice.which;
-            GameControllerMap::iterator it = m_gameControllers.find(controllerInstanceId);
-            SDL_assert(it != m_gameControllers.end());
-            if (it != m_gameControllers.end())
+            for (std::size_t k = 0; k < m_gamePadJoysticks.size(); k++)
             {
-                SDL_GameControllerClose(it->second.gameController);
-                m_gameControllers.erase(controllerInstanceId);
+                if (m_gamePadJoysticks[k].instanceId == controllerInstanceId)
+                {
+                    for (std::size_t i = 0; i < m_gamePads.size(); i++)
+                    {
+                        if (m_gamePads[i]->GetId() == m_gamePadJoysticks[k].gamePadId)
+                        {
+                            m_gamePads.erase(m_gamePads.begin() + i);
+                            break;
+                        }
+                    }
+                    m_gamePadJoysticks.erase(m_gamePadJoysticks.begin() + k);
+                    break;
+                }
             }
         }
     }
+}
+
+GamePadPtr InputManager::GetGamePad(int32_t gamePadId)
+{
+    for (GamePadPtr gamePad : m_gamePads)
+    {
+        if (gamePad->GetId() == gamePadId)
+        {
+            return gamePad;
+        }
+    }
+    return nullptr;
 }

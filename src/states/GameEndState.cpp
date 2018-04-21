@@ -10,16 +10,13 @@ void GameEndState::Init()
 
 void GameEndState::DoUpdate(const GameTimer& gameTimer)
 {
-    std::vector<SDL_JoystickID> controllerIds;
-    InputManager::GetInstance().GetAllControllerInstanceIds(controllerIds);
-    for (SDL_JoystickID controllerId : controllerIds)
-    {
-        SDL_GameController* gameController = InputManager::GetInstance().GetController(controllerId);
-        if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_START) == 1)
+    for (GamePadPtr gamePad : InputManager::GetInstance().GetAllGamePads())
+    {        
+        if (gamePad->Start())
         {
             CrazyBattle::Game().ChangeState(CrazyBattleState::Game);
         }
-        if (SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_BACK) == 1)
+        if (gamePad->Back())
         {
             CrazyBattle::Game().ChangeState(CrazyBattleState::MainMenu);
         }

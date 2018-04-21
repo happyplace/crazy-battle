@@ -34,10 +34,10 @@ void PlayerAttackInputSystem::Update(const GameTimer& gameTimer)
 
         if (playerComp.state == PlayerComponent::State::Idle && m_gameModeData.IsGameRunning())
         {
-            SDL_GameController* gameController = InputManager::GetInstance().GetController(playerComp.player.controllerInstanceId);
-            if (gameController)
+            GamePadPtr gamePad = InputManager::GetInstance().GetGamePad(playerComp.player.gamePadId);
+            if (gamePad)
             {
-                attackPressed = SDL_GameControllerGetButton(gameController, SDL_CONTROLLER_BUTTON_X) == 1;
+                attackPressed = gamePad->Attack();
                 if (!playerComp.params.attackPressed && attackPressed)
                 {
                     playerComp.params.attackPressTime = gameTimer.TotalTime();

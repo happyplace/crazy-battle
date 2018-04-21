@@ -63,8 +63,7 @@ void PhysicsWorldSystem::Integrate(double deltaTime)
 
     for (anax::Entity entity : entitiesToKill)
     {
-        if (entity.isActivated())
-            entity.kill();
+        entity.kill();
     }
     entitiesToKill.clear();
 }

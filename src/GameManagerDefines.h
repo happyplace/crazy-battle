@@ -6,11 +6,11 @@
 
 struct PlayerStruct
 {
-	explicit PlayerStruct(int64_t pId) : id(pId), controllerInstanceId(-1) {}
-	PlayerStruct() : id(-1), controllerInstanceId(-1) {}
+    explicit PlayerStruct(int64_t pId) : id(pId), gamePadId(-1) {}
+    PlayerStruct() : id(-1), gamePadId(-1) {}
 	
 	int64_t id;
-	SDL_JoystickID controllerInstanceId;
+    int32_t gamePadId;
 };
 
 struct GameRules
