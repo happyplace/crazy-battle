@@ -20,6 +20,31 @@ InputManager::InputManager()
     : m_nextGamePadId(0)
 {
     ms_instance = this;
+
+    KeyboardConfig keyboardConfig;
+    keyboardConfig.attack = SDL_SCANCODE_O;
+    keyboardConfig.jump = SDL_SCANCODE_P;
+    keyboardConfig.back = SDL_SCANCODE_RSHIFT;
+    keyboardConfig.start = SDL_SCANCODE_RETURN;
+    keyboardConfig.btnB = SDL_SCANCODE_J;
+    keyboardConfig.btnLeftShoulder = SDL_SCANCODE_L;
+    keyboardConfig.btnY = SDL_SCANCODE_K;
+    keyboardConfig.moveX_pos = SDL_SCANCODE_D;
+    keyboardConfig.moveX_neg = SDL_SCANCODE_A;
+    GamePadPtr keyboard0(new GamePad(m_nextGamePadId++, keyboardConfig));
+    m_gamePads.push_back(keyboard0);
+
+    keyboardConfig.attack = SDL_SCANCODE_KP_0;
+    keyboardConfig.jump = SDL_SCANCODE_KP_PERIOD;
+    keyboardConfig.back = SDL_SCANCODE_KP_PLUS;
+    keyboardConfig.start = SDL_SCANCODE_KP_ENTER;
+    keyboardConfig.btnB = SDL_SCANCODE_KP_9;
+    keyboardConfig.btnLeftShoulder = SDL_SCANCODE_KP_8;
+    keyboardConfig.btnY = SDL_SCANCODE_KP_7;
+    keyboardConfig.moveX_pos = SDL_SCANCODE_RIGHT;
+    keyboardConfig.moveX_neg = SDL_SCANCODE_LEFT;
+    GamePadPtr keyboard1(new GamePad(m_nextGamePadId++, keyboardConfig));
+    m_gamePads.push_back(keyboard1);
 }
 
 InputManager::~InputManager()
