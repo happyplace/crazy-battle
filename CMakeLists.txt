@@ -127,6 +127,10 @@ endif()
 
 target_compile_features(CrazyBattle PRIVATE cxx_range_for)
 
+set(CrazyBattleInstallDir "/usr/bin/crazybattle")
+install (TARGETS CrazyBattle RUNTIME DESTINATION "${CrazyBattleInstallDir}")
+install (DIRECTORY media/ DESTINATION "${CrazyBattleInstallDir}/media")
+
 if (MSVC)
 	if (CMAKE_CL_64)
 		target_link_libraries(CrazyBattle ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image-2.0.3/lib/x64/SDL2_image)
