@@ -1,12 +1,18 @@
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 cmake_minimum_required(VERSION 3.1)
 
 project (framework)
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(CMAKE_CXX_FLAGS "-Wall")
+endif()
 
 add_definitions(-DBUILDING_DLL)
 
 include_directories(include)
 
-set(fw_source_files
+set(fw_include_files
     "include/FrameworkExport.h"
     "include/Game.h"
 )
@@ -18,9 +24,13 @@ set(fw_source_files
 if (MSVC)
     include_directories("libs/msvc/SDL2/include")
 else()
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_image REQUIRED)
+    find_package(SDL2_ttf REQUIRED)
+    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR})
 endif()
 
-add_library(framework SHARED ${fw_source_files})
+add_library(framework SHARED ${fw_include_files} ${fw_source_files})
 
 target_compile_features(framework PRIVATE cxx_range_for)
 
@@ -30,6 +40,8 @@ if (MSVC)
     else()
         target_link_libraries(framework PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2/lib/x86/SDL2.lib)
     endif()
+else()
+    target_link_libraries(CrazyBattle ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 endif()
 
 if (MSVC)
