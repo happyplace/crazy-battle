@@ -1,42 +1,75 @@
-#include "Game.h"
+#include "gf/Game.h"
 
 #include <SDL.h>
 
-int Game::Run()
+#include "gf/Renderer.h"
+
+using namespace gf;
+
+Game::Game()
+    : m_quitGame(false)
 {
-    SDL_Window* window = nullptr;
+}
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-        return 1;
+Game::~Game()
+{
+}
 
-    window = SDL_CreateWindow(
-        "Game",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        1920,
-        1080,
-        SDL_WINDOW_SHOWN);
-    if (window == nullptr)
-        return 1;
+void Game::Init()
+{
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL could not initalize! SDL_ERROR: %s", SDL_GetError());
+        QuitGame();
+        return;
+    }
 
-    bool quit = false;
+    Renderer::CreateInstance();
+
+    if (!Renderer::GetInstance().Init())
+    {
+        QuitGame();
+        return;
+    }
+
+    OnInit();
+}
+
+void Game::Destroy()
+{
+    Renderer::GetInstance().Destroy();
+    
+    Renderer::DestroyInstance();
+
+    SDL_Quit();
+
+    OnDestroy();
+}
+
+void Game::QuitGame()
+{
+    m_quitGame = true;
+}
+
+int Game::Run(int argc, char** argv)
+{
+    Init();
+
     SDL_Event e;
-
-    while (!quit)
+    while (!m_quitGame)
     {
         while (SDL_PollEvent(&e) != 0)
         {
             if (e.type == SDL_QUIT)
             {
-                quit = true;
+                QuitGame();
             }
         }
 
-        SDL_UpdateWindowSurface(window);
+        SDL_UpdateWindowSurface(Renderer::GetInstance().GetWindow());
     }
 
-    SDL_DestroyWindow(window);
-    window = nullptr;
+    Destroy();
 
-    SDL_Quit();
+    return 0;
 }

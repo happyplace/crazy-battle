@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(crazy-battle)
 
@@ -8,6 +8,8 @@ endif()
 
 set(cb_source_files
     "src/main.cpp"
+    "src/CrazyBattle.h"
+    "src/CrazyBattle.cpp"
 )
 
 include_directories(framework/include)

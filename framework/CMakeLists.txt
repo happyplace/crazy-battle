@@ -1,6 +1,6 @@
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project (framework)
 
@@ -13,13 +13,18 @@ add_definitions(-DBUILDING_DLL)
 include_directories(include)
 
 set(fw_include_files
-    "include/FrameworkExport.h"
-    "include/Game.h"
+    "include/gf/FrameworkExport.h"
+    "include/gf/Game.h"
+	"include/gf/Renderer.h"
 )
 
 set(fw_source_files
     "src/Game.cpp"
+	"src/Renderer.cpp"
 )
+
+include_directories(libs/entityx)
+add_subdirectory(libs/entityx)
 
 if (MSVC)
     include_directories("libs/msvc/SDL2/include")
@@ -33,6 +38,8 @@ endif()
 add_library(framework SHARED ${fw_include_files} ${fw_source_files})
 
 target_compile_features(framework PRIVATE cxx_range_for)
+
+target_link_libraries(framework PRIVATE entityx)
 
 if (MSVC)
     if (CMAKE_CL_64)
