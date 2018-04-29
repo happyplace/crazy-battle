@@ -1,4 +1,4 @@
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+﻿set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
@@ -10,36 +10,48 @@ endif()
 
 add_definitions(-DBUILDING_DLL)
 
-include_directories(include)
-
 set(fw_include_files
     "include/gf/FrameworkExport.h"
     "include/gf/Game.h"
-	"include/gf/Renderer.h"
+    "include/gf/Renderer.h"
 )
 
 set(fw_source_files
     "src/Game.cpp"
-	"src/Renderer.cpp"
+    "src/Renderer.cpp"
 )
 
-include_directories(libs/entityx)
 add_subdirectory(libs/entityx)
 
 if (MSVC)
-    include_directories("libs/msvc/SDL2/include")
+    set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} "{FRAMEWORK_ROOT}libs/msvc/SDL2/include")
 else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_ttf REQUIRED)
-    include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2_TTF_INCLUDE_DIR})
+    set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS}
+        ${SDL2_INCLUDE_DIR}
+        ${SDL2_IMAGE_INCLUDE_DIR}
+        ${SDL2_TTF_INCLUDE_DIR}
+    )
 endif()
+
+set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS}
+    "{FRAMEWORK_ROOT}include"
+    "{FRAMEWORK_ROOT}libs/entityx"
+)
+
+SET_PROPERTY(GLOBAL PROPERTY GlobalFrameworkIncludes ${FRAMEWORK_INCLUDE_DIRS})
+foreach(includeDir ${FRAMEWORK_INCLUDE_DIRS})
+    string(REPLACE "{FRAMEWORK_ROOT}" "" full_include_dir ${includeDir})
+    include_directories(${full_include_dir})
+endforeach()
 
 add_library(framework SHARED ${fw_include_files} ${fw_source_files})
 
 target_compile_features(framework PRIVATE cxx_range_for)
 
-target_link_libraries(framework PRIVATE entityx)
+target_link_libraries(framework entityx)
 
 if (MSVC)
     if (CMAKE_CL_64)
@@ -48,7 +60,7 @@ if (MSVC)
         target_link_libraries(framework PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2/lib/x86/SDL2.lib)
     endif()
 else()
-    target_link_libraries(CrazyBattle ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
+    target_link_libraries(framework ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 endif()
 
 if (MSVC)

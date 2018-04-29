@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+﻿cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 project(crazy-battle)
 
@@ -14,6 +14,13 @@ set(cb_source_files
 
 include_directories(framework/include)
 add_subdirectory(framework)
+
+GET_PROPERTY(FRAMEWORK_INCLUDE_DIRS GLOBAL PROPERTY GlobalFrameworkIncludes)
+SET_PROPERTY(GLOBAL PROPERTY GlobalFrameworkIncludes ${FRAMEWORK_INCLUDE_DIRS})
+foreach(includeDir ${FRAMEWORK_INCLUDE_DIRS})
+    string(REPLACE "{FRAMEWORK_ROOT}" "framework/" full_include_dir ${includeDir})
+    include_directories(${full_include_dir})
+endforeach()
 
 if (MSVC)
     add_executable(crazy-battle WIN32 ${cb_source_files})
