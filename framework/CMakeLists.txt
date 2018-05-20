@@ -26,7 +26,7 @@ set(fw_source_files
     "src/systems/SpriteRendererSystem.cpp"
 )
 
-add_subdirectory(libs/entityx)
+add_subdirectory(libs/entityx/framework_cmake)
 
 if (MSVC)
     set(FRAMEWORK_INCLUDE_DIRS ${FRAMEWORK_INCLUDE_DIRS} 
@@ -60,7 +60,7 @@ add_library(framework SHARED ${fw_include_files} ${fw_source_files})
 
 target_compile_features(framework PRIVATE cxx_range_for)
 
-target_link_libraries(framework entityx)
+target_link_libraries(framework EntityX)
 
 if (MSVC)
     if (CMAKE_CL_64)
@@ -80,13 +80,19 @@ if (MSVC)
     if (CMAKE_CL_64)
         file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2/lib/x64/SDL2.dll SDL2_DLL)
         file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image/lib/x64/SDL2_image.dll SDL2_IMAGE_DLL)
+        file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image/lib/x64/libpng16-16.dll LIB_PNG_DLL)
+        file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image/lib/x64/zlib1.dll ZLIB1_DLL)
     else()
         file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2/lib/x86/SDL2.dll SDL2_DLL)
         file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image/lib/x86/SDL2_image.dll SDL2_IMAGE_DLL)
+        file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image/lib/x86/libpng16-16.dll LIB_PNG_DLL)
+        file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/libs/msvc/SDL2_image/lib/x86/zlib1.dll ZLIB1_DLL)
     endif()
 
     file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/$(Configuration)" DEST_DIR)
 
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND xcopy "${SDL2_DLL}" "${DEST_DIR}" /yis)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND xcopy "${SDL2_IMAGE_DLL}" "${DEST_DIR}" /yis)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND xcopy "${LIB_PNG_DLL}" "${DEST_DIR}" /yis)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND xcopy "${ZLIB1_DLL}" "${DEST_DIR}" /yis)
 endif()

@@ -4,10 +4,13 @@
 
 #include "gf/Renderer.h"
 
+#include "gf/GameMode.h"
+
 using namespace gf;
 
 Game::Game()
     : m_quitGame(false)
+	, m_gameMode(new GameMode())
 {
 }
 
@@ -74,6 +77,8 @@ int Game::Run(int argc, char** argv)
 {
     Init();
 
+	m_gameMode->Init();
+
     while (!m_quitGame)
     {
         SDL_PumpEvents();
@@ -83,10 +88,15 @@ int Game::Run(int argc, char** argv)
         SDL_SetRenderDrawColor(renderer, 0xb1, 0xc5, 0xdf, 0xff);
         SDL_RenderClear(renderer);
 
+		SDL_assert(m_gameMode);
+		m_gameMode->Update();
+
         SDL_RenderPresent(renderer);
 
         CheckEvents();
     }
+
+	m_gameMode->Destroy();
 
     Destroy();
 

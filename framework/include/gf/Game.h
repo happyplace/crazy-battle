@@ -3,6 +3,7 @@
 #include <SDL.h>
 
 #include "FrameworkExport.h"
+#include "GameMode.h"
 
 namespace gf
 {
@@ -28,5 +29,7 @@ namespace gf
         void CheckEvents();
 
         bool m_quitGame;
+
+		GameMode* m_gameMode;
     };
 }

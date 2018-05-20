@@ -21,12 +21,6 @@ set(ENTITYX_MAX_COMPONENTS 64 CACHE STRING "Set the maximum number of components
 set(ENTITYX_DT_TYPE double CACHE STRING "The type used for delta time in EntityX update methods.")
 set(ENTITYX_BUILD_SHARED true CACHE BOOL "Build shared libraries?")
 
-set(ENTITYX_BUILD_TESTING false)
-set(ENTITYX_RUN_BENCHMARKS false)
-set(ENTITYX_MAX_COMPONENTS 64)
-set(ENTITYX_DT_TYPE double)
-set(ENTITYX_BUILD_SHARED false)
-
 include(${CMAKE_ROOT}/Modules/CheckIncludeFile.cmake)
 include(CheckCXXSourceCompiles)
 
@@ -166,28 +160,28 @@ configure_file(
 )
 
 
-#if (NOT WINDOWS OR CYGWIN)
-#    set(entityx_libs -lentityx)
+if (NOT WINDOWS OR CYGWIN)
+    set(entityx_libs -lentityx)
 
-#    configure_file(
-#        ${CMAKE_CURRENT_SOURCE_DIR}/entityx.pc.in
-#        ${CMAKE_CURRENT_BINARY_DIR}/entityx.pc
-#        )
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/entityx.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/entityx.pc
+        )
 
-#    install(
-#        FILES ${CMAKE_CURRENT_BINARY_DIR}/entityx.pc
-#        DESTINATION "${libdir}/pkgconfig"
-#        )
-#endif()
+    install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/entityx.pc
+        DESTINATION "${libdir}/pkgconfig"
+        )
+endif()
 
-#install(
-#    DIRECTORY "entityx"
-#    DESTINATION "include"
-#    FILES_MATCHING PATTERN "*.h"
-#    )
+install(
+    DIRECTORY "entityx"
+    DESTINATION "include"
+    FILES_MATCHING PATTERN "*.h"
+    )
 
-#install(
-#    TARGETS ${install_libs}
-#    LIBRARY DESTINATION "${libdir}"
-#    ARCHIVE DESTINATION "${libdir}"
-#    )
+install(
+    TARGETS ${install_libs}
+    LIBRARY DESTINATION "${libdir}"
+    ARCHIVE DESTINATION "${libdir}"
+    )
