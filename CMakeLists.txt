@@ -28,7 +28,7 @@ else()
     add_executable(crazy-battle ${cb_source_files})
 endif()
 
-target_link_libraries(crazy-battle PRIVATE framework)
+target_link_libraries(crazy-battle framework)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR} CACHE PATH "Build directory" FORCE)

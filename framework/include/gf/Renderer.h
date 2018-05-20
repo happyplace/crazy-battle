@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "FrameworkExport.h"
 
@@ -17,8 +17,8 @@ namespace gf
         bool Init();
         void Destroy();
 
-        FRAMEWORKDLL SDL_Window* GetWindow() { return m_window; }
-        FRAMEWORKDLL SDL_Renderer* GetRenderer() { return m_renderer; }
+        SDL_Window* GetWindow() { return m_window; }
+        SDL_Renderer* GetRenderer() { return m_renderer; }
 
     private:
         static Renderer* ms_instance;

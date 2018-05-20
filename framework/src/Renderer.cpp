@@ -38,7 +38,7 @@ Renderer::~Renderer()
 bool Renderer::Init()
 {
     m_window = SDL_CreateWindow("Game Framework", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        1280, 720, SDL_WINDOW_SHOWN);
+        800, 600, SDL_WINDOW_SHOWN);
     if (m_window == nullptr)
     {
         SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "window could not be created SDL_error: %s", SDL_GetError());

@@ -1,4 +1,4 @@
-#include "gf/Game.h"
+﻿#include "gf/Game.h"
 
 #include <SDL.h>
 
@@ -51,22 +51,41 @@ void Game::QuitGame()
     m_quitGame = true;
 }
 
+void Game::CheckEvents()
+{
+    SDL_Event sdlEvents[kNumOfEventsPerPeek];
+
+    const int numOfEvents = SDL_PeepEvents(sdlEvents, kNumOfEventsPerPeek, SDL_GETEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT);
+    if (numOfEvents < 0)
+    {
+        SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "SDL_PeepEvents faile SDL_ERROR: %s", SDL_GetError());
+    }
+
+    for (int i = 0; i < numOfEvents; i++)
+    {
+        if (sdlEvents[i].type == SDL_QUIT)
+        {
+            QuitGame();
+        }
+    }
+}
+
 int Game::Run(int argc, char** argv)
 {
     Init();
 
-    SDL_Event e;
     while (!m_quitGame)
     {
-        while (SDL_PollEvent(&e) != 0)
-        {
-            if (e.type == SDL_QUIT)
-            {
-                QuitGame();
-            }
-        }
+        SDL_PumpEvents();
 
-        SDL_UpdateWindowSurface(Renderer::GetInstance().GetWindow());
+        SDL_Renderer* renderer = Renderer::GetInstance().GetRenderer();
+
+        SDL_SetRenderDrawColor(renderer, 0xb1, 0xc5, 0xdf, 0xff);
+        SDL_RenderClear(renderer);
+
+        SDL_RenderPresent(renderer);
+
+        CheckEvents();
     }
 
     Destroy();

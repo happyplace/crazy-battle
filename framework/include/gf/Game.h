@@ -9,6 +9,8 @@ namespace gf
     class Game
     {
     public:
+        static const int kNumOfEventsPerPeek = 100;
+
         FRAMEWORKDLL Game();
         FRAMEWORKDLL virtual ~Game();
 
@@ -23,6 +25,7 @@ namespace gf
     private:
         void Init();
         void Destroy();
+        void CheckEvents();
 
         bool m_quitGame;
     };
