@@ -12,6 +12,8 @@ struct FCBPawnInput
 	GENERATED_BODY()
 
 public:
+	FCBPawnInput() : bWalkPressed(false) {}
+
 	// Sanitized movement input
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn Input")
 	FVector2D MovementInput;
@@ -19,9 +21,12 @@ public:
 	void Sanitize();
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
+	void WalkPressed();
+	void WalkReleased();
 
 private:
 	FVector2D RawMovementInput;
+	bool bWalkPressed;
 };
 
 UCLASS()
@@ -51,6 +56,8 @@ protected:
 private:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
+	void WalkPressed();
+	void WalkReleased();
 
 private:
 	// Sprite for the player
@@ -63,6 +70,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UPaperFlipbook* WalkAnimation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateACcess = "true"))
+	class UPaperFlipbook* RunAnimation;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
+	class UCapsuleComponent* CapsuleComponent;
 };
