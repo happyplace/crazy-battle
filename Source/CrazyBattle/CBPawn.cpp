@@ -12,7 +12,7 @@
 void FCBPawnInput::Sanitize()
 {
 	MovementInput = RawMovementInput.ClampAxes(-1.0f, 1.0f);
-	MovementInput = MovementInput.GetSafeNormal();
+	//MovementInput = MovementInput.GetSafeNormal();
 	MovementInput *= bWalkPressed ? 0.5f : 1.0f;
 	RawMovementInput.Set(0.0f, 0.0f);
 }
@@ -39,6 +39,7 @@ void FCBPawnInput::WalkReleased()
 
 // Sets default values
 ACBPawn::ACBPawn()
+	: bJumpPressed(false)
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -62,14 +63,6 @@ ACBPawn::ACBPawn()
 	CameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
 	CameraComponent->OrthoWidth = 768.0f;
 	
-	float aspectRatio = 3.0f / 4.0f;
-	if (GEngine && GEngine->GameViewport && GEngine->GameViewport->Viewport)
-	{
-		const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
-		aspectRatio = ViewportSize.Y / ViewportSize.X;
-	}
-	CameraComponent->AspectRatio = aspectRatio;
-
 	CameraComponent->SetWorldLocation(FVector(0.0f, 500.0f, 30.0f));
 	CameraComponent->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
 	CameraComponent->AttachToComponent(CapsuleComponent, FAttachmentTransformRules::KeepRelativeTransform);
@@ -79,6 +72,14 @@ ACBPawn::ACBPawn()
 void ACBPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	float aspectRatio = 3.0f / 4.0f;
+	if (GEngine && GEngine->GameViewport && GEngine->GameViewport->Viewport)
+	{
+		const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
+		aspectRatio = ViewportSize.Y / ViewportSize.X;
+	}
+	CameraComponent->AspectRatio = aspectRatio;
 
 	Flipbook->SetFlipbook(IdleAnimation);
 }
@@ -92,9 +93,13 @@ void ACBPawn::Tick(float DeltaTime)
 
 	float MoveSpeed = 500.0f;
 
-	FVector Pos(MoveSpeed * DeltaTime * CBPawnInput.MovementInput.X, 0.0f, 0.0f);
+	//FVector Pos(MoveSpeed * DeltaTime * CBPawnInput.MovementInput.X, 0.0f, 0.0f);
 
-	CapsuleComponent->AddWorldOffset(Pos);
+	//CapsuleComponent->AddWorldOffset(Pos);
+
+	FVector inputVector(CBPawnInput.MovementInput.X, CBPawnInput.MovementInput.Y, 0.0f);
+
+	AddMovementInput(inputVector);
 
 	if (CBPawnInput.MovementInput.X > 0.1f)
 	{
@@ -130,6 +135,7 @@ void ACBPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	InputComponent->BindAction("Walk", EInputEvent::IE_Pressed, this, &ACBPawn::WalkPressed);
 	InputComponent->BindAction("Walk", EInputEvent::IE_Released, this, &ACBPawn::WalkReleased);
+	InputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACBPawn::JumpPressed);
 }
 
 void ACBPawn::MoveX(float AxisValue)
@@ -150,4 +156,9 @@ void ACBPawn::WalkPressed()
 void ACBPawn::WalkReleased()
 {
 	CBPawnInput.WalkReleased();
+}
+
+void ACBPawn::JumpPressed()
+{
+	bJumpPressed = true;
 }

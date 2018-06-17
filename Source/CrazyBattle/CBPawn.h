@@ -58,6 +58,9 @@ private:
 	void MoveY(float AxisValue);
 	void WalkPressed();
 	void WalkReleased();
+	void JumpPressed();
+
+	bool bJumpPressed;
 
 private:
 	// Sprite for the player
