@@ -55,51 +55,55 @@ void ACBPaperCharacter::Tick(float DeltaTime)
 		{
 			bPlayingOneOffAnimation = false;
 			GetSprite()->SetLooping(true);
-			GetSprite()->Play();
+			GetSprite()->PlayFromStart();
 		}
 	}
-	else if (GetMovementComponent()->IsFalling())
+
+	if (!bPlayingOneOffAnimation)
 	{
-		if (GetMovementComponent()->Velocity.Z > 0.0f)
+		if (GetMovementComponent()->IsFalling())
 		{
-			GetSprite()->SetFlipbook(JumpUpAnimation);
-		}
-		else
-		{
-			if (bWasJumppingUpLastFrame)
+			if (GetMovementComponent()->Velocity.Z > 0.0f)
 			{
-				GetSprite()->SetLooping(false);
-				GetSprite()->SetFlipbook(JumpMidAirAnimation);
-				GetSprite()->PlayFromStart();
-				bPlayingOneOffAnimation = true;
+				GetSprite()->SetFlipbook(JumpUpAnimation);
 			}
 			else
 			{
-				GetSprite()->SetFlipbook(JumpDownAnimation);
+				if (bWasJumppingUpLastFrame)
+				{
+					GetSprite()->SetLooping(false);
+					GetSprite()->SetFlipbook(JumpMidAirAnimation);
+					GetSprite()->PlayFromStart();
+					bPlayingOneOffAnimation = true;
+				}
+				else
+				{
+					GetSprite()->SetFlipbook(JumpDownAnimation);
+				}
+			}
+			bWasJumppingUpLastFrame = GetMovementComponent()->Velocity.Z > 0.0f;
+			bWasJumppingLastFrame = true;
+		}
+		else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.5f)
+		{
+			if (!HandleLanding())
+			{
+				GetSprite()->SetFlipbook(RunAnimation);
 			}
 		}
-		bWasJumppingUpLastFrame = GetMovementComponent()->Velocity.Z > 0.0f;
-		bWasJumppingLastFrame = true;
-	}
-	else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.5f)
-	{
-		if (!HandleLanding())
+		else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.01f)
 		{
-			GetSprite()->SetFlipbook(RunAnimation);
+			if (!HandleLanding())
+			{
+				GetSprite()->SetFlipbook(WalkAnimation);
+			}
 		}
-	}
-	else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.01f)
-	{
-		if (!HandleLanding())
+		else
 		{
-			GetSprite()->SetFlipbook(WalkAnimation);
-		}
-	}
-	else
-	{
-		if (!HandleLanding())
-		{
-			GetSprite()->SetFlipbook(IdleAnimation);
+			if (!HandleLanding())
+			{
+				GetSprite()->SetFlipbook(IdleAnimation);
+			}
 		}
 	}
 }
