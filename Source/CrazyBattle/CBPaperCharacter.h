@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "PaperCharacter.h"
+#include "Attack.h"
 #include "CBPaperCharacter.generated.h"
 
 /**
@@ -36,13 +37,17 @@ private:
 	void WalkReleased();
 	void JumpPressed();
 	bool HandleLanding();
+	void AttackPressed();
+	void AttackReleased();
 
 	FVector2D RawMovementInput;
 	bool bJumpPressed;
+	bool bAttackPressed;
 	
 	bool bWasJumppingUpLastFrame;
 	bool bWasJumppingLastFrame;
 	bool bPlayingOneOffAnimation;
+	bool bPrevAttackPressed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UPaperFlipbook* IdleAnimation;
@@ -64,4 +69,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UPaperFlipbook* JumpLandAnimation;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle")
+	TSubclassOf<AAttack> BasicAttack;
 };
