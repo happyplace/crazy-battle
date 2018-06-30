@@ -24,8 +24,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetInitialDirection(const FVector& value) { InitialDirection = value; }
+    const FVector& GetInitialDirection() { return InitialDirection; }
 	void SetOwningActor(uint32 value) { OwningActorUniqueId = value; }
 	uint32 GetOwningActor() { return OwningActorUniqueId; }
+
+    virtual void Fire() {}
 
 private:
 	FVector InitialDirection;

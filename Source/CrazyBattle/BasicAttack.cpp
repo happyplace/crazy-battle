@@ -31,14 +31,19 @@ void ABasicAttack::BeginPlay()
 
 	Sphere->bGenerateOverlapEvents = true;
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ABasicAttack::OnBeginOverlap);
+}
 
-	FVector force(InitialAttackSpeed, 0.0f, 0.0f);
-	Sphere->AddImpulse(force * Sphere->GetMass());
+void ABasicAttack::Fire()
+{
+    FVector force = GetInitialDirection() * InitialAttackSpeed * Sphere->GetMass();
+    Sphere->AddImpulse(force * Sphere->GetMass());
+
+    Sphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 
     Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
     Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Overlap);
     Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
-    Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECollisionResponse::ECR_Overlap);;
+    Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECollisionResponse::ECR_Overlap);
 }
 
 void ABasicAttack::Tick(float DeltaTime)

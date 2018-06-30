@@ -5,6 +5,7 @@
 #include "Components/InputComponent.h"
 #include "PaperFlipbookComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Engine/World.h"
 
@@ -95,7 +96,14 @@ void ACBPaperCharacter::Tick(float DeltaTime)
 			bWasJumppingUpLastFrame = GetMovementComponent()->Velocity.Z > 0.0f;
 			bWasJumppingLastFrame = true;
 		}
-		else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.5f)
+        else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.1f)
+        {
+            if (!HandleLanding())
+            {
+                GetSprite()->SetFlipbook(RunAnimation);
+            }
+        }
+		/*else if (GetMovementComponent()->IsMovingOnGround() && fabsf(movementInput.X) > 0.5f)
 		{
 			if (!HandleLanding())
 			{
@@ -108,7 +116,7 @@ void ACBPaperCharacter::Tick(float DeltaTime)
 			{
 				GetSprite()->SetFlipbook(WalkAnimation);
 			}
-		}
+		}*/
 		else
 		{
 			if (!HandleLanding())
@@ -123,13 +131,33 @@ void ACBPaperCharacter::Tick(float DeltaTime)
 		UWorld* world = GetWorld();
 
         FVector attackPosition = GetActorLocation();
-        attackPosition.X += 30.0f;
         FTransform attackTransform;
         attackTransform.SetTranslation(attackPosition);
 
 		AAttack* attack = Cast<AAttack>(world->SpawnActor(BasicAttack, &attackTransform));
 		attack->SetOwningActor(GetUniqueID());
-		attack->SetInitialDirection(FVector::ZeroVector);
+
+        UCapsuleComponent* capsule = GetCapsuleComponent();
+        capsule->GetCollisionObjectType();
+        
+        float x = 1.0f;
+        if (!FMath::IsNearlyEqual(0.0f, GetSprite()->GetComponentRotation().Yaw))
+        {
+            x *= -1.0f;
+        }
+        if (FMath::Abs(x) > 0.1f)
+        {
+            x = x >= 0.1f ? 1.0f : -1.0f;
+        }
+
+        if (FMath::IsNearlyEqual(0.0f, RawMovementInput.X) && !FMath::IsNearlyEqual(0.0f, RawMovementInput.Y))
+        {
+            x = 0.0f;
+        }
+
+        FVector initialDirection(x, 0.0f, -RawMovementInput.Y);
+		attack->SetInitialDirection(initialDirection.GetSafeNormal());
+        attack->Fire();
 	}
 
 	bPrevAttackPressed = bAttackPressed;
