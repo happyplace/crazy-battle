@@ -33,7 +33,6 @@ void ACBCameraController::BeginPlay()
 	Super::BeginPlay();
 
     GetWorld()->GetFirstPlayerController()->SetViewTarget(this);
-
 }
 
 // Called every frame
