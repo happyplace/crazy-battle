@@ -1,17 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "CBCameraController.h"
+#include "CBCameraPawn.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/ArrowComponent.h"
-
 #include "Engine/World.h"
 
 // Sets default values
-ACBCameraController::ACBCameraController()
+ACBCameraPawn::ACBCameraPawn()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
     CameraDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("Root"));
@@ -28,15 +27,20 @@ ACBCameraController::ACBCameraController()
 }
 
 // Called when the game starts or when spawned
-void ACBCameraController::BeginPlay()
+void ACBCameraPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
     GetWorld()->GetFirstPlayerController()->SetViewTarget(this);
+
+    FVector location = GetActorLocation();
+    location.Y = 343.0;
+    SetActorLocation(location);
+    SetActorRotation(FRotator(0.0f, 270.0f, 0.0f));
 }
 
 // Called every frame
-void ACBCameraController::Tick(float DeltaTime)
+void ACBCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -46,6 +50,4 @@ void ACBCameraController::Tick(float DeltaTime)
     SetActorLocation(playerLocation);
 
     Camera->SetOrthoWidth(768.0f);
-
 }
-
