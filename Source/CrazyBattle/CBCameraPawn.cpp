@@ -31,8 +31,6 @@ void ACBCameraPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
-    GetWorld()->GetFirstPlayerController()->SetViewTarget(this);
-
     FVector location = GetActorLocation();
     location.Y = 343.0;
     SetActorLocation(location);

@@ -14,7 +14,14 @@ class CRAZYBATTLE_API ACrazyBattleGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+    void CreatePlayerForController(int32 ControllerId);
+
+protected:
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
 	
-	
-	
+private:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
+    TSubclassOf<class ACBPaperCharacter> PlayerCharacter;
 };

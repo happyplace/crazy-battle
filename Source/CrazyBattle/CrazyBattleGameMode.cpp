@@ -2,6 +2,21 @@
 
 #include "CrazyBattleGameMode.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "CBPaperCharacter.h"
+#include "Engine/World.h"
 
+void ACrazyBattleGameMode::BeginPlay()
+{
+    Super::BeginPlay();
 
+    // The default player controller is set to the camera pawn, after that pawn is created
+    // the default pawn is changed to the actual ACBPaperCharacter Pawn
+    DefaultPawnClass = PlayerCharacter;
+}
 
+void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId)
+{
+    APlayerController* player = UGameplayStatics::CreatePlayer(GetWorld(), ControllerId, true);
+    player->SetViewTarget(GetWorld()->GetFirstPlayerController());
+}
