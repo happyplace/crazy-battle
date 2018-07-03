@@ -15,8 +15,17 @@ void ACrazyBattleGameMode::BeginPlay()
     DefaultPawnClass = PlayerCharacter;
 }
 
+#include "Engine.h"
+
 void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId)
 {
+    if (spawnedPlayersControllerId.Find(ControllerId) != INDEX_NONE)
+    {
+        return;
+    }
+
+    spawnedPlayersControllerId.Add(ControllerId);
+
     APlayerController* player = UGameplayStatics::CreatePlayer(GetWorld(), ControllerId, true);
     player->SetViewTarget(GetWorld()->GetFirstPlayerController());
 }

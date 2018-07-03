@@ -24,4 +24,6 @@ protected:
 private:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class ACBPaperCharacter> PlayerCharacter;
+
+    TArray<int32> spawnedPlayersControllerId;
 };

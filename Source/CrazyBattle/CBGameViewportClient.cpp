@@ -12,23 +12,15 @@
 
 bool UCBGameViewportClient::InputKey(FViewport* Viewport, int32 ControllerId, FKey Key, EInputEvent EventType, float AmountDepressed, bool bGamepad)
 {
+    int32 modifiedControllerId = ControllerId + bGamepad ? 2 : 1;
+
     if (Key.GetFName().Compare(TEXT("Gamepad_Special_Right")) == 0)
     {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("load player"));
+        ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
+        gameMode->CreatePlayerForController(modifiedControllerId);
     }
 
-    //ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
-    //gameMode->CreatePlayerForController(ControllerId);
-    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Key.ToString());
-
-    if (bGamepad)
-    {
-        return Super::InputKey(Viewport, ControllerId + 2, Key, EventType, AmountDepressed, bGamepad);
-    }
-    else
-    {
-        return Super::InputKey(Viewport, ControllerId + 1, Key, EventType, AmountDepressed, bGamepad);
-    }
+    return Super::InputKey(Viewport, modifiedControllerId, Key, EventType, AmountDepressed, bGamepad);
 }
 
 bool UCBGameViewportClient::InputAxis(FViewport* Viewport, int32 ControllerId, FKey Key, float Delta, float DeltaTime, int32 NumSamples /*= 1*/, bool bGamepad /*= false*/)
