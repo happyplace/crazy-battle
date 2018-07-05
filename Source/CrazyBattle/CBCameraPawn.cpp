@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Engine/World.h"
+#include "CBPaperCharacter.h"
 
 // Sets default values
 ACBCameraPawn::ACBCameraPawn()
@@ -43,9 +44,17 @@ void ACBCameraPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
     APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-    FVector playerLocation = playerController->GetPawn()->GetActorLocation();
-    playerLocation.Y = GetActorLocation().Y;
-    SetActorLocation(playerLocation);
+
+    for (FConstPlayerControllerIterator playerIt = GetWorld()->GetPlayerControllerIterator(); playerIt; ++playerIt)
+    {
+        ACBPaperCharacter* paperCharacter = Cast<ACBPaperCharacter>(playerIt->Get()->GetPawn());
+        if (paperCharacter)
+        {
+            FVector playerLocation = paperCharacter->GetActorLocation();
+            playerLocation.Y = GetActorLocation().Y;
+            SetActorLocation(playerLocation);
+        }
+    }
 
     Camera->SetOrthoWidth(768.0f);
 }
