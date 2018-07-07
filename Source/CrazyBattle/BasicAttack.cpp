@@ -5,8 +5,10 @@
 #include "PaperFlipbookComponent.h"
 #include "Components/SphereComponent.h"
 #include "CBPaperCharacter.h"
+#include "CrazyBattleGameMode.h"
+#include "Engine/World.h"
 
-#include "Engine.h"
+//#include "Engine.h"
 
 ABasicAttack::ABasicAttack()
 {
@@ -38,12 +40,38 @@ void ABasicAttack::Fire()
     FVector force = GetInitialDirection() * InitialAttackSpeed * Sphere->GetMass();
     Sphere->AddImpulse(force * Sphere->GetMass());
 
-    Sphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-
-    Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+    Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
     Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Overlap);
     Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
     Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECollisionResponse::ECR_Overlap);
+
+    switch (GetOwningPlayerIndex())
+    {
+        case 0:
+            Sphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+            Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+            break;
+        case 1:
+            Sphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+            Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
+            break;
+        case 2:
+            Sphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
+            Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
+            break;
+        case 3:
+            Sphere->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel4);
+            Sphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECollisionResponse::ECR_Ignore);
+            break;
+    }
+
+    ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
+    PaperFlipbook->SetSpriteColor(gameMode->GetPlayerColourForIndex(GetOwningPlayerIndex()));
+}
+
+void ABasicAttack::SetColour(const FLinearColor& color)
+{
+    PaperFlipbook->SetSpriteColor(color);
 }
 
 void ABasicAttack::Tick(float DeltaTime)
@@ -66,26 +94,27 @@ void ABasicAttack::Tick(float DeltaTime)
 			playingExplosionAnimation = true;
 			PaperFlipbook->SetLooping(false);
 			PaperFlipbook->SetFlipbook(ExplosionAnimation);
+            PaperFlipbook->SetSpriteColor(FLinearColor::White);
 		}
 	}
 }
 
 void ABasicAttack::OnBeginOverlap(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (shouldDelete)
+	if (shouldDelete || GetOwningPlayerIndex() < 0)
 	{
 		return;
 	}
 
 	ACBPaperCharacter* otherCharacter = Cast<ACBPaperCharacter>(OtherActor);
 
+    shouldDelete = true;
 	if (otherCharacter != nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Is Owner")));
-	}
-	else
-	{
-		shouldDelete = true;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Not Owner")));
+        if (otherCharacter->GetPlayerIndex() != GetOwningPlayerIndex())
+        {         
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Format(TEXT("Basic Attack: Owner: {0} Other: {1}"), { otherCharacter->GetPlayerIndex(), GetOwningPlayerIndex() }));
+            // Tell game mode that it got attacked
+        }
 	}
 }

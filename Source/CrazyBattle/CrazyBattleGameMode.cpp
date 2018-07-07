@@ -5,6 +5,15 @@
 #include "Kismet/GameplayStatics.h"
 #include "CBPaperCharacter.h"
 #include "Engine/World.h"
+#include "PaperFlipbookComponent.h"
+
+ACrazyBattleGameMode::ACrazyBattleGameMode()
+{
+    PlayerColor0 = FLinearColor::White;
+    PlayerColor1 = FLinearColor::Yellow;
+    PlayerColor2 = FLinearColor::Blue;
+    PlayerColor3 = FLinearColor::Green;
+}
 
 void ACrazyBattleGameMode::BeginPlay()
 {
@@ -15,8 +24,6 @@ void ACrazyBattleGameMode::BeginPlay()
     DefaultPawnClass = PlayerCharacter;
 }
 
-#include "Engine.h"
-
 void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId)
 {
     if (spawnedPlayersControllerId.Find(ControllerId) != INDEX_NONE)
@@ -24,8 +31,29 @@ void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId)
         return;
     }
 
-    spawnedPlayersControllerId.Add(ControllerId);
+    int32 playerIndex = spawnedPlayersControllerId.Add(ControllerId);
 
     APlayerController* player = UGameplayStatics::CreatePlayer(GetWorld(), ControllerId, true);
     player->SetViewTarget(GetWorld()->GetFirstPlayerController());
+    ACBPaperCharacter* playerCharacter = Cast<ACBPaperCharacter>(player->GetPawn());
+    check(playerCharacter);
+    playerCharacter->SetPlayerIndex(playerIndex);
+    playerCharacter->GetSprite()->SetSpriteColor(GetPlayerColourForIndex(playerIndex));
+}
+
+FLinearColor ACrazyBattleGameMode::GetPlayerColourForIndex(int32 playerIndex)
+{
+    switch (playerIndex)
+    {
+        case 0:
+            return PlayerColor0;
+        case 1:
+            return PlayerColor1;
+        case 2:
+            return PlayerColor2;
+        case 3:
+            return PlayerColor3;
+        default:
+            return FLinearColor::Black;
+    }
 }

@@ -14,11 +14,14 @@ bool UCBGameViewportClient::InputKey(FViewport* Viewport, int32 ControllerId, FK
 {
     int32 modifiedControllerId = ControllerId + bGamepad ? 2 : 1;
 
-    if (Key.GetFName().Compare(TEXT("Gamepad_Special_Right")) == 0)
+    if (Key.GetFName().Compare(TEXT("Gamepad_Special_Right")) == 0 ||
+        Key.GetFName().Compare(TEXT("Y")) == 0)
     {
         ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
         gameMode->CreatePlayerForController(modifiedControllerId);
     }
+
+    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Key.GetDisplayName().ToString());
 
     return Super::InputKey(Viewport, modifiedControllerId, Key, EventType, AmountDepressed, bGamepad);
 }

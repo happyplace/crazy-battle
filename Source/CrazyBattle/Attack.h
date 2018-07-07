@@ -25,12 +25,13 @@ public:
 
 	void SetInitialDirection(const FVector& value) { InitialDirection = value; }
     const FVector& GetInitialDirection() { return InitialDirection; }
-	void SetOwningActor(uint32 value) { OwningActorUniqueId = value; }
-	uint32 GetOwningActor() { return OwningActorUniqueId; }
+	void SetOwningPlayerIndex(int32 value) { OwningPlayerIndex = value; }
+	int32 GetOwningPlayerIndex() { return OwningPlayerIndex; }
 
     virtual void Fire() {}
+    virtual void SetColour(const FLinearColor& color) {}
 
 private:
 	FVector InitialDirection;
-	uint32 OwningActorUniqueId;
+	int32 OwningPlayerIndex;
 };

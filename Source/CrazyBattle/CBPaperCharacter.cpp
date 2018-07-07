@@ -25,15 +25,6 @@ ACBPaperCharacter::ACBPaperCharacter()
 void ACBPaperCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-    //CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-    //CameraComponent->bUsePawnControlRotation = false;
-    //CameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
-    //CameraComponent->OrthoWidth = 768.0f;
-
-    //CameraComponent->SetWorldLocation(FVector(0.0f, 500.0f, 30.0f));
-    //CameraComponent->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
-    //CameraComponent->AttachToComponent(CapsuleComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
 // Called every frame
@@ -41,7 +32,7 @@ void ACBPaperCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FVector movementInput = FVector(RawMovementInput.X, 0.0f, 0.0f);
+	FVector movementInput = FVector(fabsf(RawMovementInput.X) > 0.1f ? RawMovementInput.X : 0.0f, 0.0f, 0.0f);
 	AddMovementInput(movementInput.GetSafeNormal());
 
 	if (movementInput.X > 0.01f)
@@ -135,10 +126,7 @@ void ACBPaperCharacter::Tick(float DeltaTime)
         attackTransform.SetTranslation(attackPosition);
 
 		AAttack* attack = Cast<AAttack>(world->SpawnActor(BasicAttack, &attackTransform));
-		attack->SetOwningActor(GetUniqueID());
-
-        UCapsuleComponent* capsule = GetCapsuleComponent();
-        capsule->GetCollisionObjectType();
+        attack->SetOwningPlayerIndex(GetPlayerIndex());
         
         float x = 1.0f;
         if (!FMath::IsNearlyEqual(0.0f, GetSprite()->GetComponentRotation().Yaw))
@@ -163,6 +151,38 @@ void ACBPaperCharacter::Tick(float DeltaTime)
 	bPrevAttackPressed = bAttackPressed;
 }
 
+void ACBPaperCharacter::SetPlayerIndex(int32 playerIndex)
+{
+    m_playerIndex = playerIndex;
+
+    UCapsuleComponent* capsule = GetCapsuleComponent();
+
+    capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
+    capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Overlap);
+    capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Overlap);
+    capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECollisionResponse::ECR_Overlap);
+
+    switch (m_playerIndex)
+    {
+        case 0:
+            capsule->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+            capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Ignore);
+            break;
+        case 1:
+            capsule->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+            capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
+            break;
+        case 2:
+            capsule->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel3);
+            capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel3, ECollisionResponse::ECR_Ignore);
+            break;
+        case 3:
+            capsule->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel4);
+            capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel4, ECollisionResponse::ECR_Ignore);
+            break;
+    }
+}
+
 bool ACBPaperCharacter::HandleLanding()
 {
 	if (bWasJumppingLastFrame)
@@ -185,8 +205,8 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis("MoveX", this, &ACBPaperCharacter::MoveX);
 	PlayerInputComponent->BindAxis("MoveY", this, &ACBPaperCharacter::MoveY);
 
-	//PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::WalkPressed);
-	//PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, this, &ACBPaperCharacter::WalkReleased);
+	PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::WalkPressed);
+	PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, this, &ACBPaperCharacter::WalkReleased);
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
 	PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
 	PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);

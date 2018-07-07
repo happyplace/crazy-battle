@@ -30,6 +30,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+    void SetPlayerIndex(int32 playerIndex);
+    int32 GetPlayerIndex() const { return m_playerIndex; }
+
 private:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
@@ -48,6 +51,8 @@ private:
 	bool bWasJumppingLastFrame;
 	bool bPlayingOneOffAnimation;
 	bool bPrevAttackPressed;
+
+    int32_t m_playerIndex;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UPaperFlipbook* IdleAnimation;

@@ -28,6 +28,8 @@ public:
 
     virtual void Fire() override;
 
+    virtual void SetColour(const FLinearColor& color) override;
+
 	UFUNCTION()
 	void OnBeginOverlap(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
