@@ -28,6 +28,7 @@ struct PlayerData
     int32 Deaths;
     float PlayerHealth;
     int32 Lives;
+    float DealthTimer;
 };
 
 /**
@@ -60,6 +61,9 @@ protected:
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
     float InitialPlayerHealth;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
+    float RespawnTime;
 
 private:
     class ACBPaperCharacter* GetPaperCharacter(int32 playerIndex);

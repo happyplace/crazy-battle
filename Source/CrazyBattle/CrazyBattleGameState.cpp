@@ -12,6 +12,7 @@ ACrazyBattleGameState::ACrazyBattleGameState()
     PrimaryActorTick.bCanEverTick = true;
 
     InitialPlayerHealth = 100.0f;
+    RespawnTime = 5.0f;
 }
 
 void ACrazyBattleGameState::BeginPlay()
@@ -37,14 +38,16 @@ void ACrazyBattleGameState::Tick(float DeltaTime)
     {
         if (playerData[i].PlayerState == PlayerData::State::Respawn)
         {
-            // if death timer is below zero
-            // call pawn respawn function
-            playerData[i].PlayerState = PlayerData::State::Idle;
-            playerData[i].PlayerHealth = InitialPlayerHealth;
-            if (ACBPaperCharacter* paperCharacter = GetPaperCharacter(i))
+            playerData[i].DealthTimer -= DeltaTime;
+            if (playerData[i].DealthTimer <= 0.0f)
             {
-                paperCharacter->SetActorLocation(FVector(260.0f, 0.0f, 28.0f));
-                paperCharacter->OnRespawn();
+                playerData[i].PlayerState = PlayerData::State::Idle;
+                playerData[i].PlayerHealth = InitialPlayerHealth;
+                if (ACBPaperCharacter* paperCharacter = GetPaperCharacter(i))
+                {
+                    paperCharacter->SetActorLocation(FVector(260.0f, 0.0f, 28.0f));
+                    paperCharacter->OnRespawn();
+                }
             }
         }
     }
@@ -96,7 +99,16 @@ void ACrazyBattleGameState::OnPlayerDamaged(float Damage, int32 attackerIndex, i
     if (receiverData.PlayerHealth <= 0.0f)
     {
         receiverData.Lives--;
-        receiverData.PlayerState = receiverData.Lives < 0 ? PlayerData::State::Dead : PlayerData::State::Respawn;
+        if (receiverData.Lives < 0)
+        {
+            receiverData.PlayerState = PlayerData::State::Dead;
+        }
+        else
+        {
+            receiverData.PlayerState = PlayerData::State::Respawn;
+            receiverData.DealthTimer = RespawnTime;
+        }
+
         if (ACBPaperCharacter* paperCharacter = GetPaperCharacter(receiverIndex))
         {
             paperCharacter->OnDeath();
@@ -105,15 +117,5 @@ void ACrazyBattleGameState::OnPlayerDamaged(float Damage, int32 attackerIndex, i
         receiverData.Deaths++;
 
         playerData[attackerIndex].Kills++;
-    }
-    
-    if (receiverData.PlayerState == PlayerData::State::Respawn ||
-        receiverData.PlayerState == PlayerData::State::Dead)
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("played died"));
-    }
-    else
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Format(TEXT("Basic Attack: {0} Damage: {1}"), { receiverIndex, playerData[receiverIndex].PlayerHealth }));
     }
 }
