@@ -108,16 +108,21 @@ void ABasicAttack::OnBeginOverlap(class UPrimitiveComponent* OverlappedComp, AAc
 
 	ACBPaperCharacter* otherCharacter = Cast<ACBPaperCharacter>(OtherActor);
 
-    shouldDelete = true;
 	if (otherCharacter != nullptr)
 	{
-        if (otherCharacter->GetPlayerIndex() != GetOwningPlayerIndex())
+        if (otherCharacter->IsDeadOrRespawning() == false && 
+            otherCharacter->GetPlayerIndex() != GetOwningPlayerIndex())
         {         
             ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
             gameMode->OnPlayerAttacked(ACrazyBattleGameMode::AttackType::BasicAttack, GetOwningPlayerIndex(), otherCharacter->GetPlayerIndex());
+            shouldDelete = true;
 
             //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Format(TEXT("Basic Attack: Owner: {0} Other: {1}"), { otherCharacter->GetPlayerIndex(), GetOwningPlayerIndex() }));
             // Tell game mode that it got attacked
         }
 	}
+    else
+    {
+        shouldDelete = true;
+    }
 }
