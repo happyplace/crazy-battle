@@ -52,9 +52,17 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+
+protected:
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
+    float InitialPlayerHealth;
+
+private:
+    class ACBPaperCharacter* GetPaperCharacter(int32 playerIndex);
 
 private:
     TArray<PlayerData> playerData;

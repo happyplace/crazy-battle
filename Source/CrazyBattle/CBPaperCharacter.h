@@ -33,6 +33,10 @@ public:
     void SetPlayerIndex(int32 playerIndex);
     int32 GetPlayerIndex() const { return m_playerIndex; }
 
+    void OnDeath();
+    bool IsDeadOrRespawning() const { return bDeadOrRespawning; }
+    void OnRespawn();
+
 private:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
@@ -53,6 +57,7 @@ private:
 	bool bPrevAttackPressed;
 
     int32_t m_playerIndex;
+    bool bDeadOrRespawning;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UPaperFlipbook* IdleAnimation;
@@ -74,6 +79,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
 	class UPaperFlipbook* JumpLandAnimation;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
+    class UPaperFlipbook* DeathAnimation;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle")

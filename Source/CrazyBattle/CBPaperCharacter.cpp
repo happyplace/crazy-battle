@@ -16,6 +16,7 @@ ACBPaperCharacter::ACBPaperCharacter()
 	, bPlayingOneOffAnimation(false)
 	, bAttackPressed(false)
 	, bPrevAttackPressed(false)
+    , bDeadOrRespawning(false)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -31,6 +32,21 @@ void ACBPaperCharacter::BeginPlay()
 void ACBPaperCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+    if (bDeadOrRespawning)
+    {
+        bWasJumppingLastFrame = false;
+        AddMovementInput(FVector::ZeroVector);
+        if (!GetSprite()->IsPlaying())
+        {
+            bPlayingOneOffAnimation = false;
+            GetSprite()->SetLooping(true);
+            GetSprite()->PlayFromStart();
+            GetSprite()->SetVisibility(false);
+            SetActorLocation(FVector(10000.0f, 10000.0f, 10000.0f), false);
+        }
+        return;
+    }
 
 	FVector movementInput = FVector(fabsf(RawMovementInput.X) > 0.1f ? RawMovementInput.X : 0.0f, 0.0f, 0.0f);
 	AddMovementInput(movementInput.GetSafeNormal());
@@ -243,4 +259,19 @@ void ACBPaperCharacter::AttackPressed()
 void ACBPaperCharacter::AttackReleased()
 {
 	bAttackPressed = false;
+}
+
+void ACBPaperCharacter::OnDeath()
+{
+    bDeadOrRespawning = true;
+    GetSprite()->SetLooping(false);
+    GetSprite()->SetFlipbook(DeathAnimation);
+    GetSprite()->PlayFromStart();
+    bPlayingOneOffAnimation = true;
+}
+
+void ACBPaperCharacter::OnRespawn()
+{
+    bDeadOrRespawning = false;
+    GetSprite()->SetVisibility(true);
 }

@@ -114,7 +114,7 @@ void ABasicAttack::OnBeginOverlap(class UPrimitiveComponent* OverlappedComp, AAc
         if (otherCharacter->GetPlayerIndex() != GetOwningPlayerIndex())
         {         
             ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
-            gameMode->OnPlayerAttacked(ACrazyBattleGameMode::AttackType::BasicAttack, otherCharacter->GetPlayerIndex(), GetOwningPlayerIndex());
+            gameMode->OnPlayerAttacked(ACrazyBattleGameMode::AttackType::BasicAttack, GetOwningPlayerIndex(), otherCharacter->GetPlayerIndex());
 
             //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Format(TEXT("Basic Attack: Owner: {0} Other: {1}"), { otherCharacter->GetPlayerIndex(), GetOwningPlayerIndex() }));
             // Tell game mode that it got attacked

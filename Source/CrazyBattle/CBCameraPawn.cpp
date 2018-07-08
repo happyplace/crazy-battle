@@ -48,7 +48,7 @@ void ACBCameraPawn::Tick(float DeltaTime)
     for (FConstPlayerControllerIterator playerIt = GetWorld()->GetPlayerControllerIterator(); playerIt; ++playerIt)
     {
         ACBPaperCharacter* paperCharacter = Cast<ACBPaperCharacter>(playerIt->Get()->GetPawn());
-        if (paperCharacter)
+        if (paperCharacter && paperCharacter->IsDeadOrRespawning() == false)
         {
             FVector playerLocation = paperCharacter->GetActorLocation();
             playerLocation.Y = GetActorLocation().Y;

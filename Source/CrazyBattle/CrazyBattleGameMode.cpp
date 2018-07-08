@@ -6,6 +6,7 @@
 #include "CBPaperCharacter.h"
 #include "Engine/World.h"
 #include "PaperFlipbookComponent.h"
+#include "CrazyBattleGameState.h"
 
 ACrazyBattleGameMode::ACrazyBattleGameMode()
 {
@@ -58,10 +59,14 @@ FLinearColor ACrazyBattleGameMode::GetPlayerColourForIndex(int32 playerIndex)
     }
 }
 
-#include "CrazyBattleGameState.h"
-
 void ACrazyBattleGameMode::OnPlayerAttacked(AttackType attackType, int32 attackerIndex, int32 receiverIndex)
 {
     ACrazyBattleGameState* gameState = GetGameState<ACrazyBattleGameState>();
     gameState->OnPlayerDamaged(15.0f, attackerIndex, receiverIndex);
+}
+
+int32 ACrazyBattleGameMode::GetControllerIdForPlayerIndex(int32 playerIndex) const
+{
+    // TODO: check that it's within bounds
+    return spawnedPlayersControllerId[playerIndex];
 }

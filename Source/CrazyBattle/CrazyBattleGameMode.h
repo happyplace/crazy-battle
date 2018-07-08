@@ -29,6 +29,8 @@ public:
 
     void OnPlayerAttacked(AttackType attackType, int32 attackerIndex, int32 receiverIndex);
 
+    int32 GetControllerIdForPlayerIndex(int32 playerIndex) const;
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
