@@ -57,3 +57,11 @@ FLinearColor ACrazyBattleGameMode::GetPlayerColourForIndex(int32 playerIndex)
             return FLinearColor::Black;
     }
 }
+
+#include "CrazyBattleGameState.h"
+
+void ACrazyBattleGameMode::OnPlayerAttacked(AttackType attackType, int32 attackerIndex, int32 receiverIndex)
+{
+    ACrazyBattleGameState* gameState = GetGameState<ACrazyBattleGameState>();
+    gameState->OnPlayerDamaged(15.0f, attackerIndex, receiverIndex);
+}

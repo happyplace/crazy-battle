@@ -15,11 +15,19 @@ class CRAZYBATTLE_API ACrazyBattleGameMode : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+    enum class AttackType
+    { 
+        None, 
+        BasicAttack,
+    };
+    
     ACrazyBattleGameMode();
 
     void CreatePlayerForController(int32 ControllerId);
 
     FLinearColor GetPlayerColourForIndex(int32 playerIndex);
+
+    void OnPlayerAttacked(AttackType attackType, int32 attackerIndex, int32 receiverIndex);
 
 protected:
     // Called when the game starts or when spawned
