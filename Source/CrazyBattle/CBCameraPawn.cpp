@@ -36,6 +36,8 @@ void ACBCameraPawn::BeginPlay()
     location.Y = 343.0;
     SetActorLocation(location);
     SetActorRotation(FRotator(0.0f, 270.0f, 0.0f));
+
+    Camera->SetOrthoWidth(768.0f);
 }
 
 // Called every frame
@@ -45,16 +47,39 @@ void ACBCameraPawn::Tick(float DeltaTime)
 
     APlayerController* playerController = GetWorld()->GetFirstPlayerController();
 
+    int32 followedPlayerCount = 0;
+    FVector focusTarget = FVector::ZeroVector;
+    float largestDistance = 0.0f;
+
     for (FConstPlayerControllerIterator playerIt = GetWorld()->GetPlayerControllerIterator(); playerIt; ++playerIt)
     {
         ACBPaperCharacter* paperCharacter = Cast<ACBPaperCharacter>(playerIt->Get()->GetPawn());
         if (paperCharacter && paperCharacter->IsDeadOrRespawning() == false)
         {
-            FVector playerLocation = paperCharacter->GetActorLocation();
-            playerLocation.Y = GetActorLocation().Y;
-            SetActorLocation(playerLocation);
+            focusTarget += paperCharacter->GetActorLocation();
+            followedPlayerCount++;
+
+            for (FConstPlayerControllerIterator otherPlayerIt = GetWorld()->GetPlayerControllerIterator(); otherPlayerIt; ++otherPlayerIt)
+            {
+                ACBPaperCharacter* otherPaperCharacter = Cast<ACBPaperCharacter>(otherPlayerIt->Get()->GetPawn());
+                if (otherPaperCharacter && otherPaperCharacter->IsDeadOrRespawning() == false)
+                {
+                    float distance = FVector::Distance(paperCharacter->GetActorLocation(), otherPaperCharacter->GetActorLocation());
+                    if (distance > largestDistance)
+                    {
+                        largestDistance = distance;
+                    }
+                }
+            }
         }
     }
 
-    Camera->SetOrthoWidth(768.0f);
+    if (followedPlayerCount > 0)
+    {
+        focusTarget /= followedPlayerCount;
+        focusTarget.Y = GetActorLocation().Y;
+        SetActorLocation(focusTarget);
+
+        Camera->SetOrthoWidth(FMath::Lerp(768, 1200, largestDistance / 900.0f));
+    }
 }

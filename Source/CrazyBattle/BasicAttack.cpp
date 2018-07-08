@@ -8,8 +8,6 @@
 #include "CrazyBattleGameMode.h"
 #include "Engine/World.h"
 
-//#include "Engine.h"
-
 ABasicAttack::ABasicAttack()
 {
 	shouldDelete = false;
@@ -116,9 +114,6 @@ void ABasicAttack::OnBeginOverlap(class UPrimitiveComponent* OverlappedComp, AAc
             ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
             gameMode->OnPlayerAttacked(ACrazyBattleGameMode::AttackType::BasicAttack, GetOwningPlayerIndex(), otherCharacter->GetPlayerIndex());
             shouldDelete = true;
-
-            //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Format(TEXT("Basic Attack: Owner: {0} Other: {1}"), { otherCharacter->GetPlayerIndex(), GetOwningPlayerIndex() }));
-            // Tell game mode that it got attacked
         }
 	}
     else
