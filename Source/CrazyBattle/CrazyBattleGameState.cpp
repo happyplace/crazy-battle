@@ -36,12 +36,12 @@ void ACrazyBattleGameState::Tick(float DeltaTime)
 
     for (int32 i = 0; i < playerData.Num(); i++)
     {
-        if (playerData[i].PlayerState == PlayerData::State::Respawn)
+        if (playerData[i].PlayerState == EPlayerDataState::PDS_Respawn)
         {
             playerData[i].DealthTimer -= DeltaTime;
             if (playerData[i].DealthTimer <= 0.0f)
             {
-                playerData[i].PlayerState = PlayerData::State::Idle;
+                playerData[i].PlayerState = EPlayerDataState::PDS_Idle;
                 playerData[i].PlayerHealth = InitialPlayerHealth;
                 if (ACBPaperCharacter* paperCharacter = GetPaperCharacter(i))
                 {
@@ -51,16 +51,6 @@ void ACrazyBattleGameState::Tick(float DeltaTime)
             }
         }
     }
-}
-
-int32 ACrazyBattleGameState::GetKillsForPlayer(int32 playerIndex)
-{
-    return -1;
-}
-
-int32 ACrazyBattleGameState::GetPlayerDeaths(int32 playerIndex)
-{
-    return -1;
 }
 
 ACBPaperCharacter* ACrazyBattleGameState::GetPaperCharacter(int32 playerIndex)
@@ -88,9 +78,9 @@ ACBPaperCharacter* ACrazyBattleGameState::GetPaperCharacter(int32 playerIndex)
 
 void ACrazyBattleGameState::OnPlayerDamaged(float Damage, int32 attackerIndex, int32 receiverIndex)
 {
-    PlayerData& receiverData = playerData[receiverIndex];
-    if (receiverData.PlayerState == PlayerData::State::Respawn ||
-        receiverData.PlayerState == PlayerData::State::Dead)
+    FPlayerData& receiverData = playerData[receiverIndex];
+    if (receiverData.PlayerState == EPlayerDataState::PDS_Respawn ||
+        receiverData.PlayerState == EPlayerDataState::PDS_Dead)
     {
         return;
     }
@@ -101,11 +91,11 @@ void ACrazyBattleGameState::OnPlayerDamaged(float Damage, int32 attackerIndex, i
         receiverData.Lives--;
         if (receiverData.Lives < 0)
         {
-            receiverData.PlayerState = PlayerData::State::Dead;
+            receiverData.PlayerState = EPlayerDataState::PDS_Dead;
         }
         else
         {
-            receiverData.PlayerState = PlayerData::State::Respawn;
+            receiverData.PlayerState = EPlayerDataState::PDS_Respawn;
             receiverData.DealthTimer = RespawnTime;
         }
 
@@ -118,4 +108,13 @@ void ACrazyBattleGameState::OnPlayerDamaged(float Damage, int32 attackerIndex, i
 
         playerData[attackerIndex].Kills++;
     }
+}
+
+const FPlayerData& ACrazyBattleGameState::GetPlayerData(int32 playerIndex)
+{
+    if (playerIndex >= 0 && playerIndex < playerData.Num())
+    {
+        return playerData[playerIndex];
+    }
+    return playerData[0];
 }

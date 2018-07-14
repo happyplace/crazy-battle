@@ -70,3 +70,8 @@ int32 ACrazyBattleGameMode::GetControllerIdForPlayerIndex(int32 playerIndex) con
     // TODO: check that it's within bounds
     return spawnedPlayersControllerId[playerIndex];
 }
+
+int32 ACrazyBattleGameMode::GetSpawnedPlayerNum()
+{
+    return spawnedPlayersControllerId.Num();
+}

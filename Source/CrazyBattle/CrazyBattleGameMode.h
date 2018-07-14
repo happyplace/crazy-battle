@@ -31,6 +31,9 @@ public:
 
     int32 GetControllerIdForPlayerIndex(int32 playerIndex) const;
 
+    UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
+    int32 GetSpawnedPlayerNum();
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;

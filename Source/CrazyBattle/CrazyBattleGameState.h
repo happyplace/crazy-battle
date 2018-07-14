@@ -6,27 +6,35 @@
 #include "GameFramework/GameStateBase.h"
 #include "CrazyBattleGameState.generated.h"
 
-struct PlayerData
+UENUM(BlueprintType)
+enum class EPlayerDataState : uint8
 {
-    enum class State
-    {
-        Idle,
-        Respawn,
-        Dead,
-    };
+    PDS_Idle        UMETA(DisplayName="Idle"),
+    PDS_Respawn     UMETA(DisplayName="Respawn"),
+    PDS_Dead        UMETA(DisplayName="Dead"),
+};
 
-    PlayerData() 
+USTRUCT(BlueprintType)
+struct CRAZYBATTLE_API FPlayerData
+{
+    GENERATED_USTRUCT_BODY()
+
+    FPlayerData() 
         : Kills(0)
         , Deaths(0)
         , PlayerHealth(100.0f)
-        , PlayerState(State::Idle)
+        , PlayerState(EPlayerDataState::PDS_Idle)
         , Lives(0)
     {}
 
-    State PlayerState;
+    EPlayerDataState PlayerState;
     int32 Kills;
     int32 Deaths;
+
+public:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
     float PlayerHealth;
+    
     int32 Lives;
     float DealthTimer;
 };
@@ -42,11 +50,8 @@ class CRAZYBATTLE_API ACrazyBattleGameState : public AGameStateBase
 public:
     ACrazyBattleGameState();
 
-    UFUNCTION()
-    int32 GetKillsForPlayer(int32 playerIndex);
-
-    UFUNCTION()
-    int32 GetPlayerDeaths(int32 playerIndex);
+    UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
+    const FPlayerData& GetPlayerData(int32 playerIndex);
 
     void OnPlayerDamaged(float Damage, int32 attackerIndex, int32 receiverIndex);
 
@@ -69,5 +74,6 @@ private:
     class ACBPaperCharacter* GetPaperCharacter(int32 playerIndex);
 
 private:
-    TArray<PlayerData> playerData;
+    UPROPERTY()
+    TArray<FPlayerData> playerData;
 };
