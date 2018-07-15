@@ -25,6 +25,7 @@ public:
 
     void CreatePlayerForController(int32 ControllerId);
 
+    UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
     FLinearColor GetPlayerColourForIndex(int32 playerIndex);
 
     void OnPlayerAttacked(AttackType attackType, int32 attackerIndex, int32 receiverIndex);
