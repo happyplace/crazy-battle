@@ -26,7 +26,7 @@ void ACrazyBattleGameState::BeginPlay()
 
     for (int32 i = 0; i < playerData.Num(); i++)
     {
-        playerData[i].Lives = 5;
+        playerData[i].Lives = 2;
     }
 }
 
