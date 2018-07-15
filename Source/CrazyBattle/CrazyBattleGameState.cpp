@@ -8,6 +8,7 @@
 #include "CrazyBattleGameMode.h"
 
 ACrazyBattleGameState::ACrazyBattleGameState()
+    : state(ECrazyBattleGameState::CBGS_Lobby)
 {
     PrimaryActorTick.bCanEverTick = true;
 
@@ -18,6 +19,8 @@ ACrazyBattleGameState::ACrazyBattleGameState()
 void ACrazyBattleGameState::BeginPlay()
 {
     Super::BeginPlay();
+
+    state = ECrazyBattleGameState::CBGS_Lobby;
 
     for (int32 i = 0; i < 4; i++)
     {
@@ -34,6 +37,27 @@ void ACrazyBattleGameState::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
+    switch (state)
+    {
+        case ECrazyBattleGameState::CBGS_Lobby:
+            Tick_Lobby(DeltaTime);
+            break;
+        case ECrazyBattleGameState::CBGS_Game:
+            Tick_Game(DeltaTime);
+            break;
+        case ECrazyBattleGameState::CBGS_EndGame:
+            Tick_EndGame(DeltaTime);
+            break;
+    }
+}
+
+void ACrazyBattleGameState::Tick_Lobby(float DeltaTime)
+{
+
+}
+
+void ACrazyBattleGameState::Tick_Game(float DeltaTime)
+{
     for (int32 i = 0; i < playerData.Num(); i++)
     {
         if (playerData[i].PlayerState == EPlayerDataState::PDS_Respawn)
@@ -51,6 +75,11 @@ void ACrazyBattleGameState::Tick(float DeltaTime)
             }
         }
     }
+}
+
+void ACrazyBattleGameState::Tick_EndGame(float DeltaTime)
+{
+
 }
 
 ACBPaperCharacter* ACrazyBattleGameState::GetPaperCharacter(int32 playerIndex)
@@ -78,6 +107,11 @@ ACBPaperCharacter* ACrazyBattleGameState::GetPaperCharacter(int32 playerIndex)
 
 void ACrazyBattleGameState::OnPlayerDamaged(float Damage, int32 attackerIndex, int32 receiverIndex)
 {
+    if (state != ECrazyBattleGameState::CBGS_Game)
+    {
+        return;
+    }
+
     FPlayerData& receiverData = playerData[receiverIndex];
     if (receiverData.PlayerState == EPlayerDataState::PDS_Respawn ||
         receiverData.PlayerState == EPlayerDataState::PDS_Dead)

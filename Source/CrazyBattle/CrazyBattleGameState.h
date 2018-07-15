@@ -47,6 +47,14 @@ public:
     float DealthTimer;
 };
 
+UENUM(BlueprintType)
+enum class ECrazyBattleGameState : uint8
+{
+    CBGS_Lobby          UMETA(DisplayName="Lobby"),
+    CBGS_Game           UMETA(DisplayName="Game"),
+    CBGS_EndGame        UMETA(DisplayName="EndGame"),
+};
+
 /**
  * 
  */
@@ -66,6 +74,8 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
+    UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
+    ECrazyBattleGameState GetState() const { return state; }
 
 protected:
     // Called when the game starts or when spawned
@@ -81,7 +91,13 @@ protected:
 private:
     class ACBPaperCharacter* GetPaperCharacter(int32 playerIndex);
 
+    void Tick_Lobby(float DeltaTime);
+    void Tick_Game(float DeltaTime);
+    void Tick_EndGame(float DeltaTime);
+
 private:
     UPROPERTY()
     TArray<FPlayerData> playerData;
+
+    ECrazyBattleGameState state;
 };
