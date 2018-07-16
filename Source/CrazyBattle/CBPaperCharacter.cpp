@@ -6,8 +6,7 @@
 #include "PaperFlipbookComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
-
-#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 
 // Sets default values
 ACBPaperCharacter::ACBPaperCharacter()
@@ -218,14 +217,37 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("MoveX", this, &ACBPaperCharacter::MoveX);
-	PlayerInputComponent->BindAxis("MoveY", this, &ACBPaperCharacter::MoveY);
+    int32 controllerId = Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId();
 
-	PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::WalkPressed);
-	PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, this, &ACBPaperCharacter::WalkReleased);
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
-	PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
-	PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+    if (controllerId == 1)
+    {
+        PlayerInputComponent->BindAxis("MoveX_P1", this, &ACBPaperCharacter::MoveX);
+        PlayerInputComponent->BindAxis("MoveY_P1", this, &ACBPaperCharacter::MoveY);
+
+        PlayerInputComponent->BindAction("Jump_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
+        PlayerInputComponent->BindAction("Attack_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
+        PlayerInputComponent->BindAction("Attack_P1", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+    }
+    else if (controllerId == 2)
+    {
+        PlayerInputComponent->BindAxis("MoveX_P2", this, &ACBPaperCharacter::MoveX);
+        PlayerInputComponent->BindAxis("MoveY_P2", this, &ACBPaperCharacter::MoveY);
+
+        PlayerInputComponent->BindAction("Jump_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
+        PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
+        PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+    }
+    else
+    {
+        PlayerInputComponent->BindAxis("MoveX", this, &ACBPaperCharacter::MoveX);
+        PlayerInputComponent->BindAxis("MoveY", this, &ACBPaperCharacter::MoveY);
+
+        PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::WalkPressed);
+        PlayerInputComponent->BindAction("Walk", EInputEvent::IE_Released, this, &ACBPaperCharacter::WalkReleased);
+        PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
+        PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
+        PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+    }
 }
 
 void ACBPaperCharacter::MoveX(float AxisValue)
