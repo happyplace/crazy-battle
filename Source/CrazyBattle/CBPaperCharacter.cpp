@@ -16,6 +16,7 @@ ACBPaperCharacter::ACBPaperCharacter()
 	, bAttackPressed(false)
 	, bPrevAttackPressed(false)
     , bDeadOrRespawning(false)
+    , bKeyboardIndex(-1)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -250,7 +251,7 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ACBPaperCharacter::MoveX_P1(float AxisValue)
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    if (bKeyboardIndex == 0)
     {
         RawMovementInput.X = AxisValue;
     }
@@ -258,7 +259,7 @@ void ACBPaperCharacter::MoveX_P1(float AxisValue)
 
 void ACBPaperCharacter::MoveY_P1(float AxisValue)
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    if (bKeyboardIndex == 0)
     {
         RawMovementInput.Y = AxisValue;
     }
@@ -266,7 +267,8 @@ void ACBPaperCharacter::MoveY_P1(float AxisValue)
 
 void ACBPaperCharacter::JumpPressed_P1()
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%i"), bKeyboardIndex));
+    if (bKeyboardIndex == 0)
     {
         bJumpPressed = true;
     }
@@ -274,7 +276,7 @@ void ACBPaperCharacter::JumpPressed_P1()
 
 void ACBPaperCharacter::AttackPressed_P1()
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    if (bKeyboardIndex == 0)
     {
         bAttackPressed = true;
     }
@@ -282,7 +284,7 @@ void ACBPaperCharacter::AttackPressed_P1()
 
 void ACBPaperCharacter::AttackReleased_P1()
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    if (bKeyboardIndex == 0)
     {
         bAttackPressed = false;
     }
@@ -290,7 +292,7 @@ void ACBPaperCharacter::AttackReleased_P1()
 
 void ACBPaperCharacter::MoveX_P2(float AxisValue)
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    if (bKeyboardIndex == 1)
     {
         RawMovementInput.X = AxisValue;
     }
@@ -298,7 +300,7 @@ void ACBPaperCharacter::MoveX_P2(float AxisValue)
 
 void ACBPaperCharacter::MoveY_P2(float AxisValue)
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    if (bKeyboardIndex == 1)
     {
         RawMovementInput.Y = AxisValue;
     }
@@ -306,7 +308,7 @@ void ACBPaperCharacter::MoveY_P2(float AxisValue)
 
 void ACBPaperCharacter::JumpPressed_P2()
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    if (bKeyboardIndex == 1)
     {
         bJumpPressed = true;
     }
@@ -314,7 +316,7 @@ void ACBPaperCharacter::JumpPressed_P2()
 
 void ACBPaperCharacter::AttackPressed_P2()
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    if (bKeyboardIndex == 1)
     {
         bAttackPressed = true;
     }
@@ -322,7 +324,7 @@ void ACBPaperCharacter::AttackPressed_P2()
 
 void ACBPaperCharacter::AttackReleased_P2()
 {
-    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    if (bKeyboardIndex == 1)
     {
         bAttackPressed = false;
     }

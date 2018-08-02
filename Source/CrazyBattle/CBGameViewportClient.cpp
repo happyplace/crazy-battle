@@ -14,15 +14,13 @@ bool UCBGameViewportClient::InputKey(FViewport* Viewport, int32 ControllerId, FK
 {
     int32 modifiedControllerId = ControllerId + bGamepad ? 3 : 1;
  
-    if (Key == EKeys::Y)
+    if (Key == EKeys::Y || Key == EKeys::NumPadSeven)
     {
+        int keyboardControllerId = ControllerId + 1; // Next available input
+        int keyboardIndex = Key == EKeys::Y ? 0 : 1;
+
         ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
-        gameMode->CreatePlayerForController(ControllerId + 1);
-    }
-    else if (Key == EKeys::NumPadSeven)
-    {
-        ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
-        gameMode->CreatePlayerForController(ControllerId + 2);
+        gameMode->CreatePlayerForController(keyboardControllerId, keyboardIndex);
     }
     else if (Key == EKeys::Gamepad_Special_Right)
     {
@@ -59,4 +57,16 @@ bool UCBGameViewportClient::InputAxis(FViewport* Viewport, int32 ControllerId, F
     {
         return Super::InputAxis(Viewport, ControllerId + 1, Key, Delta, DeltaTime, NumSamples, bGamepad);
     }
+}
+
+bool UCBGameViewportClient::DoesPlayerUsingKeyboardIndexExist(int32 KeyboardIndex) const
+{
+    for (int32 i = 0; i < keyboardPlayers.Num(); i++)
+    {
+        if (keyboardPlayers[i].KeyboardIndex == KeyboardIndex)
+        {
+            return true;
+        }
+    }
+    return false;
 }

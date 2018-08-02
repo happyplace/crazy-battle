@@ -25,7 +25,7 @@ void ACrazyBattleGameMode::BeginPlay()
     DefaultPawnClass = PlayerCharacter;
 }
 
-void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId)
+void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId, int32 KeyboardIndex /*= -1*/)
 {
     if (spawnedPlayersControllerId.Find(ControllerId) != INDEX_NONE)
     {
@@ -40,6 +40,7 @@ void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId)
     check(playerCharacter);
     playerCharacter->SetPlayerIndex(playerIndex);
     playerCharacter->GetSprite()->SetSpriteColor(GetPlayerColourForIndex(playerIndex));
+    playerCharacter->SetKeyboardIndex(KeyboardIndex);
 }
 
 FLinearColor ACrazyBattleGameMode::GetPlayerColourForIndex(int32 playerIndex)

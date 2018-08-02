@@ -23,7 +23,7 @@ public:
     
     ACrazyBattleGameMode();
 
-    void CreatePlayerForController(int32 ControllerId);
+    void CreatePlayerForController(int32 ControllerId, int32 KeyboardIndex = -1);
 
     UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
     FLinearColor GetPlayerColourForIndex(int32 playerIndex);

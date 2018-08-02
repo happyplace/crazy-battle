@@ -37,6 +37,8 @@ public:
     bool IsDeadOrRespawning() const { return bDeadOrRespawning; }
     void OnRespawn();
 
+    void SetKeyboardIndex(int32 keyboardIndex) { bKeyboardIndex = keyboardIndex; }
+
 private:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
@@ -67,6 +69,7 @@ private:
 	bool bWasJumppingLastFrame;
 	bool bPlayingOneOffAnimation;
 	bool bPrevAttackPressed;
+    int32 bKeyboardIndex;
 
     int32_t m_playerIndex;
     bool bDeadOrRespawning;
