@@ -219,23 +219,21 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
     int32 controllerId = Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId();
 
-    if (controllerId == 1)
+    if (controllerId == 1 || controllerId == 2)
     {
-        PlayerInputComponent->BindAxis("MoveX_P1", this, &ACBPaperCharacter::MoveX);
-        PlayerInputComponent->BindAxis("MoveY_P1", this, &ACBPaperCharacter::MoveY);
+        PlayerInputComponent->BindAxis("MoveX_P1", this, &ACBPaperCharacter::MoveX_P1);
+        PlayerInputComponent->BindAxis("MoveY_P1", this, &ACBPaperCharacter::MoveY_P1);
 
-        PlayerInputComponent->BindAction("Jump_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
-        PlayerInputComponent->BindAction("Attack_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
-        PlayerInputComponent->BindAction("Attack_P1", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
-    }
-    else if (controllerId == 2)
-    {
-        PlayerInputComponent->BindAxis("MoveX_P2", this, &ACBPaperCharacter::MoveX);
-        PlayerInputComponent->BindAxis("MoveY_P2", this, &ACBPaperCharacter::MoveY);
+        PlayerInputComponent->BindAction("Jump_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed_P1);
+        PlayerInputComponent->BindAction("Attack_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed_P1);
+        PlayerInputComponent->BindAction("Attack_P1", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased_P1);
+        
+        PlayerInputComponent->BindAxis("MoveX_P2", this, &ACBPaperCharacter::MoveX_P2);
+        PlayerInputComponent->BindAxis("MoveY_P2", this, &ACBPaperCharacter::MoveY_P2);
 
-        PlayerInputComponent->BindAction("Jump_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
-        PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
-        PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+        PlayerInputComponent->BindAction("Jump_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed_P2);
+        PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed_P2);
+        PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased_P2);
     }
     else
     {
@@ -247,6 +245,86 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
         PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
         PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
         PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+    }
+}
+
+void ACBPaperCharacter::MoveX_P1(float AxisValue)
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    {
+        RawMovementInput.X = AxisValue;
+    }
+}
+
+void ACBPaperCharacter::MoveY_P1(float AxisValue)
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    {
+        RawMovementInput.Y = AxisValue;
+    }
+}
+
+void ACBPaperCharacter::JumpPressed_P1()
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    {
+        bJumpPressed = true;
+    }
+}
+
+void ACBPaperCharacter::AttackPressed_P1()
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    {
+        bAttackPressed = true;
+    }
+}
+
+void ACBPaperCharacter::AttackReleased_P1()
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 1)
+    {
+        bAttackPressed = false;
+    }
+}
+
+void ACBPaperCharacter::MoveX_P2(float AxisValue)
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    {
+        RawMovementInput.X = AxisValue;
+    }
+}
+
+void ACBPaperCharacter::MoveY_P2(float AxisValue)
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    {
+        RawMovementInput.Y = AxisValue;
+    }
+}
+
+void ACBPaperCharacter::JumpPressed_P2()
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    {
+        bJumpPressed = true;
+    }
+}
+
+void ACBPaperCharacter::AttackPressed_P2()
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    {
+        bAttackPressed = true;
+    }
+}
+
+void ACBPaperCharacter::AttackReleased_P2()
+{
+    if (Cast<APlayerController>(GetController())->GetLocalPlayer()->GetControllerId() == 2)
+    {
+        bAttackPressed = false;
     }
 }
 

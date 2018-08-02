@@ -47,6 +47,18 @@ private:
 	void AttackPressed();
 	void AttackReleased();
 
+    void MoveX_P1(float AxisValue);
+    void MoveY_P1(float AxisValue);
+    void JumpPressed_P1();
+    void AttackPressed_P1();
+    void AttackReleased_P1();
+
+    void MoveX_P2(float AxisValue);
+    void MoveY_P2(float AxisValue);
+    void JumpPressed_P2();
+    void AttackPressed_P2();
+    void AttackReleased_P2();
+
 	FVector2D RawMovementInput;
 	bool bJumpPressed;
 	bool bAttackPressed;
