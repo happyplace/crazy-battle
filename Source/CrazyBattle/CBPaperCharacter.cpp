@@ -267,7 +267,6 @@ void ACBPaperCharacter::MoveY_P1(float AxisValue)
 
 void ACBPaperCharacter::JumpPressed_P1()
 {
-    GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("%i"), bKeyboardIndex));
     if (bKeyboardIndex == 0)
     {
         bJumpPressed = true;

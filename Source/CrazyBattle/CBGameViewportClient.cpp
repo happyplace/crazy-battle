@@ -16,11 +16,22 @@ bool UCBGameViewportClient::InputKey(FViewport* Viewport, int32 ControllerId, FK
  
     if (Key == EKeys::Y || Key == EKeys::NumPadSeven)
     {
-        int keyboardControllerId = ControllerId + 1; // Next available input
-        int keyboardIndex = Key == EKeys::Y ? 0 : 1;
+        if (keyboardPlayers.Num() < 2)
+        {
+            int keyboardControllerId = ControllerId + 1 + keyboardPlayers.Num(); // Next available input
+            int keyboardIndex = Key == EKeys::Y ? 0 : 1;
 
-        ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
-        gameMode->CreatePlayerForController(keyboardControllerId, keyboardIndex);
+            if (!DoesPlayerUsingKeyboardIndexExist(keyboardIndex))
+            {
+                ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
+                gameMode->CreatePlayerForController(keyboardControllerId, keyboardIndex);
+
+                KeyboardPlayerPair pair;
+                pair.ControllerId = keyboardControllerId;
+                pair.KeyboardIndex = keyboardIndex;
+                keyboardPlayers.Add(pair);
+            }
+        }
     }
     else if (Key == EKeys::Gamepad_Special_Right)
     {
