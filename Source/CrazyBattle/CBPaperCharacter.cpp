@@ -7,6 +7,9 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "CrazyBattleGameState.h"
+#include "Engine/World.h"
+#include "CrazyBattleGameMode.h"
 
 // Sets default values
 ACBPaperCharacter::ACBPaperCharacter()
@@ -235,6 +238,9 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
         PlayerInputComponent->BindAction("Jump_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed_P2);
         PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed_P2);
         PlayerInputComponent->BindAction("Attack_P2", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased_P2);
+
+        PlayerInputComponent->BindAction("StartGame_P1", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::StartGame);
+        PlayerInputComponent->BindAction("StartGame_P2", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::StartGame);
     }
     else
     {
@@ -246,6 +252,20 @@ void ACBPaperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
         PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::JumpPressed);
         PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::AttackPressed);
         PlayerInputComponent->BindAction("Attack", EInputEvent::IE_Released, this, &ACBPaperCharacter::AttackReleased);
+
+        PlayerInputComponent->BindAction("StartGame", EInputEvent::IE_Pressed, this, &ACBPaperCharacter::StartGame);
+    }
+}
+
+void ACBPaperCharacter::StartGame()
+{
+    ACrazyBattleGameState* gameState = Cast<ACrazyBattleGameState>(GetWorld()->GetGameState());
+    ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
+
+    if (gameState->GetState() == ECrazyBattleGameState::CBGS_Lobby && 
+        gameMode->GetSpawnedPlayerNum() >= 2)
+    {
+        gameState->SetState(ECrazyBattleGameState::CBGS_Game);
     }
 }
 

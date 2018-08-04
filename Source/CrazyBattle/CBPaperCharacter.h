@@ -48,6 +48,7 @@ private:
 	bool HandleLanding();
 	void AttackPressed();
 	void AttackReleased();
+    void StartGame();
 
     void MoveX_P1(float AxisValue);
     void MoveY_P1(float AxisValue);

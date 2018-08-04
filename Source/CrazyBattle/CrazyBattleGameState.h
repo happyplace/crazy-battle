@@ -77,6 +77,8 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
     ECrazyBattleGameState GetState() const { return state; }
 
+    void SetState(ECrazyBattleGameState newState) { state = newState; }
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
