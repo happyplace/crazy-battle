@@ -6,6 +6,7 @@
 #include "Engine/LocalPlayer.h"
 #include "CBPaperCharacter.h"
 #include "CrazyBattleGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 ACrazyBattleGameState::ACrazyBattleGameState()
     : state(ECrazyBattleGameState::CBGS_Lobby)
@@ -29,7 +30,7 @@ void ACrazyBattleGameState::BeginPlay()
 
     for (int32 i = 0; i < playerData.Num(); i++)
     {
-        playerData[i].Lives = 2;
+        playerData[i].Lives = 0;
     }
 }
 
@@ -58,6 +59,8 @@ void ACrazyBattleGameState::Tick_Lobby(float DeltaTime)
 
 void ACrazyBattleGameState::Tick_Game(float DeltaTime)
 {
+    int32 playersAlive = 0;
+
     for (int32 i = 0; i < playerData.Num(); i++)
     {
         if (playerData[i].PlayerState == EPlayerDataState::PDS_Respawn)
@@ -74,6 +77,20 @@ void ACrazyBattleGameState::Tick_Game(float DeltaTime)
                 }
             }
         }
+
+        if (playerData[i].PlayerState != EPlayerDataState::PDS_Dead)
+        {
+            playersAlive++;
+        }
+    }
+
+    ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
+  
+    int32 actualPlayersAlive = (playersAlive - (4 - gameMode->GetSpawnedPlayerNum()));
+
+    if (actualPlayersAlive <= 1)
+    {
+        UGameplayStatics::OpenLevel(GetGameInstance(), TEXT("game_map"));
     }
 }
 
