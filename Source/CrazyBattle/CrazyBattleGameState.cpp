@@ -7,6 +7,7 @@
 #include "CBPaperCharacter.h"
 #include "CrazyBattleGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "CrazyBattleGameInstance.h"
 
 ACrazyBattleGameState::ACrazyBattleGameState()
     : state(ECrazyBattleGameState::CBGS_Lobby)
@@ -57,6 +58,29 @@ void ACrazyBattleGameState::Tick_Lobby(float DeltaTime)
 
 }
 
+namespace ACrazyBattleGameState_private
+{
+    FPlayerScoreCard& GetPlayerScoreCardForPlayerIndex(UCrazyBattleGameInstance* gameInstance, int32 index)
+    {
+        switch (index)
+        {
+            case 0: 
+                return gameInstance->Player0;
+            case 1:
+                return gameInstance->Player1;
+            case 2:
+                return gameInstance->Player2;
+            case 3:
+                return gameInstance->Player3;
+            default:
+            {
+                static FPlayerScoreCard emptyScoreCard;
+                return emptyScoreCard;
+            }
+        }
+    }
+}
+
 void ACrazyBattleGameState::Tick_Game(float DeltaTime)
 {
     int32 playersAlive = 0;
@@ -90,7 +114,62 @@ void ACrazyBattleGameState::Tick_Game(float DeltaTime)
 
     if (actualPlayersAlive <= 1)
     {
-        UGameplayStatics::OpenLevel(GetGameInstance(), TEXT("game_map"));
+        bool hasWinner = actualPlayersAlive == 1;
+
+        UCrazyBattleGameInstance* gameInstance = Cast<UCrazyBattleGameInstance>(GetGameInstance());
+        if (gameInstance)
+        {
+            if (hasWinner)
+            {
+                int cardIndex = 1;
+                for (int32 i = 0; i < playerData.Num(); i++)
+                {
+                    if (playerData[i].PlayerState != EPlayerDataState::PDS_Dead)
+                    {
+                        FPlayerScoreCard& playerScoreCard = ACrazyBattleGameState_private::GetPlayerScoreCardForPlayerIndex(gameInstance, 0);
+                        playerScoreCard.IsSet = true;
+                        playerScoreCard.Kills = playerData[i].Kills;
+                        playerScoreCard.Deaths = playerData[i].Deaths;
+                        playerScoreCard.Color = gameMode->GetPlayerColourForIndex(i);
+                    }
+                    else
+                    {
+                        FPlayerScoreCard& playerScoreCard = ACrazyBattleGameState_private::GetPlayerScoreCardForPlayerIndex(gameInstance, cardIndex);
+                        playerScoreCard.IsSet = true;
+                        playerScoreCard.Kills = playerData[i].Kills;
+                        playerScoreCard.Deaths = playerData[i].Deaths;
+                        playerScoreCard.Color = gameMode->GetPlayerColourForIndex(i);
+                        cardIndex++;
+                    }
+                }
+
+                for (int32 i = gameMode->GetSpawnedPlayerNum(); i < playerData.Num(); i++)
+                {
+                    FPlayerScoreCard& playerScoreCard = ACrazyBattleGameState_private::GetPlayerScoreCardForPlayerIndex(gameInstance, i);
+                    playerScoreCard.IsSet = false;
+                }
+            }
+            else
+            {
+                for (int32 i = 0; i < playerData.Num(); i++)
+                {
+                    FPlayerScoreCard& playerScoreCard = ACrazyBattleGameState_private::GetPlayerScoreCardForPlayerIndex(gameInstance, i);
+                    if (i < gameMode->GetSpawnedPlayerNum())
+                    {
+                        playerScoreCard.IsSet = true;
+                        playerScoreCard.Kills = playerData[i].Kills;
+                        playerScoreCard.Deaths = playerData[i].Deaths;
+                        playerScoreCard.Color = gameMode->GetPlayerColourForIndex(i);
+                    }
+                    else
+                    {
+                        playerScoreCard.IsSet = false;
+                    }
+                }
+            }
+        }
+
+        UGameplayStatics::OpenLevel(GetGameInstance(), TEXT("game_end"));
     }
 }
 
