@@ -35,13 +35,25 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Crazy Battle")
     int32 GetSpawnedPlayerNum();
 
+    struct KeyboardPlayerPair
+    {
+        int32 ControllerId;
+        int32 KeyboardIndex;
+    };
+    TArray<KeyboardPlayerPair> keyboardPlayers;
+
+    bool DoesPlayerUsingKeyboardIndexExist(int32 KeyboardIndex) const;
+
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
     TSubclassOf<class ACBPaperCharacter> PlayerCharacter;
+
+    TSubclassOf<APawn> initialDefaultClass;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Crazy Battle", meta = (AllowPrivateAccess = "true"))
     FLinearColor PlayerColor0;
@@ -56,4 +68,6 @@ private:
     FLinearColor PlayerColor3;
 
     TArray<int32> spawnedPlayersControllerId;
+
+    TArray<APlayerController*> spawnedPlayerControllers;
 };

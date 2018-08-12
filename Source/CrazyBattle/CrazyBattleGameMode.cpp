@@ -14,6 +14,8 @@ ACrazyBattleGameMode::ACrazyBattleGameMode()
     PlayerColor1 = FLinearColor::Yellow;
     PlayerColor2 = FLinearColor::Blue;
     PlayerColor3 = FLinearColor::Green;
+
+    initialDefaultClass = DefaultPawnClass;
 }
 
 void ACrazyBattleGameMode::BeginPlay()
@@ -23,6 +25,22 @@ void ACrazyBattleGameMode::BeginPlay()
     // The default player controller is set to the camera pawn, after that pawn is created
     // the default pawn is changed to the actual ACBPaperCharacter Pawn
     DefaultPawnClass = PlayerCharacter;
+}
+
+void ACrazyBattleGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    Super::EndPlay(EndPlayReason);;
+
+    DefaultPawnClass = initialDefaultClass;
+
+    for (int i = 0; i < spawnedPlayerControllers.Num(); i++)
+    {
+        UGameplayStatics::RemovePlayer(spawnedPlayerControllers[i], true);
+    }
+    spawnedPlayerControllers.Empty();
+    spawnedPlayersControllerId.Empty();
+    
+    UGameplayStatics::RemovePlayer(GetWorld()->GetFirstPlayerController(), true);
 }
 
 void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId, int32 KeyboardIndex /*= -1*/)
@@ -35,6 +53,10 @@ void ACrazyBattleGameMode::CreatePlayerForController(int32 ControllerId, int32 K
     int32 playerIndex = spawnedPlayersControllerId.Add(ControllerId);
 
     APlayerController* player = UGameplayStatics::CreatePlayer(GetWorld(), ControllerId, true);
+    check(player);
+
+    spawnedPlayerControllers.Add(player);
+    
     player->SetViewTarget(GetWorld()->GetFirstPlayerController());
     ACBPaperCharacter* playerCharacter = Cast<ACBPaperCharacter>(player->GetPawn());
     check(playerCharacter);
@@ -75,4 +97,16 @@ int32 ACrazyBattleGameMode::GetControllerIdForPlayerIndex(int32 playerIndex) con
 int32 ACrazyBattleGameMode::GetSpawnedPlayerNum()
 {
     return spawnedPlayersControllerId.Num();
+}
+
+bool ACrazyBattleGameMode::DoesPlayerUsingKeyboardIndexExist(int32 KeyboardIndex) const
+{
+    for (int32 i = 0; i < keyboardPlayers.Num(); i++)
+    {
+        if (keyboardPlayers[i].KeyboardIndex == KeyboardIndex)
+        {
+            return true;
+        }
+    }
+    return false;
 }

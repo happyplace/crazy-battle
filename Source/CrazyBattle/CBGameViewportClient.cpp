@@ -12,30 +12,31 @@
 
 bool UCBGameViewportClient::InputKey(FViewport* Viewport, int32 ControllerId, FKey Key, EInputEvent EventType, float AmountDepressed, bool bGamepad)
 {
+    ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
+
     int32 modifiedControllerId = ControllerId + bGamepad ? 3 : 1;
  
     if (Key == EKeys::Y || Key == EKeys::NumPadSeven)
     {
-        if (keyboardPlayers.Num() < 2)
+        if (gameMode->keyboardPlayers.Num() < 2)
         {
-            int keyboardControllerId = ControllerId + 1 + keyboardPlayers.Num(); // Next available input
+            int keyboardControllerId = ControllerId + 1 + gameMode->keyboardPlayers.Num(); // Next available input
             int keyboardIndex = Key == EKeys::Y ? 0 : 1;
 
-            if (!DoesPlayerUsingKeyboardIndexExist(keyboardIndex))
+            if (!gameMode->DoesPlayerUsingKeyboardIndexExist(keyboardIndex))
             {
                 ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
                 gameMode->CreatePlayerForController(keyboardControllerId, keyboardIndex);
 
-                KeyboardPlayerPair pair;
+                ACrazyBattleGameMode::KeyboardPlayerPair pair;
                 pair.ControllerId = keyboardControllerId;
                 pair.KeyboardIndex = keyboardIndex;
-                keyboardPlayers.Add(pair);
+                gameMode->keyboardPlayers.Add(pair);
             }
         }
     }
     else if (Key == EKeys::Gamepad_Special_Right)
     {
-        ACrazyBattleGameMode* gameMode = Cast<ACrazyBattleGameMode>(GetWorld()->GetAuthGameMode());
         gameMode->CreatePlayerForController(modifiedControllerId);
     }
 
@@ -68,16 +69,4 @@ bool UCBGameViewportClient::InputAxis(FViewport* Viewport, int32 ControllerId, F
     {
         return Super::InputAxis(Viewport, ControllerId + 1, Key, Delta, DeltaTime, NumSamples, bGamepad);
     }
-}
-
-bool UCBGameViewportClient::DoesPlayerUsingKeyboardIndexExist(int32 KeyboardIndex) const
-{
-    for (int32 i = 0; i < keyboardPlayers.Num(); i++)
-    {
-        if (keyboardPlayers[i].KeyboardIndex == KeyboardIndex)
-        {
-            return true;
-        }
-    }
-    return false;
 }

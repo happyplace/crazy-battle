@@ -24,6 +24,7 @@ void ACrazyBattleGameState::BeginPlay()
 
     state = ECrazyBattleGameState::CBGS_Lobby;
 
+    playerData.Empty();
     for (int32 i = 0; i < 4; i++)
     {
         playerData.Emplace();
