@@ -4,6 +4,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "CBPaperCharacter.h"
+#include "Engine.h"
 #include "Engine/World.h"
 #include "PaperFlipbookComponent.h"
 #include "CrazyBattleGameState.h"
@@ -25,6 +26,13 @@ void ACrazyBattleGameMode::BeginPlay()
     // The default player controller is set to the camera pawn, after that pawn is created
     // the default pawn is changed to the actual ACBPaperCharacter Pawn
     DefaultPawnClass = PlayerCharacter;
+
+    if (UGameViewportClient* viewPort = GetWorld()->GetGameViewport())
+    {
+        FEngineShowFlags *flags = viewPort->GetEngineShowFlags();
+        viewPort->ViewModeIndex = VMI_Unlit;
+        ApplyViewMode(static_cast<EViewModeIndex>(VMI_Unlit), false, *flags);
+    }
 }
 
 void ACrazyBattleGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
